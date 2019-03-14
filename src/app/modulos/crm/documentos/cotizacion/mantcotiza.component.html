@@ -1,0 +1,758 @@
+<div *ngIf="cargando" class="text-center" style="padding-top: 60px;">
+    <!-- <img src="../../../../assets/spinner.gif"> -->
+    <img src="assets/spinner.gif">
+</div>
+
+<div class="alert alert-danger" *ngIf="enerror">
+    {{message}}
+</div>
+<div class="alert alert-danger" *ngIf="enlistaerror">
+    <ul>
+        <li *ngFor="let regerror of listaerrores">
+            {{regerror.menerror}}
+        </li>
+    </ul>
+</div>
+<div class="alert alert-success" *ngIf="!enerror && grabo">
+    {{message}}
+</div>
+
+<!-- Ventana modal para pedir datos al activa -->
+<kendo-dialog *ngIf="dialogoconvsolped" title="Convertir a pedido" (close)="closeconvsolped()" [minWidth]="350" [width]="650">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <p>Al convertir una cotización a pedido debe estar creado como cliente en el ERP y los productos fuera de catalogo tenerlos relacionados con referencia valida en el ERP.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <p *ngIf="!cotvalagenped"> No se puede generar pedido por:</p>
+            <ul class="alert alert-danger" *ngIf="!cotvalagenped">
+                <li *ngFor="let regerror of menerrorvalagenped">
+                    {{regerror.menerror}}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <label for="ngmcod_forma" data-toggle="tooltip" title="Seleccione la dirección de despacho. Para buscar escriba código o nombre seguido de *">Dirección de despacho:</label>
+            <kendo-dropdownlist [data]="listadirdespa" textField="text" valueField="id" [(ngModel)]="selecteddirdespa">
+            </kendo-dropdownlist>
+        </div>
+    </div>
+
+
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <button type="submit" *ngIf="cotvalagenped" kendoButton (click)="onSubmitconvsolped()" data-toggle="tooltip" title="Confirmar" [look]="'flat'" [primary]="false">Confirmar</button>
+        <button type="submit" kendoButton (click)="closeconvsolped()" data-toggle="tooltip" title="Cancelar" [look]="'flat'" [primary]="true">Cancelar</button>
+    </div>
+</kendo-dialog>
+
+
+<!-- Ventana modal para pedir datos al revisar cambiar de version -->
+<kendo-dialog *ngIf="dialogorevisar" title="Activar Cotización" (close)="closerevisar()" [minWidth]="350" [width]="650">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <p>Al revisar una cotización se incrementa la versión y se cambia a Borrador para poder ser modificada.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <label for="ngmdescri_cierre" data-toggle="tooltip" title="Seleccione para información sobre el motivo para revisarla.">Motivo:</label>
+            <textarea type="text" [(ngModel)]="ngmdescri_cierre" class="form-control" placeholder="Escriba información sobre el motivo para revisarla" [UpperCase]="false"></textarea>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <button type="submit" kendoButton (click)="onSubmitrevisar()" data-toggle="tooltip" title="Confirmar" [look]="'flat'" [primary]="false">Confirmar</button>
+        <button type="submit" kendoButton (click)="closerevisar()" data-toggle="tooltip" title="Cancelar" [look]="'flat'" [primary]="true">Cancelar</button>
+    </div>
+</kendo-dialog>
+
+<!-- Ventana modal para pedir datos al activa -->
+<kendo-dialog *ngIf="dialogoactivar" title="Activar Cotización" (close)="closeactivar()" [minWidth]="350" [width]="650">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <p>Al activar la cotización se dara por definitiva y se generaran archivos para imprimir. Seleccione si dese anexar ficha tecnica de los productos</p>
+        </div>
+    </div>
+    <!-- <div class="col-xs-12 col-sm-12 col-md-12">
+        <label for="genfichatecnica" class="form-check-label" data-toggle="tooltip" title="Marque si desea enviar ficha técnica de los productos.">Enviar ficha tecnica:</label>
+        <kendo-switch [(ngModel)]="genfichatecnica" [onLabel]="'Si'" [offLabel]="'No'"></kendo-switch>
+    </div> -->
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <button type="submit" kendoButton *ngIf="condetalle && estadograbacotiz != 'D'" (click)="onSubmitdef()" data-toggle="tooltip" title="Activar la cotización para sacarla del estado de borrador y poder usarla como base para crear un pedido o hacer seguimientos y cambiar estado."
+            [look]="'flat'" [primary]="false">Activar Cotización</button>
+    </div>
+</kendo-dialog>
+
+<!-- Ventana modal para pedir datos al imprimir -->
+<kendo-dialog *ngIf="dialogoimprimir" title="Imprimir Cotización" (close)="closeaimprimir()" [minWidth]="350" [width]="650">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <p>Al imprimir se genera achivo pdf de acuerdo con la forma de impresión seleccionada. Seleccione si dese anexar ficha tecnica de los productos</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <label for="genfichatecnica" class="form-check-label" data-toggle="tooltip" title="Marque si desea enviar ficha técnica de los productos.">Enviar ficha tecnica:</label>
+            <kendo-switch [(ngModel)]="genfichatecnica" [onLabel]="'Si'" [offLabel]="'No'"></kendo-switch>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <label for="ngmcod_forma" data-toggle="tooltip" title="Seleccione la forma de impresión. Para buscar escriba código o nombre seguido de *">Forma de Impresión:</label>
+            <kendo-dropdownlist [data]="listaformas" textField="text" valueField="id" [(ngModel)]="selectedformas">
+            </kendo-dropdownlist>
+        </div>
+    </div>
+    <kendo-dialog-actions>
+        <button kendoButton (click)="onSubmitimprimir()" primary="true">Generar Impresión</button>
+        <button kendoButton (click)="closeaimprimir()">Cancelar</button>
+    </kendo-dialog-actions>
+
+    <!-- <div class="col-xs-12 col-sm-12 col-md-12">
+        <button type="submit" kendoButton (click)="onSubmitimprimir()" data-toggle="tooltip" title="Generar impresión." [look]="'flat'" [primary]="false">Generar impresión Cotización</button>
+    </div> -->
+</kendo-dialog>
+
+<!-- Ventana modal para pedir datos al cerrar -->
+<kendo-dialog *ngIf="dialogocerrar" title="Cerrar Cotización" (close)="closecerrar()" [minWidth]="350" [width]="650">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <p>Indique los motivos por los cuales se cierra esta cotización (oportunidad)</p>
+        </div>
+    </div>
+    <div class="row alert alert-danger" *ngIf="enerrormodal">
+        {{menerrormodal}}
+    </div>
+
+    <div class="row" *ngIf="!cotvalagenped && selectedEstado.value=='G'">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <p> No se puede cerrar como ganada por:</p>
+            <ul class="alert alert-danger" *ngIf="!cotvalagenped">
+                <li *ngFor="let regerror of menerrorvalagenped">
+                    {{regerror.menerror}}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4 col-sm-4 col-md-4">
+            <label for="ngmestado_c" data-toggle="tooltip" title="Seleccione el estado para el cierre de la oportunidad.">Estado:</label>
+            <kendo-dropdownlist [data]="listEstacierre" textField="text" valueField="value" [(ngModel)]="selectedEstado" (valueChange)="handleEstadoChange($event)">
+            </kendo-dropdownlist>
+            <!-- <netslistnum [(ngModel)]="ngmestado_c" class="solcombog" (pasarDatos)="verEstadocot($event,'estado_c','estado_c')" valini="{{ngmestado_c}}" opciones="Ganada,G,Perdida,P,Cancelada,C">
+        </netslistnum> -->
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <label for="ngmfecha_cierre" data-toggle="tooltip" title="Seleccione la fecha cierre.">fecha cierre:</label>
+            <input [(ngModel)]="ngmfecha_cierre" type="date" class="form-control date form-control-sm">
+        </div>
+    </div>
+    <div *ngIf="ngcierrexperdida" class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <!-- <mant-tablabasica ptitulo="Adicionar causal perdida oportunidad." *ngIf="crearcausalperd" (evenclose)="closeadicion('causalper')" pvaparam="CAUSAL_PERD" pobjeto="CRMCAUSPERD" ptipomant="A"></mant-tablabasica> -->
+            <label for="ngmid_causper" data-toggle="tooltip" title="Seleccione la causal de perdida. Para buscar escriba código o nombre seguido de *">Causal perdida:</label>
+            <kendo-dropdownlist [data]="listacausalesperd" textField="text" valueField="id" [(ngModel)]="selectedcausalperd">
+            </kendo-dropdownlist>
+
+            <!-- <i (click)="openadicion('causalper')" class="fa fa-plus-square fa-lg mantenimiento" data-toggle="tooltip" title="Click para adicionar una nueva causal."></i> -->
+            <!-- <netscombog (pasarDatos)="libmantab.verCombog($event,'id_causper','id_causper',tablaForm)" valini="{{libmantab.valoriniCombog('id_causper',tablaForm)}}" tablabase="CAUSAL_PERD" orden="1" filtro="*" campollave="id_causper">
+        </netscombog> -->
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <label for="ngmid_competen" data-toggle="tooltip" title="Seleccione un competidor. Para buscar escriba código o nombre seguido de *">Competidor:</label>
+            <kendo-dropdownlist [data]="listacompetidores" textField="text" valueField="id" [(ngModel)]="selectedcompetidor">
+            </kendo-dropdownlist>
+        </div>
+    </div>
+    <div class="row">
+        <label for="ngmdescri_cierre" data-toggle="tooltip" title="Seleccione para información adicional del cierre.">Notas cierre:</label>
+        <textarea type="text" [(ngModel)]="ngmdescri_cierre" class="form-control" placeholder="Escriba información adicional del cierre a tener encuenta" [UpperCase]="false"></textarea>
+    </div>
+    <!-- <div class="col-xs-12 col-sm-12 col-md-12">
+        <button type="submit" *ngIf="condetalle && estadograbacotiz === 'D'" (click)="onSubmitdefcerrar()" data-toggle="tooltip" title="Cerrar la cotización para indicar si se Gano o se Perdio la oportunidad.">Cerrar</button>
+    </div> -->
+    <!-- <button type="submit" *ngIf="condetalle && estadograbacotiz === 'D'" (click)="onSubmitdefcerrar()" data-toggle="tooltip" title="Cerrar la cotización para indicar si se Gano o se Perdio la oportunidad." [look]="'outline'" [primary]="true">Cerrar</button> -->
+    <!-- kendoButton -->
+
+    <kendo-dialog-actions>
+        <button *ngIf="!enerrormodal" kendoButton (click)="validaCerrar()" primary="true">Cerrar</button>
+        <button kendoButton (click)="closecerrar()">Cancelar</button>
+    </kendo-dialog-actions>
+
+</kendo-dialog>
+
+<!-- aqui ventanas modal para la adicion de otras tablas desde este modulo -->
+<mant-terceros ptitulo="Consultar Tercero." *ngIf="consultatercero" (evenclose)="closeconsulta('tercero')" pvaparam="VPARTERCEROS" pobjeto="GT0420VU0T0X001" ptipomant="C" [pid]="id_terconsulta"></mant-terceros>
+
+<mant-terceros ptitulo="Consultar Tercero." *ngIf="consultatercero" (evenclose)="closeconsulta('tercero')" pvaparam="VPARTERCEROS" pobjeto="GT0420VU0T0X001" ptipomant="C" [pid]="id_terconsulta"></mant-terceros>
+<mant-cliepoten ptitulo="Consultar Cliente potencial." *ngIf="consultacliepoten" (evenclose)="closeconsulta('cliepoten')" pvaparam="VPARCLIENPOTEN" pobjeto="CRMCLIENTECP01" ptipomant="C" [pid]="regCliepoten.cod_cliepote"></mant-cliepoten>
+<mant-cuentacrm ptitulo="Consultar Cuenta." *ngIf="consultacuenta" (evenclose)="closeconsulta('cuenta')" pvaparam="VPARCUENTACRM" pobjeto="CRMCLIENTECUE01" ptipomant="C" [pid]="regCuenta.cod_tercer"></mant-cuentacrm>
+<mant-cuentacrm ptitulo="Editar Cuenta." *ngIf="editacuenta" (evenclose)="closeeditar('cuenta')" pvaparam="VPARCUENTACRM" pobjeto="CRMCLIENTECUE01" ptipomant="E" [pid]="regCuenta.cod_tercer"></mant-cuentacrm>
+<mant-tablabasica ptitulo="Adicionar Contacto." *ngIf="crearcontacto" (evenclose)="closeadicion('contacto')" pvaparam="VPARCONTACTOS" pobjeto="CRMCLIENTECON01" ptipomant="A"></mant-tablabasica>
+<!-- Aqui definiciones manejo de busquedas  -->
+
+<!-- <h2>version angular {{verangular}}</h2> -->
+<!-- Solo si esta inicializado y esta grabando mostrar sppiner -->
+<div *ngIf="inicializado && grabando" class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+    <div class="alert alert-warning">
+        Grabando registro....
+        <img src="assets/spinner.gif">
+    </div>
+</div>
+
+<!-- Solo si esta inicializado -->
+<div *ngIf="inicializado" class="row">
+    <div class="row netsmonifilmentop">
+        <!-- <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop"> -->
+        <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
+            <p class="k-nsblock ">
+                <!-- <p> -->
+                <!-- <button type="submit" class="btn btn-primary" [disabled]="!tablaForm.valid">Grabar</button> -->
+                <!-- <button type="submit" class="btn btn-primary" [disabled]="!tablaForm.valid">Grabar</button> -->
+
+                <button type="submit" class="netsmonibotonmentop" kendoButton *ngIf="inicializado && estadograbacotiz === 'B0'" (click)="onSubmit()" data-toggle="tooltip" title="Grabar datos generales de la cotización para colocarla en estado borrador y poder adicionar items."
+                    [disabled]="!tablaForm.valid" [look]="'flat'" [icon]="'save'" [primary]="true">Grabar</button>
+                <button type="submit" class="netsmonibotonmentop" kendoButton *ngIf="inicializado && estadograbacotiz != 'D' && estadograbacotiz != 'B0'" (click)="onSubmit()" data-toggle="tooltip" title="Grabar los cambios a los datos generales de la cotización. Sigue en estado borrador. "
+                    [disabled]="!tablaForm.valid" [look]="'flat'" [icon]="'save'" [primary]="true">Modif. Datos</button>
+                <button type="submit" class="netsmonibotonmentop" kendoButton *ngIf="condetalle && estadograbacotiz != 'D'" (click)="openactivar()" data-toggle="tooltip" title="Activar la cotización para sacarla del estado de borrador y poder usarla como base para crear un pedido o hacer seguimientos y cambiar estado."
+                    [disabled]="!tablaForm.valid" [look]="'flat'" [icon]="'save'" [primary]="true">Activar</button>
+                <button type="submit" class="netsmonibotonmentop" kendoButton *ngIf="estadograbacotiz === 'D' && !cerrada" (click)="openrevisar()" data-toggle="tooltip" title="Incrementa la versión de la cotización y el estado a Borrador para hacer cambios." [look]="'flat'"
+                    [icon]="'edit'" [primary]="true">Revisar</button>
+                <button type="submit" class="netsmonibotonmentop" kendoButton *ngIf="estadograbacotiz === 'D' && !cerrada" (click)="opencerrar()" data-toggle="tooltip" title="Cerrar la cotización para sacarla del estado: Revisar, Aprobada, Perdida, Cancelada." [look]="'flat'"
+                    [icon]="'check'" [primary]="true">Cerrar</button>
+                <button type="submit" class="netsmonibotonmentop" kendoButton *ngIf="estadograbacotiz === 'D' && !cerrada" (click)="openimprimir()" data-toggle="tooltip" title="Permite generar archivos de impresión en pdf." [look]="'flat'" [icon]="'printer'" [primary]="true">Imprimir</button>
+                <button type="submit" class="netsmonibotonmentop" kendoButton *ngIf="condetalle && estadograbacotiz === 'D' && cerrada && estado_c==='G' && linkmonipedido===''" (click)="openconvsolped()" data-toggle="tooltip" title="Convertir la cotización a pedido."
+                    [look]="'flat'" [icon]="'cart'" [primary]="true">Convertir a Pedido</button>
+                <a *ngIf="estado_c=='G' && linkmonipedido !=''" target="_blank" href="{{'../'+linkmonipedido }}">Monitor pedido: {{numpedido}}</a>
+
+
+                <!-- <button type="submit" class="netsmonibotonmentop" kendoButton *ngIf="condetalle && estadograbacotiz != 'D'" (click)="onSubmitdef()" data-toggle="tooltip" title="Activar la cotización para sacarla del estado de borrador y poder usarla como base para crear un pedido o hacer seguimientos y cambiar estado."
+                    [disabled]="!tablaForm.valid" [look]="'flat'" [icon]="'save'" [primary]="true">Activar</button> -->
+                <button class="netsmonibotonmentop" kendoButton *ngIf="cargocuenta" data-toggle="tooltip" title="Consulte la cuenta para ver los datos generales de esta. " (click)="openconsulta('cuenta')" [icon]="'eye'" [look]="'flat'" [primary]="true">Consultar Cuenta</button>
+                <!-- <button class="netsmonibotonmentop" kendoButton *ngIf="cargocuenta" data-toggle="tooltip" title="Le permite editar datos de la cuenta." (click)="openeditar('cuenta')" [icon]="'edit'" [look]="'flat'" [primary]="true">Editar Cuenta</button> -->
+            </p>
+        </div>
+        <!-- <i class="fa fa-save netsmonibotonmentop" *ngIf="inicializado"  data-toggle="tooltip"
+          title="Click para grabar consultar cliente potencial." ></i>
+          <i class="fa fa-edit netsmonibotonmentop" *ngIf="cargocuenta" (click)="openconsulta('cuenta')" data-toggle="tooltip"
+          title="Click para consultar cliente potencial."></i>
+          <i class="fa fa-eye netsmonibotonmentop" *ngIf="cargocuenta" (click)="openconsulta('cuenta')" data-toggle="tooltip"
+          title="Click para editar consultar cliente potencial."></i> -->
+    </div>
+
+    <!-- <div class="row">
+        <div *ngIf="estadograbacotiz=='B1'" class="n-titmoninor">
+            Monitor Cotización Nuevo (Borrador) {{this.estadograbacotiz+' '+this.cod_dcotiz+'/'+this.num_dcotiz}}
+        </div>
+    </div> -->
+    <div class="row">
+        <!-- <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2"> -->
+        <form [formGroup]="tablaForm" (ngSubmit)="onSubmit()">
+            <!-- camposform:{{camposform[0] | json}} -->
+            <div class="form-group">
+                <kendo-splitter-pane>
+                    <kendo-tabstrip #tabstrip>
+                        <kendo-tabstrip-tab [title]="'Generales'" [selected]="true">
+                            <ng-template kendoTabContent>
+                                <div *ngIf="estadograbacotiz != 'D'">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <!-- <nets-buscombog *ngIf="llamabuscacliepoten" ptitulo="Buscar cliente potencial" (evenclose)="closebusqueda($event,'cliepote')" vinibus="{{libmantab.valoriniCombog('cod_cliepote',tablaForm)}}" placeholder="Escriba parte del código del cliente potencial o el nombre para buscar."
+                                                objeto="RESTCONBCLIEPOTCRM" pcamporetorna="cod_cliepote"></nets-buscombog> -->
+
+                                            <label for="cod_cliepote" data-toggle="tooltip" title="Seleccione el cliente potencial asociado a la cuenta.">Cliente potencial - {{labelcliepote}}</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_cliepote','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_cliepote','invalid',tablaForm)"></i>
+                                            <i *ngIf="cargocliepoten" (click)="openconsulta('cliepoten')" class="fa fa-eye fa-lg manteconsulta" data-toggle="tooltip" title="Click para consultar cliente potencial."></i>
+                                            <nets-ccombog *ngIf="captura_xcliepoten" #txtcod_cliepote (recibeDatos)="libmantab.recibeCombobus($event,'cod_cliepote',tablaForm)" ltooltip="Seleccione la cuenta." ltitbusqueda="Buscar cliente potencial" placeholder="Escriba parte del código del cliente potencial o el nombre para buscar."
+                                                valueini="{{libmantab.valoriniCombog('cod_cliepote',tablaForm)}}" lobjbusqueda="RESTCONBCLIEPOTCRM" camporetbusq="cod_cliepote"></nets-ccombog>
+                                            <!-- <netscombog (pasarDatos)="verComboclie_pote($event,'id_cliepote','id_cliepote')" valini="{{libmantab.valoriniCombog('id_cliepote',tablaForm)}}" tablabase="CLIENPOTEN" orden="1" filtro="*" campollave="id_cliepote" [esdisabled]="disableid_cliepote">
+                                        </netscombog> -->
+                                            <!-- <div class="input-group">
+                                                <input type="text" class="form-control .k-input" formControlName="cod_cliepote" placeholder="Escriba el código del cliente potencial" id="cod_cliepote">
+                                                <span class="input-group-btn">
+                                                  <button type="button" (click)="openbusqueda('cliepoten')"  name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
+                                             </span>
+                                            </div> -->
+
+                                        </div>
+                                        <div class="col-md-1">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <!-- Para buscar cuenta -->
+                                            <!-- <nets-buscombog *ngIf="llamabuscacuenta" ptitulo="Buscar cuenta" (evenclose)="closebusqueda($event,'cuenta')"
+                                             vinibus="{{libmantab.valoriniCombog('cod_tercer',tablaForm)}}" 
+                                             placeholder="Escriba parte del código de la cuenta o el nombre para buscar." objeto="RESTCONBCUENTACRM"
+                                                pcamporetorna="cod_tercer"></nets-buscombog> -->
+
+                                            <label for="cod_tercer" data-toggle="tooltip" title="Seleccione la cuenta (cliente).">Cuenta - {{labelcuenta}} </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_tercer','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_tercer','invalid',tablaForm)"></i>
+                                            <i *ngIf="cargocuenta" (click)="openconsulta('cuenta')" class="fa fa-eye fa-lg manteconsulta" data-toggle="tooltip" title="Click para consultar cuenta."></i>
+                                            <nets-ccombog *ngIf="captura_xcuenta" #txtcod_tercer (recibeDatos)="libmantab.recibeCombobus($event,'cod_tercer',tablaForm)" ltooltip="Seleccione la cuenta." ltitbusqueda="Buscar cuenta" placeholder="Escriba parte del código de la cuenta o el nombre para buscar."
+                                                valueini="{{libmantab.valoriniCombog('cod_tercer',tablaForm)}}" lobjbusqueda="RESTCONBCUENTACRM" camporetbusq="cod_tercer"></nets-ccombog>
+                                            <!-- <div class="input-group">
+                                                <input type="text" class="form-control .k-input" formControlName="cod_tercer" placeholder="Escriba el código de la cuenta" id="cod_tercer">
+                                                <span class="input-group-btn">
+                                                  <button type="button" (click)="openbusqueda('cuenta')"  name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
+                                             </span>
+                                            </div> -->
+
+                                            <!-- <netscombog (pasarDatos)="verCombocuenta($event,'id_cuentacrm','id_cuentacrm')" valini="{{libmantab.valoriniCombog('id_cuentacrm',tablaForm)}}" tablabase="CUENTACRM" orden="1" filtro="*" campollave="id_cuentacrm" [esdisabled]="disableid_cuentacrm">
+                                        </netscombog> -->
+                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('cod_tercer','invalid',tablaForm) && libmantab.conpropvalCampo('cod_tercer','touched',tablaForm)">
+                                                Debe seleccionar una cuenta valida para poder crear una cotización.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-1">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="cod_procve" data-toggle="tooltip" title="Seleccione el procedimiento de ventas. Este da la parametrización">Procedimiento Ventas </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_procve','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_procve','invalid',tablaForm)"></i>
+                                            <netscombog (pasarDatos)="verComboprocven($event,'cod_procve','cod_procve')" valini="{{libmantab.valoriniCombog('cod_procve',tablaForm)}}" tablabase="PROC_VEN" orden="1" filtro="{{retornafiltro('PROC_VEN')}}" campollave="cod_procve" [esdisabled]="disablecod_procve">
+                                            </netscombog>
+                                        </div>
+                                        <div *ngIf="cargoprocven" class="col-md-6">
+                                            <label for="cod_lista" data-toggle="tooltip" title="Seleccione la lista de precios.">Lista de precios </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_lista','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_lista','invalid',tablaForm)"></i>
+                                            <netscombog (pasarDatos)="verCombolistaprec($event,'cod_lista','cod_lista')" valini="{{libmantab.valoriniCombog('cod_lista',tablaForm)}}" tablabase="C_LIS_PREC" orden="1" filtro="{{retornafiltro('C_LIS_PREC')}}" campollave="cod_lista" [esdisabled]="disablecod_lista">
+                                            </netscombog>
+                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('cod_lista','invalid',tablaForm) && libmantab.conpropvalCampo('cod_lista','touched',tablaForm)">
+                                                Debe seleccionar una Lista de precios valida para poder crear una cotización.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="cargoprocven && (!ver_min || captura_xcliepoten)" class="row">
+                                        <div class="col-md-4">
+                                            <label for="cod_mone" data-toggle="tooltip" title="Seleccione la moneda en la que se hace la cotización.">Moneda </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_mone','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_mone','invalid',tablaForm)"></i>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_mone','cod_mone',tablaForm)" valini="{{libmantab.valoriniCombog('cod_mone',tablaForm)}}" tablabase="MONEDAS" orden="1" filtro="*" campollave="cod_mone">
+                                            </netscombog>
+                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('cod_mone','invalid',tablaForm) && libmantab.conpropvalCampo('cod_mone','touched',tablaForm)">
+                                                Debe seleccionar una moneda para poder crear una cotización.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="cod_ciudad" data-toggle="tooltip" title="Seleccione la ciudad. Para buscar escriba código o nombre seguido de *">Ciudad</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_ciudad','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_ciudad','invalid',tablaForm)"></i>
+                                            <!-- <pru-categoria (pasarDatos)="verCombocod_ciudad($event,'cod_ciudad','cod_ciudad')" valini="{{libmantab.valoriniCombog('cod_ciudad',tablaForm)}}" tablabase="CIUDADES" orden="1" filtro="*" campollave="cod_ciudad"></pru-categoria>
+                                        El valor seleccionado es {{vvalocategoria | json}} -->
+                                            <netscombog (pasarDatos)="verCombocod_ciudad($event,'cod_ciudad','cod_ciudad')" valini="{{libmantab.valoriniCombog('cod_ciudad',tablaForm)}}" tablabase="CIUDADES" orden="1" filtro="*" campollave="cod_ciudad" [esdisabled]="disablecod_ciudad">
+                                            </netscombog>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="cod_zona" data-toggle="tooltip" title="Seleccione la zona asociada a la cuenta. Usado en facturación y estadisticas">Zona</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_zona','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_zona','invalid',tablaForm)"></i>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_zona','cod_zona',tablaForm)" valini="{{libmantab.valoriniCombog('cod_zona',tablaForm)}}" tablabase="ZONAS" orden="1" filtro="*" campollave="cod_zona" [esdisabled]="disablecod_zona">
+                                            </netscombog>
+                                        </div>
+
+                                    </div>
+                                    <div *ngIf="cargoprocven" class="row">
+                                        <div class="col-md-6">
+                                            <label for="cod_vended" data-toggle="tooltip" title="Seleccione el vendedor asociado a la cuenta. Use * para busquedas">Vendedor:</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_vended','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_vended','invalid',tablaForm)"></i>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_vended','cod_vended',tablaForm)" valini="{{libmantab.valoriniCombog('cod_vended',tablaForm)}}" tablabase="VENDEDORES" orden="1" filtro="*" campollave="cod_vended" [esdisabled]="disablecod_vended">
+                                            </netscombog>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="cod_fpago" data-toggle="tooltip" title="Seleccione la  forma de pago asociada a la cuenta. Usado en facturación y cartera">Forma de pago</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_fpago','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_fpago','invalid',tablaForm)"></i>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_fpago','cod_fpago',tablaForm)" valini="{{libmantab.valoriniCombog('cod_fpago',tablaForm)}}" tablabase="FOR_PAGO" orden="1" filtro="*" campollave="cod_fpago" [esdisabled]="disablecod_fpago">
+                                            </netscombog>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="cargoprocven" class="row">
+                                        <div class="col-md-4">
+                                            <label for="tmp_entreg" data-toggle="tooltip" title="Tiempo de entrega en días. Entre 0 y 360 días">Tiempo de entrega</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('tmp_entreg','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('tmp_entreg','invalid',tablaForm)"></i>
+                                            <!-- <br> -->
+                                            <input type="number" class="form-control" formControlName="tmp_entreg" placeholder="Escriba el tiempo de entraga general." min="0" max="360" [id]="tmp_entreg">
+                                            <!-- <kendo-numerictextbox name="tmp_entreg" formControlName="tmp_entreg" [spinners]="false" [format]="'n0'" [min]="0" [max]=[360] [step]="1" [value]="tmp_entreg"></kendo-numerictextbox> -->
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="garantia" data-toggle="tooltip" title="Meses de garantia. Entre 0 y 900 meses.">Meses garantia</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('garantia','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('garantia','invalid',tablaForm)"></i>
+                                            <!-- <br> -->
+                                            <!-- <kendo-numerictextbox name="garantia" formControlName="garantia" [spinners]="false" [format]="'n0'" [min]="1" [max]=[900] [step]="1" [value]="garantia"></kendo-numerictextbox> -->
+                                            <input type="number" class="form-control" formControlName="garantia" placeholder="Escriba el tiempo de garantia en meses entre 0 y 900." min="0" max="900" [id]="garantia">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="val_oferta" data-toggle="tooltip" title="Validez de la oferta en días. Entre 1 y 360 días">Validez Oferta</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('val_oferta','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('val_oferta','invalid',tablaForm)"></i>
+                                            <!-- <br> -->
+                                            <input type="number" class="form-control" formControlName="val_oferta" placeholder="Escriba el tiempo de validez de la oferta en días. Entre 1 y 360 días." min="0" max="900" [id]="val_oferta">
+                                            <!-- <kendo-numerictextbox name="val_oferta" formControlName="val_oferta" [spinners]="false" [format]="'n0'" [min]="1" [max]=[360] [step]="1" [value]="val_oferta"></kendo-numerictextbox> -->
+                                        </div>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-md-6 ">
+                                            <label for="id_contacto" data-toggle="tooltip" title="Seleccione el contacto asociado a la cotización. ">Contacto</label>
+                                            <i class="fa fa-check-circle check " *ngIf="libmantab.conpropvalCampo( 'id_contacto', 'valid',tablaForm) "></i>
+                                            <i class="fa fa-exclamation-circle uncheck " *ngIf="libmantab.conpropvalCampo( 'id_contacto', 'invalid',tablaForm) "></i>
+                                            <i (click)="openadicion('contacto')" class="fa fa-plus-square fa-lg mantenimiento" data-toggle="tooltip" title="Click para adicionar un contacto."></i>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'id_contacto','id_contacto',tablaForm)" valini="{{libmantab.valoriniCombog('id_contacto',tablaForm)}}" tablabase="CONTACTOS" orden="1" filtro="{{filtrocontacto}}" campollave="id_contacto">
+                                            </netscombog>
+                                            <p class="alert alert-danger " *ngIf="libmantab.conpropvalCampo( 'id_contacto', 'invalid',tablaForm) && libmantab.conpropvalCampo( 'id_contacto', 'touched',tablaForm) ">
+                                                Debe seleccionar un contacto asociado a la cotización.
+                                            </p>
+                                            <p class="alert alert-warning " *ngIf="cargocontacto">
+                                                <label class="labelrela ">{{regContacto.nombres+' '+regContacto.apellidos}} <br>{{regContacto.cargo+' '+regContacto.tel_trabajo+' | '+regContacto.tel_movil}} </label>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="inc_iva" class="form-check-label" data-toggle="tooltip" title="Marque si se calcula el iva.">Incluir Iva</label>
+                                            <!-- <kendo-switch [(ngModel)]="incluir_iva"></kendo-switch> -->
+                                            <kendo-switch formControlName="inc_iva" [onLabel]="'Si'" [offLabel]="'No'" id="inc_iva" name="inc_iva"></kendo-switch>
+                                            <!-- <input type="checkbox" class="form-check-input" formControlName="inc_iva" id="inc_iva" name="inc_iva" checked> -->
+                                        </div>
+                                    </div>
+                                    <div *ngIf="cargoprocven" class="row ">
+                                        <div class="col-md-12 ">
+                                            <label for="notas " data-toggle="tooltip " title="Escriba información adicional a tener en cuenta. Máximo 250 caracteres.">Notas</label>
+                                            <i class="fa fa-check-circle check " *ngIf="libmantab.conpropvalCampo( 'notas', 'valid',tablaForm) "></i>
+                                            <i class="fa fa-exclamation-circle uncheck " *ngIf="libmantab.conpropvalCampo('notas', 'invalid',tablaForm) "></i>
+                                            <textarea type="text" maxlength="250" class="form-control" formControlName="notas" placeholder="Escriba información adicional a tener en cuenta. Máximo 250 caracteres.  " [UpperCase]="false" id="notas"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="estadograbacotiz === 'D'">
+                                    <div class="row">
+                                        <div *ngIf="cargocuenta && captura_xcuenta" class="col-md-6">
+                                            <labelinfo titulo="Cuenta: " valor="{{regCuenta.cod_tercer+' '+regCuenta.nombre}}"></labelinfo>
+                                        </div>
+                                        <div *ngIf="cargocliepoten && !captura_xcuenta" class="col-md-6">
+                                            <labelinfo titulo="Cliente Potencial: " valor="{{regCliepoten.cod_cliepote+' '+regCliepoten.nom_empre}}"></labelinfo>
+                                        </div>
+                                        <div *ngIf="cargoprocven" class="col-md-6">
+                                            <labelinfo titulo="Procedimiento: " valor="{{regProcven.cod_procve+' '+regProcven.nombre}}"></labelinfo>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div *ngIf="cargoprocven " class="col-md-6">
+                                            <label for="cod_lista" data-toggle="tooltip" title="Seleccione la lista de precios.">Lista de precios </label>
+                                            <netscombog (pasarDatos)="verCombolistaprec($event,'cod_lista','cod_lista')" valini="{{libmantab.valoriniCombog('cod_lista',tablaForm)}}" tablabase="C_LIS_PREC" orden="1" filtro="{{retornafiltro('C_LIS_PREC')}}" campollave="cod_lista" esdisabled="{{true}}">
+                                            </netscombog>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="cargoprocven && !ver_min" class="row">
+                                        <div class="col-md-4">
+                                            <label for="cod_mone" data-toggle="tooltip" title="Seleccione la moneda en la que se hace la cotización.">Moneda </label>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_mone','cod_mone',tablaForm)" valini="{{libmantab.valoriniCombog('cod_mone',tablaForm)}}" tablabase="MONEDAS" orden="1" filtro="*" campollave="cod_mone" esdisabled="{{true}}">
+                                            </netscombog>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="cod_ciudad" data-toggle="tooltip" title="Seleccione la ciudad. Para buscar escriba código o nombre seguido de *">Ciudad</label>
+                                            <netscombog (pasarDatos)="verCombocod_ciudad($event,'cod_ciudad','cod_ciudad')" valini="{{libmantab.valoriniCombog('cod_ciudad',tablaForm)}}" tablabase="CIUDADES" orden="1" filtro="*" campollave="cod_ciudad" esdisabled="{{true}}">
+                                            </netscombog>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="cod_zona" data-toggle="tooltip" title="Seleccione la zona asociada a la cuenta. Usado en facturación y estadisticas">Zona</label>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_zona','cod_zona',tablaForm)" valini="{{libmantab.valoriniCombog('cod_zona',tablaForm)}}" tablabase="ZONAS" orden="1" filtro="*" campollave="cod_zona" esdisabled="{{true}}">
+                                            </netscombog>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="cargoprocven && !ver_min" class="row">
+                                        <div class="col-md-4">
+                                            <label for="cod_mone" data-toggle="tooltip" title="Seleccione la moneda en la que se hace la cotización.">Moneda </label>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_mone','cod_mone',tablaForm)" valini="{{libmantab.valoriniCombog('cod_mone',tablaForm)}}" tablabase="MONEDAS" orden="1" filtro="*" campollave="cod_mone" esdisabled="{{true}}">
+                                            </netscombog>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="cod_ciudad" data-toggle="tooltip" title="Seleccione la ciudad. Para buscar escriba código o nombre seguido de *">Ciudad</label>
+                                            <netscombog (pasarDatos)="verCombocod_ciudad($event,'cod_ciudad','cod_ciudad')" valini="{{libmantab.valoriniCombog('cod_ciudad',tablaForm)}}" tablabase="CIUDADES" orden="1" filtro="*" campollave="cod_ciudad" esdisabled="{{true}}">
+                                            </netscombog>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="cod_zona" data-toggle="tooltip" title="Seleccione la zona asociada a la cuenta. Usado en facturación y estadisticas">Zona</label>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_zona','cod_zona',tablaForm)" valini="{{libmantab.valoriniCombog('cod_zona',tablaForm)}}" tablabase="ZONAS" orden="1" filtro="*" campollave="cod_zona" esdisabled="{{true}}">
+                                            </netscombog>
+                                        </div>
+
+                                    </div>
+                                    <div *ngIf="cargoprocven" class="row">
+                                        <div class="col-md-6">
+                                            <label for="cod_vended" data-toggle="tooltip" title="Seleccione el vendedor asociado a la cuenta. Use * para busquedas">Vendedor:</label>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_vended','cod_vended',tablaForm)" valini="{{libmantab.valoriniCombog('cod_vended',tablaForm)}}" tablabase="VENDEDORES" orden="1" filtro="*" campollave="cod_vended" esdisabled="{{true}}">
+                                            </netscombog>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="cod_fpago" data-toggle="tooltip" title="Seleccione la  forma de pago asociada a la cuenta. Usado en facturación y cartera">Forma de pago</label>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_fpago','cod_fpago',tablaForm)" valini="{{libmantab.valoriniCombog('cod_fpago',tablaForm)}}" tablabase="FOR_PAGO" orden="1" filtro="*" campollave="cod_fpago" esdisabled="{{true}}">
+                                            </netscombog>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="cargoprocven" class="row">
+                                        <div class="col-md-4">
+                                            <label for="tmp_entreg" data-toggle="tooltip" title="Tiempo de entrega en días. Entre 0 y 360 días">Tiempo de entrega</label>
+                                            <input type="number" class="form-control" formControlName="tmp_entreg" placeholder="Escriba el tiempo de entraga general." min="0" max="360" [id]="tmp_entreg">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="garantia" data-toggle="tooltip" title="Meses de garantia. Entre 0 y 900 meses.">Meses garantia</label>
+                                            <input type="number" class="form-control" formControlName="garantia" placeholder="Escriba el tiempo de garantia en meses entre 0 y 900." min="0" max="900" [id]="garantia">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="val_oferta" data-toggle="tooltip" title="Validez de la oferta en días. Entre 1 y 360 días">Validez Oferta</label>
+                                            <input type="number" class="form-control" formControlName="val_oferta" placeholder="Escriba el tiempo de validez de la oferta en días. Entre 1 y 360 días." min="0" max="900" [id]="val_oferta">
+                                        </div>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-md-6 ">
+                                            <label for="id_contacto" data-toggle="tooltip" title="Seleccione el contacto asociado a la cotización. ">Contacto</label>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'id_contacto','id_contacto',tablaForm)" valini="{{libmantab.valoriniCombog('id_contacto',tablaForm)}}" tablabase="CONTACTOS" orden="1" filtro="{{filtrocontacto}}" campollave="id_contacto" esdisabled="{{true}}">
+                                            </netscombog>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="inc_iva" class="form-check-label" data-toggle="tooltip" title="Marque si se calcula el iva.">Incluir Iva</label>
+                                            <kendo-switch formControlName="inc_iva" [onLabel]="'Si'" [offLabel]="'No'" id="inc_iva" name="inc_iva"></kendo-switch>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="cargoprocven" class="row ">
+                                        <div class="col-md-12 ">
+                                            <label for="notas " data-toggle="tooltip " title="Escriba información adicional a tener en cuenta. Máximo 250 caracteres. ">Notas</label>
+                                            <textarea type="text" maxlength="250" class="form-control" formControlName="notas" placeholder="Escriba información adicional a tener en cuenta. Máximo 250 caracteres. " [UpperCase]="false" id="notas"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+                        <kendo-tabstrip-tab *ngIf="estadograbacotiz != 'B0'" [title]=" 'Totales' ">
+                            <ng-template kendoTabContent>
+                                <div class="row">
+                                    <h4 class="divsecundaria alert-muted text-center ">
+                                        Totales Cotización
+                                    </h4>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tr>
+                                                    <td align="left" class="netscoltottitulo">
+                                                        Valor Bruto:
+                                                    </td>
+                                                    <td align="rigth" class="netscoltotvalor">
+                                                        {{valor_bruto |currency: 'COP':'symbol' | Moneda: '$':20}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="left" class="netscoltottitulo">
+                                                        Descuento:
+                                                    </td>
+                                                    <td align="rigth" class="netscoltotvalor">
+                                                        {{valor_descuento |currency: 'COP':'symbol' | Moneda: '$':20}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="left" class="netscoltottitulo">
+                                                        Neto:
+                                                    </td>
+                                                    <td align="rigth" class="netscoltotvalor">
+                                                        {{valor_neto |currency: 'COP':'symbol' | Moneda: '$':20}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="left" class="netscoltottitulo">
+                                                        Iva:
+                                                    </td>
+                                                    <td align="rigth" class="netscoltotvalor">
+                                                        {{valor_iva |currency: 'COP':'symbol' | Moneda: '$':20}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="left" class="netscoltottitulo">
+                                                        Total:
+                                                    </td>
+                                                    <td align="rigth" class="netscoltotvalor">
+                                                        {{valor_total |currency: 'COP':'symbol' | Moneda: '$':20}}
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+                        <kendo-tabstrip-tab *ngIf="cerrada" [title]=" 'Cierre' ">
+                            <ng-template kendoTabContent>
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-6 col-md-6">
+                                        <label for="estado_c" data-toggle="tooltip" title="">Cerrada como:</label>
+                                        <netslistnum class="solcombog" (pasarDatos)="libmantab.verListnum($event,'estado_c','estado_c',tablaForm)" valini="{{libmantab.valoriniListnum('estado_c',tablaForm)}}" opciones="Ganada,G,Perdida,P,Cancelada,C" esdisabled="{{true}}">
+                                        </netslistnum>
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-md-6">
+                                        <label for="fecha_cierre " data-toggle="tooltip " title="">Fecha Cierre</label>
+                                        <input type="date" class="form-control date" formControlName="fecha_cierre" id="fecha_cierre">
+                                        <!-- <p>Cotización cerrada el {{ fecha_cierre | date:'dd.MM.yyyy HH:mm' }}
+                                            </p> -->
+                                    </div>
+                                </div>
+                                <div *ngIf="estado_c=='P'" class="row ">
+                                    <div class="col-md-6 ">
+                                        <label for="id_causper" data-toggle="tooltip" title="">Causal perdida</label>
+                                        <netscombog (pasarDatos)="libmantab.verCombog($event,'id_causper','id_causper',tablaForm)" valini="{{libmantab.valoriniCombog('id_causper',tablaForm)}}" tablabase="CAUSAL_PERD" orden="1" filtro="{{filtrocontacto}}" campollave="id_causper" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="id_competen" data-toggle="tooltip" title="">Competidor</label>
+                                        <netscombog (pasarDatos)="libmantab.verCombog($event,'id_competen','id_competen',tablaForm)" valini="{{libmantab.valoriniCombog('id_competen',tablaForm)}}" tablabase="COMPETENCIA" orden="1" filtro="{{filtrocontacto}}" campollave="id_competen" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                </div>
+                                <div *ngIf="estado_c=='G' && linkmonipedido !=''" class="row ">
+                                    <div class="col-md-12 ">
+                                        <label>Monitor Pedido:</label>
+                                        <a target="_blank" href="{{'../'+linkmonipedido }}">{{numpedido}}</a>
+                                    </div>
+                                </div>
+
+
+                                <div class="row ">
+                                    <div class="col-xs-12 col-sm-12 col-md-12">
+                                        <label for="descri_cierre " data-toggle="tooltip " title="">Notas Cierre</label>
+                                        <textarea type="text" class="form-control" formControlName="descri_cierre" placeholder="" [UpperCase]="false" id="descri_cierre"></textarea>
+                                    </div>
+                                </div>
+
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+
+                        <kendo-tabstrip-tab *ngIf="estadograbacotiz != 'B0'" [title]=" 'Actividades' ">
+                            <!-- <kendo-tabstrip-tab *ngIf="estadograbacotiz ==='D'" [title]=" 'Seguimiento' "> -->
+                            <ng-template kendoTabContent>
+                                <kendo-splitter-pane>
+                                    <kendo-tabstrip #tabstripseg [ngStyle]="{'background-color':'#e2eef5'}">
+                                        <kendo-tabstrip-tab [title]="'Actividades'" [selected]="true">
+                                            <ng-template kendoTabContent>
+                                                <div [ngStyle]="{'background-color':'#e2eef5'}">
+                                                    <app-listmantactividad ptablab="ACTIVIDADES" paplica="21" porden="2" [modulo_asoc]="4" [id_modasoc]="idccotiza" [filtro]="filtroactividades" title="Actividades Cotización" objeto="CRMACTIVIDADES" rutamant="actividades/CRMACTIVIDADES/" (pasarDatos)="refrescaSeguimiento($event)"
+                                                        [cod_doca]="cod_dcotiz" [num_doca]="num_dcotiz" [id_cliepote]="id_cliepoten" [id_cuentacrm]="id_cuentacrm">
+                                                    </app-listmantactividad>
+                                                </div>
+                                            </ng-template>
+                                        </kendo-tabstrip-tab>
+                                    </kendo-tabstrip>
+                                </kendo-splitter-pane>
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+                        <kendo-tabstrip-tab *ngIf="estadograbacotiz != 'B0'" [title]="'Archivos'" [selected]="false">
+                            <ng-template kendoTabContent>
+                                <div [ngStyle]="{'background-color':'#e2eef5'}">
+                                    <h3 class="divprincipal alert-muted text-center ">
+                                        Archivos adjuntos de la cotización
+                                    </h3>
+                                    <app-listmantarchivosadj ptablab="ARCHIVOSADJ" paplica="21" porden="2" [modulo_asoc]="4" [id_modasoc]="idccotiza" [filtro]="filtroactividades" title="Archivos Cotización" objeto="CRMARCHIVOSADJ" rutamant="archivosadj/CRMARCHIVOSADJ/" (pasarDatos)="refrescaArchivos($event)"
+                                        [cod_doca]="cod_dcotiz" [num_doca]="num_dcotiz" [id_cliepote]="id_cliepoten" [id_cuentacrm]="id_cuentacrm">
+                                    </app-listmantarchivosadj>
+                                </div>
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+
+                        <!-- <kendo-tabstrip-tab *ngIf="estadograbacotiz ==='D'" [title]=" 'Seguimiento' ">
+                            <ng-template kendoTabContent>
+                                <kendo-splitter-pane>
+                                    <kendo-tabstrip #tabstripseg [ngStyle]="{'background-color':'#e2eef5'}">
+                                        <kendo-tabstrip-tab [title]="'Genera Archivos'" [selected]="true">
+                                            <ng-template kendoTabContent>
+                                                <div [ngStyle]="{'background-color':'#e2eef5'}">
+                                                </div>
+                                            </ng-template>
+                                        </kendo-tabstrip-tab>
+                                    </kendo-tabstrip>
+                                </kendo-splitter-pane>
+                            </ng-template>
+                        </kendo-tabstrip-tab> -->
+                        <kendo-tabstrip-tab [title]=" 'Usuario' ">
+                            <ng-template kendoTabContent>
+                                <h3 class="divprincipal alert-muted text-center ">
+                                    Campos de usuario de la cotización
+                                </h3>
+                                <div *ngFor="let field of camposform ">
+                                    <div *ngIf="field.creado ">
+                                        <label *ngIf="field.type != 'checkbox' && field.type != 'autonumber'  && field.per_adicionar" [for]="field.name" data-toggle="tooltip " [title]="field.placeholder ">{{field.label}} </label>
+                                        <label *ngIf="field.type == 'checkbox' && field.type != 'autonumber'  && field.per_adicionar" [for]="field.name" class="form-check-label" data-toggle="tooltip " [title]="field.placeholder ">{{field.label}} </label>
+                                        <i class="fa fa-check-circle check" *ngIf="field.type != 'checkbox' && field.type != 'autonumber' && field.per_adicionar && libmantab.conpropvalCampo(field.name,'valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="field.type != 'checkbox' && field.type != 'autonumber' && field.per_adicionar && libmantab.conpropvalCampo(field.name,'invalid',tablaForm)"></i>
+                                        <input *ngIf="field.type == 'text' && field.per_adicionar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="field.upper" [id]="field.name">
+                                        <textarea *ngIf="field.type == 'textarea'  && field.per_adicionar" rows="5" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="field.upper" [id]="field.name"></textarea>
+                                        <input *ngIf="field.type == 'number'  && field.per_adicionar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [id]="field.name">
+                                        <input *ngIf="field.type == 'date'  && field.per_adicionar" [type]="field.type" class="form-control date" [formControlName]="field.name" [id]="field.name">
+                                        <kendo-switch *ngIf="field.type == 'checkbox'" [formControlName]="field.name" [id]="field.name" [onLabel]="'Si'" [offLabel]="'No'"></kendo-switch>
+                                        <netscombog *ngIf="field.type == 'solcombog'  && field.per_adicionar" class="solcombog" (pasarDatos)="libmantab.verCombog($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniCombog(field.name,tablaForm)}}" tablabase="{{field.combtabla}}"
+                                            orden="{{field.comborden}}" filtro="*" campollave="{{field.combcllave}}">
+                                        </netscombog>
+                                        <netslistnum *ngIf="field.type == 'netslistnum'  && field.per_adicionar" class="solcombog" (pasarDatos)="libmantab.verListnum($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniListnum(field.name,tablaForm)}}" opciones="{{field.options}}">
+                                        </netslistnum>
+                                        <!-- <label *ngIf="field.type !='checkbox' && field.per_adicionar " [for]="field.name " data-toggle="tooltip " [title]="field.placeholder ">{{field.label}} </label> -->
+                                        <!-- <label *ngIf="field.type=='checkbox' && field.per_adicionar " [for]="field.name " class="form-check-label " data-toggle="tooltip " [title]="field.placeholder ">{{field.label}} </label> -->
+                                        <!-- <i class="fa fa-check-circle check " *ngIf="field.type !='checkbox' && field.per_adicionar && libmantab.conpropvalCampo(field.name, 'valid',tablaForm) "></i> -->
+                                        <!-- <i class="fa fa-exclamation-circle uncheck " *ngIf="field.type !='checkbox' && field.per_adicionar && libmantab.conpropvalCampo(field.name, 'invalid',tablaForm) "></i> -->
+                                        <!-- <input *ngIf="field.type=='text' && field.per_adicionar " [type]="field.type " class="form-control " [formControlName]="field.name " placeholder="{{field.placeholder}} " [UpperCase]="true " [id]="field.name ">
+                                        <textarea *ngIf="field.type=='textarea' && field.per_adicionar " rows="5 " class="form-control " [formControlName]="field.name " placeholder="{{field.placeholder}} " [UpperCase]="true " [id]="field.name "></textarea>
+                                        <input *ngIf="field.type=='number' && field.per_adicionar " [type]="field.type " class="form-control " [formControlName]="field.name " placeholder="{{field.placeholder}} " [id]="field.name "> -->
+                                        <!-- <input *ngIf="field.type=='date' && field.per_adicionar " [type]="field.type " class="form-control date " [formControlName]="field.name " [id]="field.name "> -->
+                                        <!-- <input *ngIf="field.type=='checkbox' && field.per_adicionar " type="checkbox " class="form-check-input " [formControlName]="field.name " [id]="field.name " [name]="field.name " checked>
+                                        <netscombog *ngIf="field.type=='solcombog' && field.per_adicionar " class="solcombog " (pasarDatos)="libmantab.verCombog($event,field.name,field.combcllave,tablaForm) " valini="{{libmantab.valoriniCombog(field.name,tablaForm)}}
+                                            " tablabase="{{field.combtabla}} " orden="{{field.comborden}} " filtro="* " campollave="{{field.combcllave}} ">
+                                        </netscombog>
+                                        <netslistnum *ngIf="field.type=='netslistnum' && field.per_adicionar " class="solcombog " (pasarDatos)="libmantab.verListnum($event,field.name,field.combcllave,tablaForm) " valini="{{libmantab.valoriniListnum(field.name,tablaForm)}}
+                                            " opciones="{{field.options}} ">
+                                        </netslistnum> -->
+                                        <p class="alert alert-danger " *ngIf="libmantab.conpropvalCampo(field.name, 'invalid',tablaForm) && field.per_adicionar && libmantab.conpropvalCampo(field.name, 'touched',tablaForm) ">
+                                            {{field.mensaje_er}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+                    </kendo-tabstrip>
+                </kendo-splitter-pane>
+            </div>
+            <p class="alert alert-warning " *ngIf="!tablaForm.valid &&  estadograbacotiz !='D'">
+                Por favor complete todos los campos
+            </p>
+        </form>
+        <div *ngIf="estadograbacotiz=='B1' || estadograbacotiz ==='D'" class="row">
+            <div class="col-md-12">
+                <app-listmantdcotiza ptablab="COTIZACRM_D" paplica="21" porden="2" [filtro]="filtrocotizad" title="Detalle productos Cotización" objeto="CRMCOTIZDPROD" rutamant="cotizacion/CRMCOTIZDPROD/" (pasarDatos)="refrescaTotalesdeta($event)" [idccotiza]="idccotiza"
+                    [estado_graba]="estadograbacotiz">
+                </app-listmantdcotiza>
+            </div>
+        </div>
+        <!-- <p>Form value: {{tablaForm.value | json}}</p> -->
+
+
+        <!-- <p>filtrocotizad: {{filtrocotizad}}</p> -->
+        <!-- <p>filtrocontacto: {{filtrocontacto}}</p> -->
+        <!-- <p>estadograbacotiz: {{estadograbacotiz}}</p> -->
+        <!-- <p>ptipomant: {{ptipomant}}</p> -->
+
+        <!-- <p>Cuenta: {{regCuenta | json}}</p>
+        <p>Cliente: {{regCliente | json}}</p> -->
+
+        <!-- <hr> -->
+        <!-- </div> -->
+    </div>
+
+</div>

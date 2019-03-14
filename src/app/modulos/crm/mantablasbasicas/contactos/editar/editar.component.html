@@ -1,0 +1,293 @@
+<!-- <div *ngIf="!vparcaptura">
+    <app-header [title]="title" [subtitle]="subtitle" [rutaListado]="retornaRuta()"> </app-header>
+</div> -->
+<div class="alert alert-danger" *ngIf="enerror">
+    {{message}}
+</div>
+<div class="alert alert-danger" *ngIf="enlistaerror">
+    <ul>
+        <li *ngFor="let regerror of listaerrores">
+            {{regerror.menerror}}
+        </li>
+    </ul>
+</div>
+<div class="alert alert-success" *ngIf="!enerror && grabo">
+    {{message}}
+</div>
+<div>
+    <!-- aqui ventanas modal para la adicion de otras tablas desde este modulo -->
+   <!--<mant-tablabasica ptitulo="Adicionar Campaña." *ngIf="crearcampana" (evenclose)="closeadicion('campana')" pvaparam="VPARCAMPANAS" pobjeto="CRMMARK001" ptipomant="A"></mant-tablabasica>
+    <mant-tablabasica ptitulo="Adicionar Sector Económico." *ngIf="crearsectore" (evenclose)="closeadicion('sectore')" pvaparam="VPARSECTORCRM" pobjeto="CRMSECT001" ptipomant="A"></mant-tablabasica>
+    <mant-tablabasica ptitulo="Adicionar Origen Ciente Potencial." *ngIf="crearorigencp" (evenclose)="closeadicion('origencp')" pvaparam="VPARORIGCLIPOT" pobjeto="CRMCLIENTECONPRU" ptipomant="A"></mant-tablabasica>
+   -->
+
+    <kendo-dialog title="Resultado." *ngIf="confmodifica" (close)="close()">
+        <h3 style="margin: 30px; text-align: center;">Se modifico el registro satisfactoriamente.</h3>
+
+        <kendo-dialog-actions>
+            <button kendoButton (click)="close()" [primary]="true">Cerrar.</button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+    <div *ngIf="resultados && grabando" class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+        <div class="alert alert-warning">
+            Grabando registro....
+            <img src="assets/spinner.gif">
+        </div>
+    </div>
+
+    <div *ngIf="resultados && !grabando" class="row">
+        <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+            <form [formGroup]="tablaForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <kendo-splitter-pane min="50%">
+                        <kendo-tabstrip>
+                                <kendo-tabstrip-tab [title]="'Generales'" [selected]="true">
+                                        <ng-template kendoTabContent>
+                                                <h3 class="divprincipal alert-muted text-center">
+                                                        Adicionar:Contactos
+                                                    </h3>
+            
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="id_cliepote" data-toggle="tooltip" title="Seleccione la ciudad. Para buscar escriba código o nombre seguido de *">Id. Cliente Potencial original</label>
+                                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('id_cliepote','valid',tablaForm)"></i>
+                                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('id_cliepote','invalid',tablaForm)"></i>
+                                                            <netscombog (pasarDatos)="verComboid_cliepote($event,'id_cliepote','id_cliepote')" valini="{{libmantab.valoriniCombog('id_cliepote',tablaForm)}}" tablabase="CLIENPOTEN" orden="1" filtro="*" campollave="id_cliepote">
+                                                            </netscombog>
+                                                         </div>
+                                                         <div class="col-md-4">
+                                                            <label for="id_cuenta" data-toggle="tooltip" title="Seleccione la ciudad. Para buscar escriba código o nombre seguido de *">Id. Cuenta asociada </label>
+                                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('id_cuenta','valid',tablaForm)"></i>
+                                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('id_cuenta','invalid',tablaForm)"></i>
+                                                            <netscombog (pasarDatos)="verComboid_cuenta($event,'id_cuenta','id_cuenta')" valini="{{libmantab.valoriniCombog('id_cuenta',tablaForm)}}" tablabase="CUENTACRM" orden="1" filtro="*" campollave="id_cuenta">
+                                                            </netscombog>
+                                                         </div>
+                                                    </div>
+            
+                                                    <div class="row">
+                                                            <div class="col-md-4">
+                                                                    <label for="clase_iden" data-toggle="tooltip" title="Tipo de identificaciòn">Tipo de identificaciòn</label>
+                                                                    <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('clase_iden','valid',tablaForm)"></i>
+                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('clase_iden','invalid',tablaForm)"></i>
+                                                                    <netslistnum class="solcombog" (pasarDatos)="verListclase_iden($event,'clase_iden','clase_iden')" valini="{{libmantab.valoriniListnum('metodo_cont',tablaForm)}}" opciones="Nit,0,Cedula,1,Pasaporte,2,otros,3">
+                                                                    </netslistnum>
+                                                                    
+                                                             </div>
+                                                         <div class="col-md-4">
+                                                            <label for="cod_contac" data-toggle="tooltip" title="Escriba el Doc de identidad">Doc.Identidad </label>
+                                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_contac','valid',tablaForm)"></i>
+                                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_contac','invalid',tablaForm)"></i>
+                                                            <input type="text" class="form-control" formControlName="cod_contac" placeholder="Escriba el número de documento con que se identifica el contacto." [UpperCase]="true" id="cod_contac">
+                                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('cod_contac','invalid',tablaForm) && 
+                                                                    libmantab.conpropvalCampo('cod_contac','touched',tablaForm)">
+                                                                Escriba el número de documento con que se identifica el contacto.     
+                                                    </p>
+                                                         </div>
+                                                    </div>
+            
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="nombres" data-toggle="tooltip" title="Nombres">Nombres </label>
+                                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('nombres','valid',tablaForm)"></i>
+                                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('nombres','invalid',tablaForm)"></i>
+                                                            <input type="text" class="form-control" formControlName="nombres" placeholder="Nombres" [UpperCase]="true" id="nombres">
+                                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('nombres','invalid',tablaForm) && 
+                                                                    libmantab.conpropvalCampo('nombres','touched',tablaForm)">
+                                                                Nombre invalido.     
+                                                            </p>
+                                                                </div>
+                                                         <div class="col-md-4">
+                                                            <label for="apellidos" data-toggle="tooltip" title="Apellidos">Apellidos </label>
+                                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('apellidos','valid',tablaForm)"></i>
+                                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('apellidos','invalid',tablaForm)"></i>
+                                                            <input type="text" class="form-control" formControlName="apellidos" placeholder="Apellidos" [UpperCase]="true" id="apellidos">
+                                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('apellidos','invalid',tablaForm) && 
+                                                                    libmantab.conpropvalCampo('apellidos','touched',tablaForm)">
+                                                                Apellido Invalido.     
+                                                            </p>
+                                                                </div>
+                                                            </div>
+                                                    
+                                                    <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <label for="cargo" data-toggle="tooltip" title="cargo">Cargo </label>
+                                                                    <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cargo','valid',tablaForm)"></i>
+                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cargo','invalid',tablaForm)"></i>
+                                                                    <input type="text" class="form-control" formControlName="cargo" placeholder="Escriba el cargo del contacto para asegurarse que se dirige correctamente a el" [UpperCase]="true" id="cargo">
+                                                                    
+                                                                        </div>
+                                                                 <div class="col-md-4">
+                                                                    <label for="tel_trabajo" data-toggle="tooltip" title="tel_trabajo">Telèfono del trabajo </label>
+                                                                    <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('tel_trabajo','valid',tablaForm)"></i>
+                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('tel_trabajo','invalid',tablaForm)"></i>
+                                                                    <input type="text" class="form-control" formControlName="tel_trabajo" placeholder="Escriba el teléfono del trabajo " [UpperCase]="true" id="tel_trabajo">
+                                                                    <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('tel_trabajo','invalid',tablaForm) && 
+                                                                            libmantab.conpropvalCampo('tel_trabajo','touched',tablaForm)">
+                                                                        Telèfono invalido.     
+                                                                    </p>
+                                                                        </div>
+                                                            </div>
+            
+                                                    <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <label for="tel_movil" data-toggle="tooltip" title="tel_movil">Telèfono mòvil </label>
+                                                                    <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('tel_movil','valid',tablaForm)"></i>
+                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('tel_movil','invalid',tablaForm)"></i>
+                                                                    <input type="text" class="form-control" formControlName="tel_movil" placeholder="Escriba el teléfono móvil " [UpperCase]="true" id="tel_movil">
+                                                                </div>
+                                                                       
+                                                                 <div class="col-md-4">
+                                                                    <label for="email" data-toggle="tooltip" title="email">Correo electrònico</label>
+                                                                    <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('email','valid',tablaForm)"></i>
+                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('email','invalid',tablaForm)"></i>
+                                                                    <input type="text" class="form-control" formControlName="email" placeholder="Escriba el correo electrónico para contactarlo " [UpperCase]="true" id="email">
+                                                                    <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('email','invalid',tablaForm) && 
+                                                                            libmantab.conpropvalCampo('email','touched',tablaForm)">
+                                                                        email invalido.     
+                                                                    </p>
+                                                                        </div>
+                                                            </div>
+            
+                                                    <div class="row">
+                                                                <div class="col-md-4">
+                                                                        <label for="intdesicion" class="form-check-label" data-toggle="tooltip" title="Marque si interviene en la toma de decisiones ">Interviene en toma de desiciones</label>
+                                                                        <kendo-switch formControlName="intdesicion" [onLabel]="'Si'" [offLabel]="'No'" id="intdesicion" name="intdesicion"></kendo-switch>                
+                                                                </div>  
+            
+                                                                <div class="col-md-4">
+                                                                        <label for="principal" class="form-check-label" data-toggle="tooltip" title="Marque si es el contacto principal de la cuenta">Contacto Principal</label>
+                                                                        <kendo-switch formControlName="principal" [onLabel]="'Si'" [offLabel]="'No'" id="principal" name="principal"></kendo-switch>                
+                                                                </div> 
+            
+                                                                <div class="col-md-4">
+                                                                        <label for="inactivo" class="form-check-label" data-toggle="tooltip" title="Marque si quiere inactivar el contacto ">Inactivo</label>
+                                                                        <kendo-switch formControlName="inactivo" [onLabel]="'Si'" [offLabel]="'No'" id="inactivo" name="inactivo"></kendo-switch>                
+                                                                </div> 
+                                                                
+                
+            
+                                                        </div>
+            
+                                                    
+                                        </ng-template>
+                                    </kendo-tabstrip-tab>
+                                    <kendo-tabstrip-tab [title]="'Informaciòn Adicional'">
+                                        <ng-template kendoTabContent>
+                                            <h3 class="divprincipal alert-muted text-center">
+                                                Informaciòn Adicional
+                                            </h3>
+                                            <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label for="cod_pais" data-toggle="tooltip" title="Seleccione el pais. Para buscar escriba código o nombre seguido de *">País</label>
+                                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_pais','valid',tablaForm)"></i>
+                                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_pais','invalid',tablaForm)"></i>
+                                                        <netscombog (pasarDatos)="verCombocod_pais($event,'cod_pais','cod_pais')" valini="{{libmantab.valoriniCombog('cod_pais',tablaForm)}}" tablabase="PAISES" orden="1" filtro="*" campollave="cod_pais">
+                                                        </netscombog>
+                                                     </div>
+                                                     <div class="col-md-6">
+                                                        <label for="cod_ciudad" data-toggle="tooltip" title="Seleccione la ciudad. Para buscar escriba código o nombre seguido de *">Ciudad</label>
+                                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_ciudad','valid',tablaForm)"></i>
+                                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_ciudad','invalid',tablaForm)"></i>
+                                                        <netscombog (pasarDatos)="verCombocod_ciudad($event,'cod_ciudad','cod_ciudad')" valini="{{libmantab.valoriniCombog('cod_ciudad',tablaForm)}}" tablabase="CIUDADES" orden="1" filtro="*" campollave="cod_ciudad">
+                                                        </netscombog>
+                                                    </div>
+                                                 </div>
+                                                 
+                                                 <div class="row">
+                                                     <div class="col-md-4">
+                                                        <label for="direccion" data-toggle="tooltip" title="direccion">Dirección</label>
+                                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('direccion','valid',tablaForm)"></i>
+                                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('direccion','invalid',tablaForm)"></i>
+                                                        <input type="text" class="form-control" formControlName="direccion" placeholder="Escriba la Dirección" [UpperCase]="true" id="direccion">
+                                                        </div>
+            
+                                                 <div class="col-md-4">
+                                                            <label for="metodo_cont" data-toggle="tooltip" title="Mètodo de contacto">Método de contacto </label>
+                                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('metodo_cont','valid',tablaForm)"></i>
+                                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('metodo_cont','invalid',tablaForm)"></i>
+                                                            <netslistnum class="solcombog" (pasarDatos)="verListmetodo_cont($event,'metodo_cont','metodo_cont')" valini="{{libmantab.valoriniListnum('metodo_cont',tablaForm)}}" opciones="Cualquiera,0,Correo electrònico,1,Telèfono,2,Correo,3">
+                                                            </netslistnum>
+                                                        </div>     
+                                                </div>
+            
+                                                <div class="row">      
+                                                 <div class="col-md-4">
+                                                        <label for="estado_civ" data-toggle="tooltip" title="Estado Civil">Estado Civil</label>
+                                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('estado_civ','valid',tablaForm)"></i>
+                                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('estado_civ','invalid',tablaForm)"></i>
+                                                        <netslistnum class="solcombog" (pasarDatos)="verListestado_civ($event,'estado_civ','metodo_cont')" valini="{{libmantab.valoriniListnum('estado_civ',tablaForm)}}" opciones="Soltero,S,Casado/a,C,Union Libre,U,Divorciado/a,D,Viudo,V">
+                                                        </netslistnum>
+                                                    </div>  
+                                                    <div class="col-md-4">
+                                                        <label for="sexo" data-toggle="tooltip" title="sexo">Sexo </label>
+                                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('sexo','valid',tablaForm)"></i>
+                                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('sexo','invalid',tablaForm)"></i>
+                                                        <netslistnum class="solcombog" (pasarDatos)="verListsexo($event,'sexo','sexo')" valini="{{libmantab.valoriniListnum('sexo',tablaForm)}}" opciones="Hombre,H,Mujer,M">
+                                                        </netslistnum>
+                                                    </div>  
+                                                 </div>
+            
+                                                 <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="notas" data-toggle="tooltip" title="Notas">Notas </label>
+                                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('notas','valid',tablaForm)"></i>
+                                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('notas','invalid',tablaForm)"></i>
+                                                            <input type="text" class="form-control" formControlName="notas" placeholder="Notas" [UpperCase]="true" id="notas">
+                                                        </div>  
+            
+                                                         <div class="col-md-4">
+                                                                <label for="cumpleanos " data-toggle="tooltip " title="">Cumpleaños</label>
+                                                                <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cumpleanos','valid',tablaForm)"></i>
+                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cumpleanos','invalid',tablaForm)"></i>
+                                                                <input type="date" class="form-control date" formControlName="cumpleanos" id="cumpleanos">
+                                                         </div>
+                                                    </div>
+            
+                                        </ng-template>
+                                    </kendo-tabstrip-tab>
+                                    <kendo-tabstrip-tab [title]="'Usuario'">
+                                        <ng-template kendoTabContent>
+                                            <h3 class="divprincipal alert-muted text-center">
+                                                Campos de usuario de la cuenta (cliente)
+                                            </h3>
+                                            <div *ngFor="let field of camposform">
+                                                <div *ngIf="field.creado">
+                                                    <label *ngIf="field.type != 'checkbox' && field.per_adicionar" [for]="field.name" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                                    <label *ngIf="field.type == 'checkbox' && field.per_adicionar" [for]="field.name" class="form-check-label" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                                    <i class="fa fa-check-circle check" *ngIf="field.type != 'checkbox'  && field.per_adicionar && libmantab.conpropvalCampo(field.name,'valid',tablaForm)"></i>
+                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="field.type != 'checkbox'  && field.per_adicionar && libmantab.conpropvalCampo(field.name,'invalid',tablaForm)"></i>
+                                                    <input *ngIf="field.type == 'text' && field.per_adicionar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name">
+                                                    <textarea *ngIf="field.type == 'textarea' && field.per_adicionar" rows="5" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name"></textarea>
+                                                    <input *ngIf="field.type == 'number' && field.per_adicionar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [id]="field.name">
+                                                    <input *ngIf="field.type == 'date' && field.per_adicionar" [type]="field.type" class="form-control date" [formControlName]="field.name" [id]="field.name">
+                                                    <input *ngIf="field.type == 'checkbox' && field.per_adicionar" type="checkbox" class="form-check-input" [formControlName]="field.name" [id]="field.name" [name]="field.name" checked>
+                                                    <netscombog *ngIf="field.type == 'solcombog' && field.per_adicionar" class="solcombog" (pasarDatos)="libmantab.verCombog($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniCombog(field.name,tablaForm)}}" tablabase="{{field.combtabla}}"
+                                                        orden="{{field.comborden}}" filtro="*" campollave="{{field.combcllave}}">
+                                                    </netscombog>
+                                                    <netslistnum *ngIf="field.type == 'netslistnum' && field.per_adicionar" class="solcombog" (pasarDatos)="libmantab.verListnum($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniListnum(field.name,tablaForm)}}" opciones="{{field.options}}">
+                                                    </netslistnum>
+                                                    <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo(field.name,'invalid',tablaForm)  && field.per_adicionar && 
+                                  libmantab.conpropvalCampo(field.name,'touched',tablaForm)">
+                                                        {{field.mensaje_er}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </kendo-tabstrip-tab>
+                        </kendo-tabstrip>
+                    </kendo-splitter-pane>
+
+                </div>
+                <button type="submit" class="btn btn-primary" [disabled]="!tablaForm.valid">Guardar Cambios</button>
+                <div *ngIf="!vparcaptura">
+                    <a class="btn btn-danger" [routerLink]="[retornaRuta()]">Cancelar</a>
+                </div>
+                <p class="alert alert-warning" *ngIf="!tablaForm.valid">
+                    Por favor complete todos los campos con valores validos
+                </p>
+            </form>
+            <!-- <p>Form value: {{tablaForm.value | json}}</p> -->
+            <hr>
+        </div>
+    </div>
+</div>

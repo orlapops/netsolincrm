@@ -1,0 +1,60 @@
+<!--<crm-busqueda ptitulo="Monitor Busquedas" *ngIf="mostmonibusquedas" (evenclose)="closebusqueda()"></crm-busqueda>
+-->
+    <aside class="main-sidebar">
+    <section class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="active">
+                <a href="#">
+                    <span>OPCIONES</span>
+                </a>
+            </li>
+            <!-- 
+            <li>
+            <a href='javascript:show_dialogo_con("../EjeConsultaLis.wss?VRCod_obj=MONIBUSQCRM&VCAMPO=&VCONDI=Especial&VRPLINKXML=N&VTEXTO=","Busqueda","700px","100%",true)'> 
+                <a (click)="openbusqueda()">
+                    <i (click)="openbusqueda()" class="fa fa-search text-red busqueda" data-toggle="tooltip" title="Click para busquedas."></i>
+                    <span class="busqueda">Monitor Busquedas Crm</span>
+                </a>
+            </li>
+        -->
+
+        </ul>
+
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu" data-widget="tree">
+            <!-- <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-table"></i> <span>Tables</span>
+                    <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                          </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i> Cliente Potencial</a></li>
+                    <li><a href="pages/tables/data.html"><i class="fa fa-circle-o"></i>Cuentas</a></li>
+                </ul>
+            </li> -->
+
+            <li>
+                <a routerLink="/mantbasica/TIENDAXCATGR" routerLinkActive="active">
+                    <i class="fa fa-shopping-cart text-green"></i>Categoria</a>
+            </li>
+
+            <li>
+                <a routerLink="/mantbasica/TIENDAXSUBCA" routerLinkActive="active">
+                    <i class="fa fa-cart-arrow-down text-green"></i>Sub Categorias</a>
+            </li>
+            <li>
+                <a routerLink="/mantbasica/TIENDAXPROD" routerLinkActive="active">
+                    <i class="fa fa-shopping-bag text-green"></i>Productos</a>
+            </li>
+
+            <li>
+                <a routerLink="/menutbas" routerLinkActive="active">
+                    <i class="fa fa-table"></i>Mant. Tablas</a>
+            </li>
+
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

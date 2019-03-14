@@ -1,0 +1,128 @@
+<div class="row">
+    <div class="alert alert-danger" *ngIf="enerror">
+        {{message}}
+    </div>
+    <div class="alert alert-danger" *ngIf="enlistaerror">
+        <ul>
+            <li *ngFor="let regerror of listaerrores">
+                {{regerror.menerror}}
+            </li>
+        </ul>
+    </div>
+    <div class="alert alert-success" *ngIf="!enerror && grabo">
+        {{message}}
+    </div>
+
+    <!-- aqui ventanas modal para la adicion de otras tablas desde este modulo -->
+
+
+    <!-- <h2>version angular {{verangular}}</h2> -->
+    <!-- Solo si esta inicializado y esta grabando mostrar sppiner -->
+    <div *ngIf="inicializado && grabando" class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+        <div class="alert alert-warning">
+            Grabando registro....
+            <img src="assets/spinner.gif">
+        </div>
+    </div>
+    <!-- Solo si esta inicializado y no esta grabando-->
+    <div *ngIf="inicializado && cargomodasoc && !grabando" class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+        <form [formGroup]="tablaForm" (ngSubmit)="onSubmit()">
+            <!-- camposform:{{camposform[0] | json}} -->
+            <div class="form-group">
+                <kendo-splitter-pane min="50%">
+                    <kendo-tabstrip #tabstrip>
+                        <kendo-tabstrip-tab [title]="'Generales'" [selected]="true">
+                            <ng-template kendoTabContent>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="labelrela"> {{labelmodasoc}} </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <mant-tablabasica ptitulo="Adicionar tipo de archivo." *ngIf="creartipoarch" (evenclose)="closeadicion('tipoarch')" pvaparam="TIPOSARCHADJ" pobjeto="CRMTIPARCHADJ" ptipomant="A"></mant-tablabasica>
+                                        <label for="id_tiparch" data-toggle="tooltip" title="Seleccione el tipo de archivo. Para buscar escriba código o nombre seguido de *">Tipo de archivo:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('id_tiparch','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('id_tiparch','invalid',tablaForm)"></i>
+                                        <i (click)="openadicion('tipoarch')" class="fa fa-plus-square fa-lg mantenimiento" data-toggle="tooltip" title="Click para adicionar un nuevo tipo de archivo."></i>
+                                        <netscombog (pasarDatos)="verComboTipoarch($event,'id_tiparch','id_tiparch')" valini="{{libmantab.valoriniCombog('id_tiparch',tablaForm)}}" tablabase="TIPOSARCHADJ" orden="1" filtro="*" campollave="id_tiparch">
+                                        </netscombog>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="descripcion" data-toggle="tooltip" title="Escriba información adicional para describir la archivosadj.">Descripción</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('descripcion','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('descripcion','invalid',tablaForm)"></i>
+                                        <textarea type="text" class="form-control" formControlName="descripcion" placeholder="Escriba información adicional para describir la archivosadj" [UpperCase]="false" id="descripcion"></textarea>
+                                    </div>
+                                </div>
+                                <!-- op abril 6 18 pendiente saver como guardar el archivo por ahora se puede ver la imagen si es img
+                                se desactiva -->
+
+                                <!-- <div class="row">
+                                    <div class="col-md-12">
+                                        <label style="display: block; margin: .8em 0 .2em">Archivo:</label>
+                                        <kendo-upload formControlName="link" [saveUrl]="uploadSaveUrl" [removeUrl]="uploadRemoveUrl" (select)="selectEventHandler($event)" (clear)="clearEventHandler($event)" (remove)="removeEventHandler($event)" (complete)="completeEventHandler($event)">
+                                            <kendo-upload-messages select="Seleccione..." uploadSelectedFiles="Subir archivos" clearSelectedFiles="Anular la selección">
+                                            </kendo-upload-messages>
+                                        </kendo-upload>
+                                        <p>Form imagePreviews: {{imagePreviews | json}}</p>
+                                        <div *ngIf="imagePreviews.length" class="img-preview example-config">
+                                            <h3>Preview selected images</h3>
+                                            <img *ngFor="let image of imagePreviews" [src]="image.src" alt="image preview" style="width: 200px; margin: 10px;" />
+                                            <textarea *ngFor="let image of imagePreviews" [value]="image.src" rows="15" class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div> -->
+
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+                        <kendo-tabstrip-tab [title]="'Usuario'">
+                            <ng-template kendoTabContent>
+                                <h3 class="divprincipal alert-muted text-center">
+                                    Campos de usuario
+                                </h3>
+                                <div *ngFor="let field of camposform">
+                                    <div *ngIf="field.creado">
+                                        <label *ngIf="field.type != 'checkbox' && field.per_adicionar" [for]="field.name" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                        <label *ngIf="field.type == 'checkbox' && field.per_adicionar" [for]="field.name" class="form-check-label" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                        <i class="fa fa-check-circle check" *ngIf="field.type != 'checkbox'  && field.per_adicionar && libmantab.conpropvalCampo(field.name,'valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="field.type != 'checkbox'  && field.per_adicionar && libmantab.conpropvalCampo(field.name,'invalid',tablaForm)"></i>
+                                        <input *ngIf="field.type == 'text' && field.per_adicionar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name">
+                                        <textarea *ngIf="field.type == 'textarea' && field.per_adicionar" rows="5" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name"></textarea>
+                                        <input *ngIf="field.type == 'number' && field.per_adicionar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [id]="field.name">
+                                        <input *ngIf="field.type == 'date' && field.per_adicionar" [type]="field.type" class="form-control date" [formControlName]="field.name" [id]="field.name">
+                                        <input *ngIf="field.type == 'checkbox' && field.per_adicionar" type="checkbox" class="form-check-input" [formControlName]="field.name" [id]="field.name" [name]="field.name" checked>
+                                        <netscombog *ngIf="field.type == 'solcombog' && field.per_adicionar" class="solcombog" (pasarDatos)="libmantab.verCombog($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniCombog(field.name,tablaForm)}}" tablabase="{{field.combtabla}}"
+                                            orden="{{field.comborden}}" filtro="*" campollave="{{field.combcllave}}">
+                                        </netscombog>
+                                        <netslistnum *ngIf="field.type == 'netslistnum' && field.per_adicionar" class="solcombog" (pasarDatos)="libmantab.verListnum($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniListnum(field.name,tablaForm)}}" opciones="{{field.options}}">
+                                        </netslistnum>
+                                        <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo(field.name,'invalid',tablaForm)  && field.per_adicionar && 
+                          libmantab.conpropvalCampo(field.name,'touched',tablaForm)">
+                                            {{field.mensaje_er}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+                    </kendo-tabstrip>
+                </kendo-splitter-pane>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="!tablaForm.valid">Adicionar Registro</button>
+            <div *ngIf="!vparcaptura">
+                <a class="btn btn-danger" [routerLink]="[retornaRuta()]">Cancelar</a>
+            </div>
+            <p class="alert alert-warning" *ngIf="!tablaForm.valid">
+                Por favor complete todos los campos
+            </p>
+        </form>
+        <hr>
+    </div>
+</div>
+<!-- <p>Form value: {{tablaForm.value | json}}</p> -->
+
+<!-- {{tablaForm | json}} -->

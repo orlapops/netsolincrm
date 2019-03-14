@@ -1,0 +1,98 @@
+.divprincipal {
+    border-radius: 3px;
+    border-style: groove;
+    padding: 2.5px; 
+    margin-bottom: 0px;
+    background-color: lightgrey;
+    font-weight: 900;
+}
+.divsecundaria {
+    border-radius: 3px;
+    border-style: groove;
+    padding: 1px; 
+    margin-bottom: 0px;
+    background-color:#d2d6de;
+    font-weight: 500;
+}
+
+.divterciaria {
+    border-radius: 3px;
+    padding: 1px; 
+    margin-bottom: 0px;
+    background-color:#cfdcf5;
+    border-style: groove;
+   
+}
+
+
+input.ng-invalid.ng-touched {
+    border-left: 5px solid #a94442;
+}
+
+input.ng-valid.ng-dirty {
+    border-left: 5px solid #42A948;
+}
+
+.select.ng-invalid.ng-touched {
+    border-left: 5px solid #a94442;
+}
+
+.select.ng-valid.ng-dirty {
+    border-left: 5px solid #42A948;
+}
+.solcombog.ng-invalid.ng-touched {
+    border-left: 5px solid #a94442;
+}
+
+.solcombog.ng-valid.ng-dirty {
+    border-left: 5px solid #42A948;
+}
+
+.check {
+    color: #42A948;
+}
+
+.uncheck {
+    color: #a94442;
+}
+.date {
+    width: 280px;
+}
+
+.title_cod
+{
+    font-size: 18px;
+    font-weight: bold; 
+    text-align: left;
+}
+
+.title_par
+{
+    border-style: groove;
+    font-size: 16px;
+    font-weight: bold; 
+    text-align: center;
+}
+
+
+.title_expli
+{
+    font-size: 12px;
+    font-weight: bold; 
+    text-align: left;
+}
+
+.border {
+    border-style: groove;
+    border-color: rgb(184, 236, 240);
+}
+
+
+.image
+{
+display: block;
+margin-left: auto;
+margin-right: auto;
+width: 50%;
+border: 1px solid;
+}

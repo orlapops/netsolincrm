@@ -1,0 +1,136 @@
+<kendo-dialog title="{{ptitulo}}" (close)="close()" [minWidth]="350" [width]="650">
+    <div class="alert alert-danger" *ngIf="enerror">
+        {{message}}
+    </div>
+    <div *ngIf="cargando" class="text-center" style="padding-top: 60px;">
+        <!-- <img src="../../../../assets/spinner.gif"> -->
+        <img src="assets/spinner.gif">
+    </div>
+    <div class="alert alert-danger" *ngIf="enlistaerror">
+        <ul>
+            <li *ngFor="let regerror of listaerrores">
+                {{regerror.menerror}}
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <kendo-splitter-pane min="50%">
+            <kendo-tabstrip>
+                <kendo-tabstrip-tab [title]="'Cliente Potencial'" [selected]="true">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <solsearch #ssearchclipot placeholder="Cadena a buscar en código o nombre" valini={{busqueda}} (pasarDatos)="lanzarbuscliepoten($event)"></solsearch>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div *ngIf="mostrarlistacliepoten" class="col-md-12">
+                                <lista-busqueda ptablab="CLIENPOTEN" paplica="21" porden="2" [filtro]="filtrocliepoten" lobjbusqueda="BUSMONICLIEPOTENCRM" title="Cliente potencial" objeto="CRMCLIENTECP01" rutamant="mantbasica/CRMCLIENTECP01/">
+                                </lista-busqueda>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+                <kendo-tabstrip-tab [title]="'Cuenta'" [selected]="false">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <solsearch #ssearchcuenta placeholder="Cadena a buscar en código o nombre" valini={{busqueda}} (pasarDatos)="lanzarbuscuenta($event)"></solsearch>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div *ngIf="mostrarlistacuentas" class="col-md-12">
+                                <lista-busqueda ptablab="CUENTACRM" paplica="21" porden="2" [filtro]="filtrocuenta" lobjbusqueda="BUSMONICUENTACRM" title="Cuentas" objeto="CRMCLIENTECUE01" rutamant="mantbasica/CRMCLIENTECUE01/">
+                                </lista-busqueda>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+                <kendo-tabstrip-tab [title]="'Vendedor'" [selected]="false">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <solsearch #ssearchvendedor placeholder="Cadena a buscar en código o nombre" valini={{busqueda}} (pasarDatos)="lanzarbusvendedor($event)"></solsearch>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div *ngIf="mostrarlistavendedor" class="col-md-12">
+                                <lista-busqueda ptablab="VENDEDORES" paplica="0" porden="2" [filtro]="filtrovendedor" lobjbusqueda="BUSMONIVENDEDORCRM" title="Vendedores" objeto="CRMVENDEDOR" rutamant="mantbasica/CRMVENDEDOR/">
+                                </lista-busqueda>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+
+                <kendo-tabstrip-tab [title]="'Cotizaciones'" [selected]="false">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <solsearch #ssearchcuenta placeholder="Número de cotización" valini={{busqueda}} (pasarDatos)="lanzarbuscotiza($event)"></solsearch>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div *ngIf="mostrarlistacotizaciones" class="col-md-12">
+                                <!-- <lista-busqueda ptablab="COTIZACRM_C" paplica="21" porden="2" [filtro]="filtrocotiza" title="Cotizaciones" objeto="CRMCOTIZA" rutamant="cotizacion/VARPARCOTIZACRM_C/">
+                                </lista-busqueda> -->
+                                <lista-busqueda ptablab="COTIZACRM_C" paplica="21" porden="2" [filtro]="filtrocotiza" lobjbusqueda="BUSMONICOTIZACRM" title="Cotizaciones" objeto="CRMCOTIZA" rutamant="cotizacion/VARPARCOTIZACRM_C/">
+                                </lista-busqueda>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+
+                <kendo-tabstrip-tab [title]="'Contactos'" [selected]="false">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <solsearch #ssearchcontacto placeholder="Cadena a buscar en código o nombre" valini={{busqueda}} (pasarDatos)="lanzarbuscontacto($event)"></solsearch>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div *ngIf="mostrarlistacontactos" class="col-md-12">
+                                <lista-busqueda ptablab="CONTACTOS" paplica="21" porden="2" [filtro]="filtrocontacto" lobjbusqueda="BUSMONICONTACTOCRM" title="Contactos" objeto="CRMCLIENTECON01" rutamant="mantbasica/CRMCLIENTECON01/">
+                                </lista-busqueda>
+                            </div>
+                        </div>
+
+                    </ng-template>
+                </kendo-tabstrip-tab>
+                <kendo-tabstrip-tab [title]="'Prod FCatal.'" [selected]="false">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <solsearch #ssearchprodfc placeholder="Cadena a buscar en código o nombre" valini={{busqueda}} (pasarDatos)="lanzarbusprodfcatal($event)"></solsearch>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div *ngIf="mostrarlistaprodfc" class="col-md-12">
+                                <lista-busqueda ptablab="PRODUCTOS" paplica="21" porden="2" [filtro]="filtroprodfc" lobjbusqueda="BUSMONIPRODFCCRM" title="productos fuera de catalogo" objeto="CRMPRODUCTOS01" rutamant="mantbasica/CRMPRODUCTOS01/">
+                                </lista-busqueda>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+                <kendo-tabstrip-tab [title]="'Referencias'" [selected]="false">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <solsearch #ssearchrefventas placeholder="Cadena a buscar en código o nombre" valini={{busqueda}} (pasarDatos)="lanzarbusrefventas($event)"></solsearch>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div *ngIf="mostrarlistarefven" class="col-md-12">
+                                <lista-busqueda ptablab="REFERE_V" paplica="10" porden="2" [filtro]="filtrorefven" lobjbusqueda="BUSMONIREFVENCRM" title="referencias Ventas" objeto="VEREF0101" rutamant="mantbasica/VEREF0101/">
+                                </lista-busqueda>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+                <!-- <kendo-tabstrip-tab [title]="'Casos'" [selected]="false">
+                    <ng-template kendoTabContent>
+                    </ng-template>
+                </kendo-tabstrip-tab> -->
+            </kendo-tabstrip>
+        </kendo-splitter-pane>
+    </div>
+</kendo-dialog>

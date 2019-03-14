@@ -1,0 +1,731 @@
+<!-- <div *ngIf="!vparcaptura">
+    <app-header [title]="title" [subtitle]="subtitle" [rutaListado]="retornaRuta()"> </app-header>
+</div> -->
+<div class="alert alert-danger" *ngIf="enerror">
+    {{message}}
+</div>
+<div class="alert alert-danger" *ngIf="enlistaerror">
+    <ul>
+        <li *ngFor="let regerror of listaerrores">
+            {{regerror.menerror}}
+        </li>
+    </ul>
+</div>
+<div class="alert alert-success" *ngIf="!enerror && grabo">
+    {{message}}
+</div>
+<div>
+    <!-- aqui ventanas modal para la adicion de otras tablas desde este modulo -->
+
+    <kendo-dialog title="Resultado." *ngIf="confmodifica" (close)="close()">
+        <h3 style="margin: 30px; text-align: center;">Se modifico la ficha satisfactoriamente.</h3>
+
+        <kendo-dialog-actions>
+            <button kendoButton (click)="close()" [primary]="true">Cerrar.</button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+    <div *ngIf="resultados && grabando" class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+        <div class="alert alert-warning">
+            Grabando registro....
+            <img src="assets/spinner.gif">
+        </div>
+    </div>
+
+    <div *ngIf="resultados && !grabando" class="row">
+        <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+            <form [formGroup]="tablaForm" (ngSubmit)="onSubmit()">
+                <!-- camposform:{{camposform[0] | json}} -->
+                <div class="form-group">
+                    <kendo-splitter-pane min="50%">
+                        <kendo-tabstrip #tabstrip>
+                            <kendo-tabstrip-tab [title]="'Generales'" [selected]="true">
+                                <ng-template kendoTabContent>
+                                    <h1 class="divprincipal alert-muted text-center"> INFORMACIÓN TÉCNICA </h1>
+                                    <h2 class="divsecundaria alert-muted text-center">ESPECIFICACIONES </h2>
+
+
+                                    <h3 *ngIf="cargorefere" class="divterciaria text-center" style="color:rgb(255,0,0);"> {{labelprodref}} </h3>
+
+                                    <h4 class="divterciaria">
+
+                                        <div class="row ">
+
+                                            <div class="col-sm-3">
+                                                <label for="esde_catalogo" class="form-check-label" data-toggle="tooltip" title="Marque si es un producto de catalogo. Si no es de catalogo tomara de productos solo CRM">Producto de catalogo</label>
+                                                <kendo-switch formControlName="esde_catalogo" [onLabel]="'Si'" [offLabel]="'No'" id="esde_catalogo" name="esde_catalogo"></kendo-switch>
+                                            </div>
+
+                                            <div *ngIf="prod_catalogo" class="col-sm-4">
+                                                <!-- <div class="col-md-4"> -->
+                                                <label for="cod_refven" class="title_cod " data-toggle="tooltip" title="Seleccione el codigo de referencia de venta. Para buscar escriba código o nombre seguido de *">Cod. de referencia </label>
+                                                <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_refven','valid',tablaForm)"></i>
+                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_refven','invalid',tablaForm)"></i>
+                                                <netscombog (pasarDatos)="verCombocod_refven($event,'cod_refven','cod_refven')" valini="{{libmantab.valoriniCombog('cod_refven',tablaForm)}}" tablabase="REFERE_V" orden="1" filtro="*" campollave="cod_refven">
+                                                </netscombog>
+                                            </div>
+
+                                            <div *ngIf="!prod_catalogo" class="col-md-4">
+                                                <!-- <div class="col-md-4"> -->
+                                                <label for="cod_prod" class="title_cod" data-toggle="tooltip" title="Seleccione el codigo de referencia de producto. Para buscar escriba código o nombre seguido de *">Cod. del producto </label>
+                                                <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_prod','valid',tablaForm)"></i>
+                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_prod','invalid',tablaForm)"></i>
+                                                <netscombog (pasarDatos)="verCombocod_prod($event,'cod_prod','cod_prod')" valini="{{libmantab.valoriniCombog('cod_prod',tablaForm)}}" tablabase="PRODUCTOS" orden="1" filtro="*" campollave="cod_prod">
+                                                </netscombog>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <label for="nombre" data-toggle="tooltip" title="nombre">Nombre </label>
+                                                <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('nombre','valid',tablaForm)"></i>
+                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('nombre','invalid',tablaForm)"></i>
+                                                <input type="text" class="form-control" formControlName="nombre" placeholder="Nombre" [UpperCase]="true" id="nombre">
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                <label for="descrip" class="form-check-label title_cod" data-toggle="tooltip" title="Descripción">Descripción</label>
+                                                <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('descrip','valid',tablaForm)"></i>
+                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('descrip','invalid',tablaForm)"></i>
+                                                <textarea class="form-control" formControlName="descrip" placeholder="Escriba la descripción del producto" [UpperCase]="true" id="descrip" textarea rows="3" cols="50" name="descrip" form="usrform"></textarea>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-6 ">
+
+                                                <h4 class="title_par">CARACTERÍSTICAS DIMENSIONALES</h4>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_par"> DIMENSIONES</h5>
+                                                    </div>
+
+                                                    <div class="col-md-2">
+                                                        <h5 class="title_par"> Frente</h5>
+                                                    </div>
+
+                                                    <div class="col-md-2">
+                                                        <h5 class="title_par"> Fondo</h5>
+                                                    </div>
+
+                                                    <div class="col-md-2">
+                                                        <h5 class="title_par">Alto</h5>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> DIMENSIONES(mm)</h5>
+                                                    </div>
+
+                                                    <div class="col-md-2">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="dime_frente" placeholder="mm" [UpperCase]="true" id="dime_frente">
+                                                    </div>
+
+                                                    <div class="col-md-2">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="dime_fondo" placeholder="mm" [UpperCase]="true" id="dime_fondo">
+                                                    </div>
+
+                                                    <div class="col-md-2">
+
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="dime_alto" placeholder="mm" [UpperCase]="true" id="dime_alto">
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> NUM BANDEJAS (mm)</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+
+                                                        <input type="text" class="form-control" formControlName="num_bande" placeholder="Digite el numero de bandejas" [UpperCase]="true" id="num_bande">
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> CAPACIDAD</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+
+                                                        <input type="text" class="form-control" formControlName="capacidad" placeholder="Escriba la capacidad (Kg/h)" [UpperCase]="true" id="capacidad">
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> PESO (Kg) </h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="peso" placeholder="Escriba el peso (Kg)" [UpperCase]="true" id="peso">
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> MATERIAL DE FABRICACIÒN </h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                 <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <textarea class="form-control" formControlName="mater_fabric" placeholder="Escriba los materiales de fabricación  " [UpperCase]="true" id="mater_fabric" textarea rows="4" cols="50" name="mater_fabric" form="usrform">
+                                                                                                 Enter text here...</textarea>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div *ngIf="cargorefere" class="col-md-6 ">
+                                                <h4 *ngIf="prod_catalogo" class="title_par">{{regProdref.cod_refven}}</h4>
+                                                <h4 *ngIf="!prod_catalogo" class="title_par">{{regProdref.cod_prod}}</h4>
+                                                <img img src="{{linkimagen}}" alt="{{regProdref.nombre}}" width="400" height="270" class="center" class="image">
+                                                <div *ngIf="crearimagen">
+                                                    <a [href]="cleanURL(linkcreaimagen)"><strong>Cargar Imagen</strong></a>
+                                                </div>
+                                                <div *ngIf="!crearimagen">
+                                                    <a [href]="cleanURL(linkcreaimagen)"><strong>Cambiar Imagen</strong></a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 ">
+                                                <h4 class="title_par">INSTALACIONES ELÉCTRICAS</h4>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> POTENCIA (kW)</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="potencia" placeholder="Escriba la potencia  (kw)   " [UpperCase]="true" id="potencia">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> CORRIENTE (A)</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="corriente" placeholder="Escriba el valor de la corriente (A)" [UpperCase]="true" id="corriente">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">FRECUENCIA (Hz)</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="frecuencia" placeholder="Escriba  la frecuencia (Hz) " [UpperCase]="true" id="frecuencia">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> VOLTAJE (V)</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="voltaje" placeholder="Escriba el valor del voltaje " [UpperCase]="true" id="voltaje">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> FASES</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="fases" placeholder="Escriba las fases" [UpperCase]="true" id="fases">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> BREAKER SUGERIDO</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="break_suge" placeholder="Tipo de breaker sugerido  " [UpperCase]="true" id="break_suge">
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <div class="col-md-6 ">
+                                                <h4 class="title_par">INSTALACIONES SANITARIAS</h4>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> CONEXIÓN DESAGÜE </h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="conex_desa" placeholder="Escriba la conexión del desague    " [UpperCase]="true" id="conex_desa">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> DIÁMETRO DESAGÜE </h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="diame_desa" placeholder="Escriba el diametro del desague  " [UpperCase]="true" id="diame_desa">
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">TIPO DE TUBERÍA </h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="tip_tube" placeholder="Escriba el tipo de tuberia   " [UpperCase]="true" id="tip_tube">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">ALTURA MÁXIMA (CM) </h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="altu_max" placeholder="Escriba la altura máxima (cm) " [UpperCase]="true" id="altu_max">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">CAMPAÑA </h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="camext_for" placeholder="Escriba la campaña de extracción " [UpperCase]="true" id="camext_for">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">TRAMPA DE GRASAS</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="tram_gras" placeholder="Escriba la trampa de grasas" [UpperCase]="true" id="tram_gras">
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 ">
+                                                <h4 class="title_par">ESPECIFICACIONES METROLÓGICAS - PESAJE</h4>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> CAPACIDAD MÁXIMA (KG)</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="capa_max" placeholder="Escriba la capacidad máxima (kg)" [UpperCase]="true" id="capa_max">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">CAPACIDAD MÍNIMA (KG)</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="capa_mini" placeholder="Escriba la capacidad minima (Kg) " [UpperCase]="true" id="cap_mini">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">MARGEN DE ERROR (GR)</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="marg_erro" placeholder="Escriba el margen de error" [UpperCase]="true" id="marg_erro">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">DIVISIÓN DE ESCALA (GR)</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="div_escal" placeholder="Escriba la división de escala" [UpperCase]="true" id="div_escal">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> INDICADOR</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="indicador" placeholder="Escriba el indicador" [UpperCase]="true" id="indicador">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-6 ">
+                                                <h4 class="title_par">GAS</h4>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> DIÁMETRO TUBERÍA </h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="diám_tube" placeholder="Escriba el diámetro de la tubería" [UpperCase]="true" id="diám_tube">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> POTENCIA TÉRMICA (BTU)</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="poten_ter" placeholder="Escriba la potencia térmica  " [UpperCase]="true" id="poten_ter">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli"> PRESIÓN GN (mbar) </h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="presi_gn" placeholder="Escriba la presión GN " [UpperCase]="true" id="presi_gn">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">PRESIÓN GLP (mbar) </h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="presi_glp" placeholder="Escriba la presión GLP" [UpperCase]="true" id="presi_glp">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">CAUDAL GN</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="cauda_gn" placeholder="Escriba el caudal GN " [UpperCase]="true" id="cauda_gn">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">CAUDAL GLP </h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="cauda_glp" placeholder="Escriba el caudal GLP" [UpperCase]="true" id="cauda_glp">
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6 ">
+                                                <h4 class="title_par">INSTALACIONES HIDRÁULICAS</h4>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">AGUA FRÍA</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="agua_fri" placeholder="Escriba la capacidad para agua fria " [UpperCase]="true" id="agua_fri">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">AGUA CALIENTE</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="agua_cali" placeholder="Escriba la capacidad para agua caliente " [UpperCase]="true" id="agua_cali">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">DIÁMETRO ENTRADA</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="diam_entra" placeholder="Escriba el diametro de entrada " [UpperCase]="true" id="diam_entra">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">TIPO CONEXIÓN</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="tip_conex" placeholder="Escriba el tipo de conexión" [UpperCase]="true" id="tip_conex">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <h5 class="title_expli">ALTURA CONEXIÓN (cm)</h5>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <input type="text" class="form-control" formControlName="alt_conex" placeholder="Escriba la altura de la conexión" [UpperCase]="true" id="alt_conex">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-6 ">
+                                                <div class="row ">
+
+                                                    <div class="col-md-12">
+                                                        <h4 class="title_par "> ACCESORIOS INCLUIDOS </h4>
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                 <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <textarea class="form-control" formControlName="acce_incl" placeholder="Escriba los accesorios que van incluidos" [UpperCase]="true" id="acce_incl" textarea rows="2.9" cols="30" name="acce_incl" form="usrform">
+                                                                                                 </textarea>
+                                                    </div>
+
+
+
+                                                </div>
+
+                                                <div class="row ">
+
+                                                    <div class="col-md-12">
+                                                        <h5 class="title_par"> ACCESORIOS OPCIONALES </h5>
+                                                        <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
+                                                        <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
+                                                                                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
+                                                        <textarea class="form-control" formControlName="acce_opci" placeholder="Escriba  los accesorios adicionales " [UpperCase]="true" id="acce_opci" textarea rows="2.9" cols="30" name="acce_opci">
+                                                                                                        </textarea>
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </h4>
+
+
+
+
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+
+                            <kendo-tabstrip-tab [title]="'Usuario'">
+                                <ng-template kendoTabContent>
+                                    <h3 class="divprincipal alert-muted text-center">
+                                        Campos de usuario de la ficha
+                                    </h3>
+                                    <div *ngFor="let field of camposform">
+                                        <div *ngIf="field.creado">
+                                            <label *ngIf="field.type != 'checkbox' && field.per_adicionar" [for]="field.name" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                            <label *ngIf="field.type == 'checkbox' && field.per_adicionar" [for]="field.name" class="form-check-label" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                            <i class="fa fa-check-circle check" *ngIf="field.type != 'checkbox'  && field.per_adicionar && libmantab.conpropvalCampo(field.name,'valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="field.type != 'checkbox'  && field.per_adicionar && libmantab.conpropvalCampo(field.name,'invalid',tablaForm)"></i>
+                                            <input *ngIf="field.type == 'text' && field.per_adicionar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name">
+                                            <textarea *ngIf="field.type == 'textarea' && field.per_adicionar" rows="5" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name"></textarea>
+                                            <input *ngIf="field.type == 'number' && field.per_adicionar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [id]="field.name">
+                                            <input *ngIf="field.type == 'date' && field.per_adicionar" [type]="field.type" class="form-control date" [formControlName]="field.name" [id]="field.name">
+                                            <input *ngIf="field.type == 'checkbox' && field.per_adicionar" type="checkbox" class="form-check-input" [formControlName]="field.name" [id]="field.name" [name]="field.name" checked>
+                                            <netscombog *ngIf="field.type == 'solcombog' && field.per_adicionar" class="solcombog" (pasarDatos)="libmantab.verCombog($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniCombog(field.name,tablaForm)}}" tablabase="{{field.combtabla}}"
+                                                orden="{{field.comborden}}" filtro="*" campollave="{{field.combcllave}}">
+                                            </netscombog>
+                                            <netslistnum *ngIf="field.type == 'netslistnum' && field.per_adicionar" class="solcombog" (pasarDatos)="libmantab.verListnum($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniListnum(field.name,tablaForm)}}" opciones="{{field.options}}">
+                                            </netslistnum>
+                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo(field.name,'invalid',tablaForm)  && field.per_adicionar && 
+                                                                                     libmantab.conpropvalCampo(field.name,'touched',tablaForm)">
+                                                {{field.mensaje_er}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+                            <kendo-tabstrip-tab [title]="'Archivos'" [selected]="false">
+                                <ng-template kendoTabContent>
+                                    <div [ngStyle]="{'background-color':'#e2eef5'}">
+                                        <app-listmantarchivosadj ptablab="ARCHIVOSADJ" paplica="21" porden="2" [modulo_asoc]="8" [id_modasoc]="id_fichatec" [filtro]="filtrofichaarch" title="Archivos" objeto="CRMARCHIVOSADJ" rutamant="archivosadj/CRMARCHIVOSADJ/" (pasarDatos)="refrescaArchivos($event)"
+                                            cod_doca="" num_doca="" id_cliepote="" id_cuentacrm="">
+                                        </app-listmantarchivosadj>
+
+                                    </div>
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+
+                            <kendo-tabstrip-tab [title]="'Log'">
+                                <ng-template kendoTabContent>
+                                    <h3 class="divprincipal alert-muted text-center">
+                                        Log
+                                    </h3>
+                                    <lista-busqueda ptablab="FICHATECPROD" paplica="21" porden="2" [filtro]="filtroficha" lobjbusqueda="BUSLISTALOGFICHATEC" title="Ficha" objeto="FICHATECPROD" rutamant="mantbasica/FICHATECPROD/">
+                                    </lista-busqueda>
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+
+                        </kendo-tabstrip>
+                    </kendo-splitter-pane>
+                </div>
+
+
+                <div class="row">
+                    <div class="alert alert-danger" *ngIf="enerror">
+                        {{message}}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" [disabled]="!tablaForm.valid">Editar Registro</button>
+                <div *ngIf="!vparcaptura">
+                    <a class="btn btn-danger" [routerLink]="[retornaRuta()]">Cancelar</a>
+                </div>
+                <p class="alert alert-warning" *ngIf="!tablaForm.valid">
+                    Por favor complete todos los campos
+                </p>
+            </form>
+            <!-- <p>Form value: {{tablaForm.value | json}}</p> -->
+            <hr>
+        </div>
+    </div>
+</div>

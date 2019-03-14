@@ -1,0 +1,218 @@
+<!-- <div *ngIf="!vparcaptura">
+    <app-header [title]="title" [subtitle]="subtitle" [rutaListado]="retornaRuta()"> </app-header>
+</div> -->
+<div class="alert alert-danger" *ngIf="enerror">
+    {{message}}
+</div>
+<div class="alert alert-danger" *ngIf="enlistaerror">
+    <ul>
+        <li *ngFor="let regerror of listaerrores">
+            {{regerror.menerror}}
+        </li>
+    </ul>
+</div>
+<div class="alert alert-success" *ngIf="!enerror && grabo">
+    {{message}}
+</div>
+<div>
+    <!-- aqui ventanas modal para la adicion de otras tablas desde este modulo -->
+
+    <kendo-dialog title="Resultado." *ngIf="confmodifica" (close)="close()">
+        <h3 style="margin: 30px; text-align: center;">Se modifico la cuenta satisfactoriamente.</h3>
+
+        <kendo-dialog-actions>
+            <button kendoButton (click)="close()" [primary]="true">Cerrar.</button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+    <div *ngIf="resultados && grabando" class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+        <div class="alert alert-warning">
+            Grabando registro....
+            <img src="assets/spinner.gif">
+        </div>
+    </div>
+
+    <div *ngIf="resultados && !grabando" class="row">
+        <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+                <form [formGroup]="tablaForm" (ngSubmit)="onSubmit()">
+                        <!-- camposform:{{camposform[0] | json}} -->
+                        <div class="form-group">
+                                <kendo-splitter-pane min="50%">
+                                    <kendo-tabstrip #tabstrip>
+                                        <kendo-tabstrip-tab [title]="'Generales'" [selected]="true">
+                                                <ng-template kendoTabContent>
+                               
+                                                        <h1 class="title_main alert-muted "> Editar la  Sub-Categoria <i class="fa fa-edit icon_main"></i> </h1>
+                                                     
+                                                        <h3 *ngIf="cargorefere" class="divterciaria text-center" style="color:rgb(255,0,0);"> {{labelprodref}} </h3>
+                        
+                                                        <h4 class="divterciaria">
+                        
+                                                            <div class="row ">
+                        
+                                                                <div class="col-xs-4"> 
+                                                                        <label for="id_categoria" class="title_cod " data-toggle="tooltip" class="title_check" title="Seleccione El id de la categoria. Para buscar escriba código o nombre seguido de *">Id.Categoria </label>
+                                                                         <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('id_categoria','valid',tablaForm)"></i>
+                                                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('id_categoria','invalid',tablaForm)"></i>
+                                                                        <netscombog (pasarDatos)="verComboid_categoria($event,'id_categoria','id_categoria')" valini="{{libmantab.valoriniCombog('id_categoria',tablaForm)}}" tablabase="TIEN_CATEGOR" orden="1" filtro="*" campollave="id_categoria">
+                                                                         </netscombog>
+                                                                 </div>
+                                                                 
+                                                                 <div class="col-xs-4">
+                                                                        <label for="cod_subcatg" data-toggle="tooltip" class="title_check" title="nombre">Cod.SubCategoria</label>
+                                                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_subcatg','valid',tablaForm)"></i>
+                                                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_subcatg','invalid',tablaForm)"></i>
+                                                                        <input type="text" class="form-control" formControlName="cod_subcatg" placeholder="Codigo de la Sub-categoria" [UpperCase]="true" id="cod_subcatg">
+                                                                </div>
+                                                             </div>
+                        
+                        
+                                                             <div class="spacer5"></div>
+                        
+                                                            <div class="row ">
+                        
+                                                               
+                                                                <div class="col-xs-4">
+                                                                        <label for="nombre" data-toggle="tooltip" class="title_check"  title="nombre">Nombre de la Subcategoria </label>
+                                                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('nombre','valid',tablaForm)"></i>
+                                                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('nombre','invalid',tablaForm)"></i>
+                                                                        <input type="text" class="form-control" formControlName="nombre" placeholder="Nombre de la subcategoria" [UpperCase]="true" id="nombre">
+                                                                </div>
+                        
+                                                                
+                                                                <div class="col-xs-4">
+                                                                        <label for="icono" data-toggle="tooltip" class="title_check" title="nombre">Icono de la Subcategoria </label>
+                                                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('icono','valid',tablaForm)"></i>
+                                                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('icono','invalid',tablaForm)"></i>
+                                                                        <input type="text" class="form-control" formControlName="icono" placeholder="icono de la categoria" [UpperCase]="false" id="icono">
+                                                                </div>
+                        
+                                                            </div>
+                                                            
+                                                            <div class="spacer5"></div>
+                        
+                                                            <div class="row">
+                        
+                                                                <div class="col-xs-8">
+                                                                    <label for="descripcion" class="form-check-label title_cod" data-toggle="tooltip" class="title_check" title="Descripción">Descripción de la Subcategoria</label>
+                                                                    <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('descripcion','valid',tablaForm)"></i>
+                                                                    <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('descripcion','invalid',tablaForm)"></i>
+                                                                    <textarea class="form-control" formControlName="descripcion" placeholder="Escriba la descripción de la categoria" [UpperCase]="true" id="descripcion" textarea rows="3" cols="50" name="descripcion" form="usrform"></textarea>
+                        
+                                                                </div>
+                                                            </div>
+                        
+                                                            <div class="spacer5"></div>
+                                                            <h4 class="title_check">Imagenes de la Sub-Categoria
+                                                            <i class="fa fa-camera" style="color:#42A948;" ></i></h4>
+                                                
+                                                            <div class="rowimg">
+                                                                
+                                                                <div class="column" >
+                                                                   <!-- <h5 class="title_sec"> Imagen grande</h5>-->
+                                                                          <img  [src]="imagrandeUrl" 
+                                                                          style="width:85%" 
+                                                                          class="center" 
+                                                                          class="image">
+                                                                    
+                                                                      <div align="center">  
+                                                                          <label class="custom-file-upload">
+                                                                            <input        
+                                                                                style="display:none"
+                                                                                type="file"
+                                                                                name="file" 
+                                                                                base-sixty-four-input required onload="onLoad" 
+                                                                                maxsize="500" 
+                                                                                (change)="base64Encoding ($event)"
+                                                                                (change)="handleFileInput($event.target.files)" 
+                                                                                #image accept="image/*">
+                                                                             
+                                                                              <i class="fa fa-upload"></i> Img Grande
+                                                                          </label>  
+                                                                     </div>
+                                                                        
+                        
+                                                                </div>
+                        
+                                                                <div class="column">
+                                                                    <!--<h5 class="title_sec">Imagen pequeña</h5>-->
+                                                                
+                                                                    <img  [src]="imapequenaUrl" 
+                                                                    style="width:85%"  
+                                                                    class="center" 
+                                                                    class="image">
+                                                            
+                                                            <div align="center">
+                                                                <label class="custom-file-upload">
+                                                                     <input        
+                                                                         style="display:none"
+                                                                         type="file"
+                                                                         name="file" 
+                                                                         base-sixty-four-input required onload="onLoad" 
+                                                                         maxsize="500" 
+                                                                         (change)="base64Encoding2($event)"
+                                                                         (change)="handleFileInput2($event.target.files)" 
+                                                                         #image accept="image/*">
+                                                                        
+                                                                        <i class="fa fa-upload"></i> Img Pequeña
+                                                                    </label>   
+                                                              </div>
+                        
+                                                                </div>
+                        
+                                                                <div class="column">
+                                                                    <!--<h5 class="title_sec"> Imagen adicional</h5>-->
+                                                                    <img  [src]="imadicionalUrl" 
+                                                                    style="width:85%" 
+                                                                    class="center" 
+                                                                    class="image">
+                                                                    
+                                                                    <div align="center">  
+                                                                        <label class="custom-file-upload">
+                                                                        <input        
+                                                                            style="display:none"
+                                                                            type="file"
+                                                                            name="file" 
+                                                                            base-sixty-four-input required onload="onLoad" 
+                                                                            maxsize="500" 
+                                                                            (change)="base64Encoding3 ($event)"
+                                                                            (change)="handleFileInput3($event.target.files)" 
+                                                                            #image accept="image/*">
+                        
+                                                                            <i class="fa fa-upload"></i> Img Adicional
+                                                                        </label>       
+                                                                    </div>
+                                                                </div>
+                        
+                                                            </div>
+                        
+                        
+                                                        </h4>
+                        
+                        
+                        
+                        
+                                                    </ng-template>
+                                        </kendo-tabstrip-tab>
+                                    </kendo-tabstrip>
+                                </kendo-splitter-pane>
+                            </div>
+
+                            
+                            <div class="row">
+                                    <div class="alert alert-danger" *ngIf="enerror">
+                                        {{message}}
+                                    </div>
+                            </div>
+                        <button type="submit" class="btn btn-primary" [disabled]="!tablaForm.valid">Editar Registro</button>
+                        <div *ngIf="!vparcaptura">
+                            <a class="btn btn-danger" [routerLink]="[retornaRuta()]">Cancelar</a>
+                        </div>
+                        <p class="alert alert-warning" *ngIf="!tablaForm.valid">
+                            Por favor complete todos los campos
+                        </p>
+                    </form>
+            <!-- <p>Form value: {{tablaForm.value | json}}</p> -->
+            <hr>
+        </div>
+    </div>
+</div>

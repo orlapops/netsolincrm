@@ -1,0 +1,303 @@
+<!-- <div *ngIf="!vparcaptura">
+    <app-header [title]="title" [subtitle]="subtitle" [rutaListado]="retornaRuta()"> </app-header>
+  </div> -->
+<div class="alert alert-danger" *ngIf="enerror">
+    {{message}}
+</div>
+<div class="alert alert-danger" *ngIf="enlistaerror">
+    <ul>
+        <li *ngFor="let regerror of listaerrores">
+            {{regerror.menerror}}
+        </li>
+    </ul>
+</div>
+<div class="alert alert-success" *ngIf="!enerror && grabo">
+    {{message}}
+</div>
+<div>
+    <!-- aqui ventanas modal para la adicion de otras tablas desde este modulo -->
+    <mant-tablabasica ptitulo="Adicionar Campaña." *ngIf="crearcampana" (evenclose)="closeadicion('campana')" pvaparam="VPARCAMPANAS" pobjeto="CRMMARK001" ptipomant="A"></mant-tablabasica>
+    <mant-tablabasica ptitulo="Adicionar Sector Económico." *ngIf="crearsectore" (evenclose)="closeadicion('sectore')" pvaparam="VPARSECTORCRM" pobjeto="CRMSECT001" ptipomant="A"></mant-tablabasica>
+    <mant-tablabasica ptitulo="Adicionar Origen Ciente Potencial." *ngIf="crearorigencp" (evenclose)="closeadicion('origencp')" pvaparam="VPARORIGCLIPOT" pobjeto="CRMCLIENTECP01" ptipomant="A"></mant-tablabasica>
+
+    <kendo-dialog title="Resultado." *ngIf="confmodifica" (close)="close()">
+        <h3 style="margin: 30px; text-align: center;">Se modifico el registro satisfactoriamente.</h3>
+
+        <kendo-dialog-actions>
+            <button kendoButton (click)="close()" [primary]="true">Cerrar.</button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+    <div *ngIf="resultados && grabando" class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+        <div class="alert alert-warning">
+            Grabando registro....
+            <img src="assets/spinner.gif">
+        </div>
+    </div>
+
+    <div *ngIf="resultados && !grabando" class="row">
+        <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+            <form [formGroup]="tablaForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <kendo-splitter-pane min="50%">
+                        <kendo-tabstrip>
+                            <kendo-tabstrip-tab [title]="'Generales'" [selected]="true">
+                                <ng-template kendoTabContent>
+                                    <h3 class="divprincipal alert-muted text-center">
+                                        Datos básicos del cliente potencial
+                                    </h3>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="cod_cliepote" data-toggle="tooltip" title="Ingrese un Código que le ayude a identificar el cliente potencial. Prefiera el Nit.">Código </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_cliepote','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_cliepote','invalid',tablaForm)"></i>
+                                            <input type="text" class="form-control" formControlName="cod_cliepote" placeholder="Escriba un código que le ayude a identificar el cliente potencial. Prefiera el nit" [UpperCase]="true" id="cod_cliepote">
+                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('cod_cliepote','invalid',tablaForm) && 
+                            libmantab.conpropvalCampo('cod_cliepote','touched',tablaForm)">
+                                                Debe ingresar un Código que le ayude a identificar el cliente potencial. Prefiera el Nit.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <h4 class="divsecundaria alert-muted text-center">
+                                            Contacto
+                                        </h4>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="nom_contac" data-toggle="tooltip" title="Nombres del contacto pricipal del cliente potencial.">Nombres </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('nom_contac','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('nom_contac','invalid',tablaForm)"></i>
+                                            <input type="text" class="form-control" formControlName="nom_contac" placeholder="Nombres del contacto principal" [UpperCase]="true" id="nom_contac">
+                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('nom_contac','invalid',tablaForm) && 
+                              libmantab.conpropvalCampo('nom_contac','touched',tablaForm)">
+                                                Nombres del contacto pricipal del cliente potencial.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="ape_contac" data-toggle="tooltip" title="Apellido del contacto pricipal del cliente potencial.">Apellidos </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('ape_contac','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('ape_contac','invalid',tablaForm)"></i>
+                                            <input type="text" class="form-control" formControlName="ape_contac" placeholder="Apellidos del contacto principal" [UpperCase]="true" id="ape_contac">
+                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('ape_contac','invalid',tablaForm) && 
+                                libmantab.conpropvalCampo('ape_contac','touched',tablaForm)">
+                                                Apellido del contacto pricipal del cliente potencial.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="cargo_contac" data-toggle="tooltip" title="Escriba el cargo del contacto principal">Cargo</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cargo_contac','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cargo_contac','invalid',tablaForm)"></i>
+                                            <input type="text" class="form-control" formControlName="cargo_contac" placeholder="Escriba el cargo del contacto principal" [UpperCase]="true" id="cargo_contac">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="tel_trabcont" data-toggle="tooltip" title="Escriba el número de teléfono de trabajo del contacto principal.">Teléfono trabajo </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('tel_trabcont','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('tel_trabcont','invalid',tablaForm)"></i>
+                                            <input type="text" class="form-control" formControlName="tel_trabcont" placeholder="Escriba el número de teléfono de trabajo del contacto principal." [UpperCase]="true" id="tel_trabcont">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="tel_movilcont" data-toggle="tooltip" title="Escriba el número de teléfono móvil del contacto principal.">Teléfono móvil </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('tel_movilcont','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('tel_movilcont','invalid',tablaForm)"></i>
+                                            <input type="text" class="form-control" formControlName="tel_movilcont" placeholder="Escriba el número de teléfono móvil del contacto principal." [UpperCase]="true" id="tel_movilcont">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="email_cont" data-toggle="tooltip" title="Escriba la direccón de correo electrónico del contacto principal">Email </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('email_cont','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('email_cont','invalid',tablaForm)"></i>
+                                            <input type="text" class="form-control" formControlName="email_cont" placeholder="Escriba la direccón de correo electrónico del contacto principal" [UpperCase]="false" id="email_cont">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <h4 class="divsecundaria alert-muted text-center">
+                                            Empresa
+                                        </h4>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="nom_empre" data-toggle="tooltip" title="Escriba el nombre de la empresa asociada al cliente potencial.">Empresa </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('nom_empre','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('nom_empre','invalid',tablaForm)"></i>
+                                            <input type="text" class="form-control" formControlName="nom_empre" placeholder="Escriba el nombre de la empresa asociada al cliente potencial." [UpperCase]="true" id="email">
+                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('nom_empre','invalid',tablaForm) && 
+                                  libmantab.conpropvalCampo('nom_empre','touched',tablaForm)">
+                                                Debe ingresar nombre de la empresa asociada al cliente potencial..
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="url_empre" data-toggle="tooltip" title="Escriba la dirección url asociada al cliente potencial">Sitio Web </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('url_empre','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('url_empre','invalid',tablaForm)"></i>
+                                            <input type="text" class="form-control" formControlName="url_empre" placeholder="Escriba la dirección url asociada al cliente potencial" [UpperCase]="false" id="url_empre">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="cod_pais" data-toggle="tooltip" title="Seleccione el pais. Para buscar escriba código o nombre seguido de *">País</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_pais','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_pais','invalid',tablaForm)"></i>
+                                            <netscombog (pasarDatos)="verCombocod_pais($event,'cod_pais','cod_pais')" valini="{{libmantab.valoriniCombog('cod_pais',tablaForm)}}" tablabase="PAISES" orden="1" filtro="*" campollave="cod_pais">
+                                            </netscombog>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="cod_ciudad" data-toggle="tooltip" title="Seleccione la ciudad. Para buscar escriba código o nombre seguido de *">Ciudad</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_ciudad','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_ciudad','invalid',tablaForm)"></i>
+                                            <netscombog (pasarDatos)="verCombocod_ciudad($event,'cod_ciudad','cod_ciudad')" valini="{{libmantab.valoriniCombog('cod_ciudad',tablaForm)}}" tablabase="CIUDADES" orden="1" filtro="*" campollave="cod_ciudad">
+                                            </netscombog>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('direccion','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('direccion','invalid',tablaForm)"></i>
+                                            <label for="direccion" data-toggle="tooltip" title="Escriba la Dirección principal completa">Dirección</label>
+                                            <input type="text" class="form-control" formControlName="direccion" placeholder="Escriba la Dirección principal completa" [UpperCase]="true" id="direccion">
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+                            <kendo-tabstrip-tab [title]="'Detalles'">
+                                <ng-template kendoTabContent>
+                                    <h3 class="divprincipal alert-muted text-center">
+                                        Detalles del cliente potencial
+                                    </h3>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="descripcion" data-toggle="tooltip" title="Escriba información adicional para describir el cliente potencial">Descripción</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('descripcion','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('descripcion','invalid',tablaForm)"></i>
+                                            <textarea type="text" class="form-control" formControlName="descripcion" placeholder="Escriba información adicional para describir el cliente potencial" [UpperCase]="false" id="descripcion"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="ing_anual" data-toggle="tooltip" title="Escriba los ingresos anuales del cliente potencial">Ingresos anuales:</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('ing_anual','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('ing_anual','invalid',tablaForm)"></i>
+                                            <input type="number" class="form-control" formControlName="ing_anual" placeholder="Escriba los ingresos anuales del cliente potencial" id="ing_anual">
+                                        </div>
+                                        <div class="col-md-2">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="num_emple" data-toggle="tooltip" title="Escriba el número de empleados del cliente potencial">Número de empleados:</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('num_emple','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('num_emple','invalid',tablaForm)"></i>
+                                            <input type="number" class="form-control" formControlName="num_emple" placeholder="Escriba el número de empleados del cliente potencial" id="num_emple">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="id_sectore" data-toggle="tooltip" title="Seleccione el sector al que pertenece. Para buscar escriba código o nombre seguido de *">Sector:</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('id_sectore','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('id_sectore','invalid',tablaForm)"></i>
+                                            <i (click)="openadicion('sectore')" class="fa fa-plus-square fa-lg mantenimiento" data-toggle="tooltip" title="Click para adicionar un nuevo sector económico."></i>
+                                            <netscombog (pasarDatos)="verCombosector($event,'id_sectore','id_sector')" valini="{{libmantab.valoriniCombog('id_sectore',tablaForm)}}" tablabase="SECTORCRM" orden="1" filtro="*" campollave="id_sector">
+                                            </netscombog>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="cod_acteic" data-toggle="tooltip" title="Seleccione la actividad económica a la que pertenece. Para buscar escriba código o nombre seguido de *">Actividad Económica</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_acteic','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_acteic','invalid',tablaForm)"></i>
+                                            <netscombog (pasarDatos)="verCombocod_acteic($event,'cod_acteic','cod_acteic')" valini="{{libmantab.valoriniCombog('cod_acteic',tablaForm)}}" tablabase="ACT_INDC" orden="1" filtro="*" campollave="cod_acteic">
+                                            </netscombog>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="id_campana" data-toggle="tooltip" title="Seleccione la campaña de marketing desde la que se genero el cliente potencial. Para buscar escriba código o nombre seguido de *">Campaña Origen:</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('id_campana','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('id_campana','invalid',tablaForm)"></i>
+                                            <i (click)="openadicion('campana')" class="fa fa-plus-square fa-lg mantenimiento" data-toggle="tooltip" title="Click para adicionar una nueva campaña de marketing."></i>
+                                            <netscombog (pasarDatos)="verCombocampana($event,'id_campana','id_campana')" valini="{{libmantab.valoriniCombog('id_campana',tablaForm)}}" tablabase="CAMPANAS" orden="1" filtro="*" campollave="cod_campana">
+                                            </netscombog>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="id_origclipot" data-toggle="tooltip" title="Seleccione el origen de marketing que llevó al cliente potencial a ponerse en contacto. Para buscar escriba código o nombre seguido de *">Origen del cliente</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('id_origclipot','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('id_origclipot','invalid',tablaForm)"></i>
+                                            <i (click)="openadicion('origencp')" class="fa fa-plus-square fa-lg mantenimiento" data-toggle="tooltip" title="Click para adicionar un nuevo origen de marketing para cliente potencial"></i>
+                                            <netscombog (pasarDatos)="verComboorigclie($event,'id_origclipot','id_origclipot')" valini="{{libmantab.valoriniCombog('id_origclipot',tablaForm)}}" tablabase="ORIGCLIPOT" orden="1" filtro="*" campollave="id_origclipot">
+                                            </netscombog>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="prodinteres" data-toggle="tooltip" title="Escriba un detalle de los productos en los que puede estar interesado el cliente potencial">Productos de interes</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('prodinteres','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('prodinteres','invalid',tablaForm)"></i>
+                                            <textarea type="text" class="form-control" formControlName="prodinteres" placeholder="Escriba los productos en los que puede estar interesado el cliente potencial" [UpperCase]="false" id="prodinteres"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="nivel_inter" data-toggle="tooltip" title="Seleccione un valor de clasificación para indicar el potencial del cliente potencial para convertirse en cliente.">Nivel de interes:</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('nivel_inter','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('nivel_inter','invalid',tablaForm)"></i>
+                                            <netslistnum class="solcombog" (pasarDatos)="verListniv_inter($event,'nivel_inter','nivel_inter')" valini="{{libmantab.valoriniListnum('nivel_inter',tablaForm)}}" opciones="No interesado,0,Algo interesado,1,Muy interesado,2">
+                                            </netslistnum>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="estado" data-toggle="tooltip" title="Seleccione el estado del cliente potencial.">Estado:</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('estado','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('estado','invalid',tablaForm)"></i>
+                                            <netslistnum class="solcombog" (pasarDatos)="verListestado($event,'estado','estado')" valini="{{libmantab.valoriniListnum('estado',tablaForm)}}" opciones="Nuevo,0,Contactado,1,Cliente,2">
+                                            </netslistnum>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+                            <kendo-tabstrip-tab [title]="'Usuario'">
+                                <ng-template kendoTabContent>
+                                    <h3 class="divprincipal alert-muted text-center">
+                                        Campos de usuario del cliente potencial
+                                    </h3>
+                                    <!-- addregttercero/:varParam/id_cliepoten -->
+                                    <div *ngFor="let field of camposform">
+                                        <div *ngIf="field.creado">
+                                            <label *ngIf="field.type != 'checkbox' && field.per_modificar" [for]="field.name" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                            <label *ngIf="field.type == 'checkbox' && field.per_modificar" [for]="field.name" class="form-check-label" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                            <i class="fa fa-check-circle check" *ngIf="field.type != 'checkbox' && field.per_modificar && libmantab.conpropvalCampo(field.name,'valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="field.type != 'checkbox' && field.per_modificar && libmantab.conpropvalCampo(field.name,'invalid',tablaForm)"></i>
+                                            <input *ngIf="field.type == 'text' && field.per_modificar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name">
+                                            <textarea *ngIf="field.type == 'textarea' && field.per_modificar" rows="5" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name"></textarea>
+                                            <input *ngIf="field.type == 'number' && field.per_modificar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [id]="field.name">
+                                            <input *ngIf="field.type == 'date' && field.per_modificar" [type]="field.type" class="form-control date" [formControlName]="field.name" [id]="field.name">
+                                            <input *ngIf="field.type == 'checkbox' && field.per_modificar" type="checkbox" class="form-check-input" [formControlName]="field.name" [id]="field.name" [name]="field.name" checked>
+                                            <netscombog *ngIf="field.type == 'solcombog' && field.per_modificar" class="solcombog" (pasarDatos)="libmantab.verCombog($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniCombog(field.name,tablaForm)}}" tablabase="{{field.combtabla}}"
+                                                orden="{{field.comborden}}" filtro="*" campollave="{{field.combcllave}}">
+                                            </netscombog>
+                                            <netslistnum *ngIf="field.type == 'netslistnum' && field.per_modificar" class="solcombog" (pasarDatos)="libmantab.verListnum($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniListnum(field.name,tablaForm)}}" opciones="{{field.options}}">
+                                            </netslistnum>
+                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo(field.name,'invalid',tablaForm) && field.per_modificar && 
+                            libmantab.conpropvalCampo(field.name,'touched',tablaForm)">
+                                                {{field.mensaje_er}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+                        </kendo-tabstrip>
+                    </kendo-splitter-pane>
+
+                </div>
+                <button type="submit" class="btn btn-primary" [disabled]="!tablaForm.valid">Guardar Cambios</button>
+                <div *ngIf="!vparcaptura">
+                    <a class="btn btn-danger" [routerLink]="[retornaRuta()]">Cancelar</a>
+                </div>
+                <p class="alert alert-warning" *ngIf="!tablaForm.valid">
+                    Por favor complete todos los campos con valores validos
+                </p>
+            </form>
+            <!-- <p>Form value: {{tablaForm.value | json}}</p> -->
+            <hr>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,164 @@
+<div *ngIf="!vparcaptura">
+</div>
+<div class="alert alert-danger" *ngIf="enerror">
+    {{message}}
+</div>
+<div class="alert alert-danger" *ngIf="enlistaerror">
+    <ul>
+        <li *ngFor="let regerror of listaerrores">
+            {{regerror.menerror}}
+        </li>
+    </ul>
+</div>
+<div class="alert alert-success" *ngIf="!enerror && mostrarmensaje">
+    {{message}}
+</div>
+<!-- aqui ventanas modal para la adicion de otras tablas desde este modulo -->
+<!-- <mant-productocrm ptitulo="Consultar producto." *ngIf="consultaproducto" (evenclose)="closeconsulta('producto')" pvaparam="VPARCUENTACRM" pobjeto="CRMCLIENTECUE01" ptipomant="C" [pid]="regRefven.cod_tercer"></mant-cuentacrm>
+<mant-productocrm ptitulo="Editar producto." *ngIf="editaproducto" (evenclose)="closeeditar('producto')" pvaparam="VPARCUENTACRM" pobjeto="CRMCLIENTECUE01" ptipomant="E" [pid]="regRefven.cod_tercer"></mant-cuentacrm> -->
+<mant-fichateccrm ptitulo="Consultar Ficha Técnica." *ngIf="consultaficha" (evenclose)="closeconsulta('fichatec')" pvaparam="VPARFICHATECPROD" pobjeto="FICHATECPROD" ptipomant="C" ptipoficha="R" [pid]="regRefven.cod_refven"></mant-fichateccrm>
+
+
+<nets-buscombog *ngIf="llamabusqueda" ptitulo="Buscar producto" (evenclose)="closebusquellama($event)" vinibus="cadbus" placeholder="Escriba parte del código del producto o del nombre para buscar." objeto="RESTCONVENPROD" pcamporetorna="cod_refven"></nets-buscombog>
+
+<div *ngIf="resultados" class="row">
+    <!-- <div class="row netsmonifilmentop">
+        <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
+            <p class="k-block">
+                <button class="netsmonibotonmentop" kendoButton *ngIf="regproducto" (click)="openconsulta('fichatec')" [icon]="'eye'" [look]="'flat'" [primary]="true">Consultar Ficha Técnica</button>
+                <button class="netsmonibotonmentop" kendoButton *ngIf="regproducto" (click)="openeditar('producto')" [icon]="'edit'" [look]="'flat'" [primary]="true">Editar producto</button>
+            </p>
+        </div>
+    </div> -->
+
+    <div class="row clearfix">
+        <div class="col-lg-5 col-md-5">
+            <section id="profile" class="well">
+                <h2 class="ra-well-title"> {{regRefven.nombre}}</h2>
+
+                <div class="row">
+                    <div class="col-lg-5 col-md-5  col-sm-4">
+                        <img src="{{linkimagen}}" class="ra-avatar img-responsive" />
+                        <div *ngIf="crearimagen">
+                            <a [href]="cleanURL(linkcreaimagen)"><strong>Cargar Imagen</strong></a>
+                        </div>
+                        <div *ngIf="!crearimagen">
+                            <a [href]="cleanURL(linkcreaimagen)"><strong>Cambiar Imagen</strong></a>
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-7 col-md-5 col-sm-8">
+                        <span *ngIf="regRefven.inactivo" class="ra-last-name alert alert-danger"> Inactivo </span>
+                        <span class="ra-last-name"> Código: {{regRefven.cod_refven}}</span>
+                        <span class="ra-first-name"> U. Medida: {{regRefven.cod_umed}}</span>
+                        <!-- <span class="ra-first-name"> {{regRefven.precio_ven}}</span> -->
+                        <!-- <span class="ra-first-name"> {{regRefven.por_iva}}</span> -->
+                        <div class="ra-position"> {{regRefven.descripcio}}</div>
+                        <p *ngIf="existefichatec" class="k-block">
+                            <button class="netsmonibotonmentop" kendoButton *ngIf="regproducto" (click)="openconsulta('fichatec')" [icon]="'eye'" [look]="'flat'" [primary]="true">Consultar Ficha Técnica</button>
+                        </p>
+                        <p class="k-blocklink">
+                            <!-- <button class="netsmonibotonmentop" kendoButton *ngIf="regproducto" (click)="openconsulta('fichatec')" [icon]="'eye'" [look]="'flat'" [primary]="true">Consultar Ficha Técnica</button> -->
+                            <a target="_blank" [href]="cleanURL(linkmonierp)"><strong>Monitor ERP</strong></a>
+                        </p>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="col-lg-7 col-md-7">
+            <div *ngIf="!esconder" class="box box-warning">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Ventas Anuales</h3>
+                    <div class="box-tools pull-right">
+                        <button *ngIf="collapse" class="btn btn-box-tool" data-widget="collapse" (click)="conmutacollapse()"><i class="fa fa-plus"></i></button>
+                        <button *ngIf="!collapse" class="btn btn-box-tool" data-widget="collapse" (click)="conmutacollapse()"><i class="fa fa-minus"></i></button>
+                        <button class="btn btn-box-tool" data-widget="remove" (click)="esconderpanel()"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div *ngIf="!collapse" class="box-body">
+                    <!-- <kendo-splitter-pane> -->
+                    <!-- <kendo-tabstrip> -->
+                    <!-- <kendo-tabstrip-tab [title]="'Pie'" [selected]="true">
+                                            <ng-template kendoTabContent>
+                                                <nets-grafico titulo="Titulo grafico Pie" [leyendavisible]="true" backgroundcolor="white" tipografico="pie" formatoserie="M" formatoxy="c0" [oparamgrafico]="oparamgrafico"></nets-grafico>
+                                            </ng-template>
+                                        </kendo-tabstrip-tab> -->
+                    <!-- <kendo-tabstrip-tab [title]="'Dona '" [selected]="false">
+                                            <ng-template kendoTabContent>
+                                                <nets-grafico titulo="Titulo grafico Dona" [leyendavisible]="false" backgroundcolor="white" tipografico="donut" formatoserie="M" formatoxy="c0" [oparamgrafico]="oparamgrafico"></nets-grafico>
+                                            </ng-template>
+                                        </kendo-tabstrip-tab> -->
+                    <!-- <kendo-tabstrip-tab [title]="'Bar'" [selected]="false">
+                                            <ng-template kendoTabContent>
+                                                <nets-grafico titulo="Titulo grafico linea" [leyendavisible]="true" backgroundcolor="white" tipografico="bar" formatoserie="M" formatoxy="c0" [oparamgrafico]="oparamgrafico"></nets-grafico>
+                                            </ng-template>
+                                        </kendo-tabstrip-tab> -->
+                    <!-- <kendo-tabstrip-tab [title]="'Ventas Anuales'" [selected]="true">
+                                <ng-template kendoTabContent> -->
+                    <nets-grafico titulo="Ventas en el año" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="line" formatoserie="M" formatoxy="c0" [oparamgrafico]="oparamgrafico"></nets-grafico>
+                    <!-- </ng-template>
+                            </kendo-tabstrip-tab>
+
+                        </kendo-tabstrip>
+                    </kendo-splitter-pane> -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <kendo-splitter-pane>
+            <kendo-tabstrip>
+                <kendo-tabstrip-tab [title]="'Monitor'" [selected]="true">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONTABREFVXMES" minimizada="NO" titulo="Ventas x Mes" color="success" [paramobj]="paramtabvenxmes"></monitor-objtabla>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- <div class="row">
+                                    <div class="col-md-1">
+                                        <a [href]="cleanURL(linkaddarchivo)"><strong>Adicionar</strong></a>
+                                    </div>
+                                </div>
+                                <br> -->
+                                <monitor-objtabla objeto="MONTABREFEARCHIVO" minimizada="SI" titulo="Archivos" color="danger" [paramobj]="paramtabarchivos"></monitor-objtabla>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONTABREFETOPCLIE" minimizada="SI" titulo="Top 10 Vtas x Cliente del Año" color="warning" [paramobj]="paramtabvenxmes"></monitor-objtabla>
+                            </div>
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONTABREFEXIXBOD" minimizada="SI" titulo="Existencias x Bodega" color="info" [paramobj]="paramtabexixbod"></monitor-objtabla>
+                            </div>
+                        </div>
+
+                    </ng-template>
+                </kendo-tabstrip-tab>
+                <!-- <kendo-tabstrip-tab [title]="'En proceso'">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONTABREFCOTC" minimizada="NO" titulo="Cotizaciones en Curso" color="success" [paramobj]="paramtabvenxmes"></monitor-objtabla>
+                            </div>
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONTABREFPEDXR" minimizada="SI" titulo="Demanda (Pedidos pendientes x Remisionar)" color="danger" [paramobj]="paramtabarchivos"></monitor-objtabla>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONTABREFREMXF" minimizada="SI" titulo="Remisiones pend. X Facturar" color="warning" [paramobj]="paramtabvenxmes"></monitor-objtabla>
+                            </div>
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONTABREFEXIMPXR" minimizada="SI" titulo="Transito (Importaciones pendientes x recibir)" color="info" [paramobj]="paramtabexixbod"></monitor-objtabla>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab> -->
+            </kendo-tabstrip>
+        </kendo-splitter-pane>
+    </div>
+</div>

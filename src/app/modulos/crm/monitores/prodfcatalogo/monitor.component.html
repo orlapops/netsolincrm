@@ -1,0 +1,355 @@
+<div *ngIf="!vparcaptura">
+</div>
+<div class="alert alert-danger" *ngIf="enerror">
+    {{message}}
+</div>
+<div class="alert alert-danger" *ngIf="enlistaerror">
+    <ul>
+        <li *ngFor="let regerror of listaerrores">
+            {{regerror.menerror}}
+        </li>
+    </ul>
+</div>
+<div class="alert alert-success" *ngIf="!enerror && mostrarmensaje">
+    {{message}}
+</div>
+<!-- aqui ventanas modal para la adicion de otras tablas desde este modulo -->
+<mant-tablabasica ptitulo="Consultar producto." *ngIf="consultaproducto" (evenclose)="closeconsulta('producto')" pvaparam="VPARPRODUCTOS" pobjeto="CRMPRODUCTOS01" ptipomant="C" [pid]="regProdfcat.cod_prod"></mant-tablabasica>
+
+<mant-tablabasica ptitulo="Editar producto." *ngIf="editaproducto" (evenclose)="closeeditar('producto')" pvaparam="VPARPRODUCTOS" pobjeto="CRMPRODUCTOS01" ptipomant="E" [pid]="regProdfcat.cod_prod"></mant-tablabasica>
+<mant-fichateccrm ptitulo="Consultar Ficha Técnica." *ngIf="consultaficha" (evenclose)="closeconsulta('fichatec')" pvaparam="VPARFICHATECPROD" pobjeto="FICHATECPROD" ptipomant="C" ptipoficha="P" [pid]="regProdfcat.cod_prod"></mant-fichateccrm>
+
+<nets-buscombog *ngIf="llamabusqueda" ptitulo="Buscar producto" (evenclose)="closebusquellama($event)" vinibus="cadbus" placeholder="Escriba parte del código del producto o del nombre para buscar." objeto="RESTCONVENPROD" pcamporetorna="cod_refven"></nets-buscombog>
+
+<div *ngIf="resultados" class="row">
+    <!-- <div class="row netsmonifilmentop">
+        <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
+        </div>
+    </div> -->
+
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12">
+            <section id="profile" class="well">
+                <h2 class="ra-well-title"> {{regProdfcat.nombre}}</h2>
+
+                <div class="row">
+                    <p class="k-block">
+                        <button class="netsmonibotonmentop" kendoButton *ngIf="regproducto" (click)="openconsulta('producto')" [icon]="'eye'" [look]="'flat'" [primary]="true">Consultar producto</button>
+                        <button class="netsmonibotonmentop" kendoButton *ngIf="regproducto" (click)="openeditar('producto')" [icon]="'edit'" [look]="'flat'" [primary]="true">Editar producto</button>
+                    </p>
+
+                    <!-- <div class="col-lg-5 col-sm-2">
+                        <img src="{{'imagenes/productos/'+regProdfcat.cod_prod+'.png'}}" class="ra-avatar img-responsive" />
+                    </div>
+
+                    <div class="col-lg-7 col-sm-2"> -->
+                    <div class="col-lg-5 col-md-5  col-sm-4">
+                        <img src="{{linkimagen}}" class="ra-avatar img-responsive" />
+                        <div *ngIf="crearimagen">
+                            <a [href]="cleanURL(linkcreaimagen)"><strong>Cargar Imagen</strong></a>
+                        </div>
+                        <div *ngIf="!crearimagen">
+                            <a [href]="cleanURL(linkcreaimagen)"><strong>Cambiar Imagen</strong></a>
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-7 col-md-5 col-sm-8">
+
+                        <span class="ra-last-name"> {{regProdfcat.cod_prod}}</span>
+                        <span class="ra-first-name"> {{regProdfcat.cod_umed}}</span>
+                        <span class="ra-first-name"> {{regProdfcat.precio_ven}}</span>
+                        <span class="ra-first-name"> {{regProdfcat.por_iva}}</span>
+                        <div class="ra-position"> {{regProdfcat.descripcio}}</div>
+                        <p *ngIf="existefichatec" class="k-block">
+                            <button class="netsmonibotonmentop" kendoButton *ngIf="regproducto" (click)="openconsulta('fichatec')" [icon]="'eye'" [look]="'flat'" [primary]="true">Consultar Ficha Técnica</button>
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="row">
+        <kendo-splitter-pane>
+            <kendo-tabstrip>
+                <kendo-tabstrip-tab [title]="'Información'" [selected]="true">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="layout">
+                                <div class="navigation-pane">
+                                    <div class="panelbar-wrapper">
+                                        <kendo-panelbar [items]="itemsinfo" (stateChange)="onPanelChange($event)">
+                                            <ng-template kendoPanelBarItemTemplate let-dataItem>
+                                            </ng-template>
+                                        </kendo-panelbar>
+                                    </div>
+                                </div>
+                                <div class="content-pane">
+                                    <div *ngIf="regproducto && cargocliente" class="row">
+                                        <div *ngIf="infopanelselec==='infcon'" class="col-md-12">
+                                            <app-listbasmodal ptablab="CONTACTOS" paplica="21" porden="2" [filtro]="filtrocontacto" title="Contacto" objeto="CRMCLIENTECON01" rutamant="mantbasica/CRMCLIENTECON01/">
+                                            </app-listbasmodal>
+                                        </div>
+                                        <div *ngIf="infopanelselec==='infgen'" class="col-md-12">
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">Identificación:</legend>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Código'}}" valor="{{regProdfcat.cod_prod}}"></labelinfo>
+                                                    <i *ngIf="regproducto" (click)="openconsulta('producto')" class="fa fa-eye fa-lg manteconsulta" data-toggle="tooltip" title="Click para consultar producto."></i>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Nit'}}" valor="{{regTercero.nit}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Nombre o Razón social'}}" valor="{{regProdfcat.nombre}}"></labelinfo>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">Ubicación:</legend>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'País'}}" valor="{{regProdfcat.cod_pais}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Ciudad'}}" valor="{{regProdfcat.cod_ciudad}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Dirección'}}" valor="{{regProdfcat.direccion}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Teléfono'}}" valor="{{regProdfcat.telefono}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Sitio Web'}}" valor="{{regProdfcat.url_empre}}"></labelinfo>
+                                                </div>
+
+                                            </fieldset>
+                                        </div>
+                                        <div *ngIf="infopanelselec==='infmark'" class="col-md-12">
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">:</legend>
+                                                <div *ngIf="cargocliepoten" class="row">
+                                                    <labelinfo titulo="{{'Cliente potencial de origen'}}" valor="{{regCliepoten.nom_empre}}"></labelinfo>
+                                                    <i *ngIf="cargocliepoten" (click)="openconsulta('cliepoten')" class="fa fa-eye fa-lg manteconsulta" data-toggle="tooltip" title="Click para consultar cliente potencial."></i>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Ingresos anuales'}}" valor="{{regProdfcat.ing_anual}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Número empleados'}}" valor="{{regProdfcat.num_emple}}"></labelinfo>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">Clasificación:</legend>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Sector'}}" valor="{{regProdfcat.id_sectore}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Propiedad'}}" valor="{{regProdfcat.propiedad}}"></labelinfo>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div *ngIf="infopanelselec==='infclie'" class="col-md-12">
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">Info. para facturación y cartera:</legend>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Cupo de credito'}}" valor="{{regProdfcat.cupo_credi}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Forma de pago'}}" valor="{{regProdfcat.cod_fpago}}"></labelinfo>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div *ngIf="infopanelselec==='infarch'" class="col-md-12">
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">Archivos:</legend>
+                                                <app-listmantarchivosadj ptablab="ARCHIVOSADJ" paplica="21" porden="2" modulo_asoc="3" [id_modasoc]="regProdfcat.id_cuentacrm" [filtro]="filtroarchivos" title="Archivos producto" objeto="CRMARCHIVOSADJ" rutamant="archivosadj/CRMARCHIVOSADJ/" (pasarDatos)="refrescaArchivos($event)"
+                                                    cod_doca="" num_doca="" id_cliepote="0" [id_cuentacrm]="regProdfcat.id_cuentacrm">
+                                                </app-listmantarchivosadj>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+                <kendo-tabstrip-tab [title]="'En proceso'">
+                    <ng-template kendoTabContent>
+                        <kendo-splitter-pane>
+                            <kendo-tabstrip #tabstripseg [ngStyle]="{'background-color':'#e2eef5'}">
+                                <kendo-tabstrip-tab [title]="'Cotizaciones'" [selected]="false">
+                                    <ng-template kendoTabContent>
+                                        <div [ngStyle]="{'background-color':'#e2eef5'}">
+                                            <h3 class="divprincipal alert-muted text-center ">
+                                                Cotizaciones
+                                            </h3>
+                                            <lista-busqueda ptablab="COTIZACRM_C" paplica="21" porden="2" [filtro]="filtrocotiza" lobjbusqueda="BUSMONICOTIZACRM" title="Cotizaciones" objeto="CRMCOTIZA" rutamant="cotizacion/VARPARCOTIZACRM_C/">
+                                            </lista-busqueda>
+
+                                        </div>
+                                    </ng-template>
+                                </kendo-tabstrip-tab>
+                                <kendo-tabstrip-tab [title]="'Actividades'" [selected]="true">
+                                    <ng-template kendoTabContent>
+                                        <div [ngStyle]="{'background-color':'#e2eef5'}">
+                                            <app-listmantactividad ptablab="ACTIVIDADES" paplica="21" porden="2" [modulo_asoc]="3" [id_modasoc]="regProdfcat.id_cuentacrm" [filtro]="filtroactividades" title="Actividades Cuenta" objeto="CRMACTIVIDADES" rutamant="actividades/CRMACTIVIDADES/" [cod_doca]=""
+                                                [num_doca]="" [id_cliepote]="" [id_cuentacrm]="regProdfcat.id_cuentacrm">
+                                            </app-listmantactividad>
+                                        </div>
+                                    </ng-template>
+                                </kendo-tabstrip-tab>
+                                <!-- <kendo-tabstrip-tab [title]="'Archivos'" [selected]="false">
+                                    <ng-template kendoTabContent>
+                                        <div [ngStyle]="{'background-color':'#e2eef5'}">
+                                            <h3 class="divprincipal alert-muted text-center ">
+                                                Archivos adjuntos de la cotización
+                                            </h3> -->
+                                <!-- <app-listmantarchivosadj ptablab="ARCHIVOSADJ" paplica="21" porden="2" [modulo_asoc]="4" [id_modasoc]="idccotiza" [filtro]="filtroactividades" title="Archivos Cotización" objeto="CRMARCHIVOSADJ" rutamant="archivosadj/CRMARCHIVOSADJ/" (pasarDatos)="refrescaArchivos($event)"
+                                                        [cod_doca]="cod_dcotiz" [num_doca]="num_dcotiz" [id_cliepote]="id_cliepoten" [id_cuentacrm]="id_cuentacrm">
+                                                    </app-listmantarchivosadj> -->
+                                <!-- </div>
+                                    </ng-template>
+                                </kendo-tabstrip-tab> -->
+                            </kendo-tabstrip>
+                        </kendo-splitter-pane>
+
+                    </ng-template>
+                </kendo-tabstrip-tab>
+                <kendo-tabstrip-tab [title]="'Estadistica'">
+                    <ng-template kendoTabContent>
+                        <h3 class="divprincipal alert-muted text-center">
+                            Estadisticas de la cuenta. En desarrollo. Muy pronto
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <li>
+                                    <a href='javascript:show_dialogo_con("../EjeConsultaLis.wss?VRCod_obj=MONIBUSQUEDAS&VCAMPO=&VCONDI=Especial&VRPLINKXML=N&VTEXTO=","Busqueda","700px","100%",false)'>
+                                        <i class="fa fa-search text-red"></i>
+                                        <span>Monitor Busquedas</span></a>
+                                    <a href='javascript:show_dialogo_con("../EjeConsultaLis.wss?VRCod_obj=MONIBUSQUEDAS&VCAMPO=&VCONDI=Especial&VRPLINKXML=N&VTEXTO=","Busqueda","700px","100%",false)'>
+                                        <i class="fa fa-search text-red"></i>
+                                        <span>Monitor Busquedas</span></a>
+                                </li>
+                                <li class="footer">
+                                    <a [href]="cleanURL(linkcarteracuetna)">
+                                        <strong>Cartera cliente</strong></a>
+                                </li>
+
+                                <li class="footer">
+                                    <a [href]="cleanURL(linkaddarchivo)">
+                                        <strong>Adicionar Archivo</strong></a>
+                                </li>
+
+                                <div id="Nethtmlpanel">
+                                </div>
+
+                                <!-- <monitor-objtabla objeto="LTEVCARTXCLIE" minimizada="SI" titulo="Cartera" color="info" [paramobj]="paramactividadtareas"></monitor-objtabla> -->
+                            </div>
+                            <div class="col-md-6">
+                                <div id="panel_vcartxcue" class="box box-info box-solid collapsed-box">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Cartera X Cuenta</h3>
+                                        <div class="box-tools pull-right">
+                                            <button id="btn-div_vcartxcue" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" data-placement="top" title="Click en + para consultar en - para contraer"><i class="fa fa-plus"></i></button>
+                                            <button class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" data-placement="top" title="Click para esconder panel"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        <div id="indtrabdiv_vcartxcue" class="overlay">
+                                            <i class="fa fa-refresh fa-spin"></i>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table no-margin">
+                                                <div id="div_vcartxcue">
+                                                </div>
+                                            </table>
+                                        </div>
+                                        <!-- /.table-responsive -->
+                                    </div>
+                                    <!-- /.box-body -->
+                                    <div class="box-footer clearfix">
+                                    </div>
+                                    <!-- /.box-footer -->
+                                </div>
+                                <!-- /.box -->
+
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+                <!-- <kendo-tabstrip-tab [title]="'Prueba'">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="layout">
+                                <div class="navigation-pane">
+                                    <div class="panelbar-wrapper">
+                                        <kendo-panelbar>
+                                            <kendo-panelbar-item [title]="'My Teammates'" expanded="true">
+                                                <ng-template kendoPanelBarContent>
+                                                    <div>
+                                                        <div class="teamMate">
+                                                            <img [src]="imageUrl('andrew')" alt="Andrew Fuller">
+                                                            <span class="mate-info">
+                                <h2>Andrew Fuller</h2>
+                                <p>Team Lead</p>
+                              </span>
+                                                        </div>
+                                                        <div class="teamMate">
+                                                            <img [src]="imageUrl('nancy')" alt="Nancy Leverling">
+                                                            <span class="mate-info">
+                                <h2>Nancy Leverling</h2>
+                                <p>Sales Associate</p>
+                              </span>
+                                                        </div>
+                                                        <div class="teamMate">
+                                                            <img [src]="imageUrl('robert')" alt="Robert King">
+                                                            <span class="mate-info">
+                                <h2>Robert King</h2>
+                                <p>Business System Analyst</p>
+                              </span>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                            </kendo-panelbar-item>
+                                            <kendo-panelbar-item [title]="'Projects'">
+                                                <kendo-panelbar-item [title]="'New Business Plan'"></kendo-panelbar-item>
+                                                <kendo-panelbar-item [title]="'Sales Forecasts'">
+                                                    <kendo-panelbar-item [title]="'Q1 Forecast'"></kendo-panelbar-item>
+                                                    <kendo-panelbar-item [title]="'Q2 Forecast'"></kendo-panelbar-item>
+                                                    <kendo-panelbar-item [title]="'Q3 Forecast'"></kendo-panelbar-item>
+                                                    <kendo-panelbar-item [title]="'Q4 Forecast'"></kendo-panelbar-item>
+                                                </kendo-panelbar-item>
+                                                <kendo-panelbar-item [title]="'Sales Reports'"></kendo-panelbar-item>
+                                            </kendo-panelbar-item>
+                                            <kendo-panelbar-item [title]="'Programs'">
+                                                <kendo-panelbar-item [title]="'Monday'"></kendo-panelbar-item>
+                                                <kendo-panelbar-item [title]="'Tuesday'"></kendo-panelbar-item>
+                                                <kendo-panelbar-item [title]="'Wednesday'"></kendo-panelbar-item>
+                                                <kendo-panelbar-item [title]="'Thursday'"></kendo-panelbar-item>
+                                                <kendo-panelbar-item [title]="'Friday'"></kendo-panelbar-item>
+                                            </kendo-panelbar-item>
+                                            <kendo-panelbar-item [title]="'Communication'" [disabled]="true"></kendo-panelbar-item>
+                                        </kendo-panelbar>
+                                    </div>
+                                </div>
+                                <div class="content-pane">
+                                    <h3 class="divprincipal alert-muted text-center">
+                                        Contactos asociados a la cuenta
+                                    </h3>
+                                    <div class="row">
+                                        <div *ngIf="infopanelselec=='infcon'" class="col-md-12">
+                                            <app-listbasmodal ptablab="CONTACTOS" paplica="21" porden="2" [filtro]="filtrocontacto" title="Contacto" objeto="CRMCLIENTECON01" rutamant="mantbasica/CRMCLIENTECON01/">
+                                            </app-listbasmodal>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab> -->
+            </kendo-tabstrip>
+        </kendo-splitter-pane>
+    </div>
+</div>

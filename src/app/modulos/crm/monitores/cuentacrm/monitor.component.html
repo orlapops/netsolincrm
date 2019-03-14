@@ -1,0 +1,309 @@
+<div *ngIf="!vparcaptura">
+</div>
+<div class="alert alert-danger" *ngIf="enerror">
+    {{message}}
+</div>
+<div class="alert alert-danger" *ngIf="enlistaerror">
+    <ul>
+        <li *ngFor="let regerror of listaerrores">
+            {{regerror.menerror}}
+        </li>
+    </ul>
+</div>
+<div class="alert alert-success" *ngIf="!enerror && mostrarmensaje">
+    {{message}}
+</div>
+<!-- aqui ventanas modal para la adicion de otras tablas desde este modulo -->
+<mant-terceros ptitulo="Consultar Tercero." *ngIf="consultatercero" (evenclose)="closeconsulta('tercero')" pvaparam="VPARTERCEROS" pobjeto="GT0420VU0T0X001" ptipomant="C" [pid]="id_terconsulta"></mant-terceros>
+<mant-cliepoten ptitulo="Consultar Cliente potencial." *ngIf="consultacliepoten" (evenclose)="closeconsulta('cliepoten')" pvaparam="VPARCLIENPOTEN" pobjeto="CRMCLIENTECP01" ptipomant="C" [pid]="id_cliepoten"></mant-cliepoten>
+<mant-cuentacrm ptitulo="Consultar Cuenta." *ngIf="consultacuenta" (evenclose)="closeconsulta('cuenta')" pvaparam="VPARCUENTACRM" pobjeto="CRMCLIENTECUE01" ptipomant="C" [pid]="regCuenta.cod_tercer"></mant-cuentacrm>
+
+<mant-cuentacrm ptitulo="Editar Cuenta." *ngIf="editacuenta" (evenclose)="closeeditar('cuenta')" pvaparam="VPARCUENTACRM" pobjeto="CRMCLIENTECUE01" ptipomant="E" [pid]="regCuenta.cod_tercer"></mant-cuentacrm>
+
+<!-- <div class="alert alert-success" *ngIf="!llamabusqueda">
+    {{pruellegallabusque}}
+</div> -->
+<nets-buscombog *ngIf="llamabusqueda" ptitulo="Buscar producto" (evenclose)="closebusquellama($event)" vinibus="cadbus" placeholder="Escriba parte del código del producto o del nombre para buscar." objeto="RESTCONVENPROD" pcamporetorna="cod_refven"></nets-buscombog>
+
+<!-- <mant-cotiza ptitulo="Adicionar Cotización." *ngIf="crearcotiza" (evenclose)="closeadicion('cotiza')" pvaparam="VPARCOTIZACRM_C"
+  pobjeto="CRMCOTIZA" ptipomant="A" [pid]="regCuenta.cod_tercer" [pidcliepote]="regCuenta.id_cliepote" [pidcuentacrm]="regCuenta.id_cuentacrm"></mant-cotiza> -->
+
+<div *ngIf="resultados" class="row">
+    <div class="row netsmonifilmentop">
+        <!-- <div class="col-md-12 netsmonibotonmentop"> -->
+        <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
+            <p class="k-block">
+                <!-- <p> -->
+                <!-- (click)="openadicion('cotiza')" -->
+                <!-- [routerLink]="[retornaRutacotiza()]"  -->
+                <!-- <button kendoButton *ngIf="cargocuenta"  (click)="adicionarCotiza()" [look]="'flat'" [icon]="'plus'" [primary]="true">Crear Cotización</button> -->
+                <!-- <button kendoButton *ngIf="cargocuenta"  [routerLink]="[retornaRutacotiza()]" [look]="'flat'" [icon]="'plus'" [primary]="true">Crear Cotización</button> -->
+                <button class="netsmonibotonmentop" kendoButton *ngIf="cargocuenta" [routerLink]="[retornaRutacotiza()]" [look]="'flat'" [icon]="'plus'" [primary]="true">Crear Cotización</button>
+                <button class="netsmonibotonmentop" kendoButton *ngIf="cargocuenta" (click)="openconsulta('cuenta')" [icon]="'eye'" [look]="'flat'" [primary]="true">Consultar Cuenta</button>
+                <!-- <button class="netsmonibotonmentop" kendoButton *ngIf="cargocuenta" (click)="openeditar('cuenta')" [icon]="'edit'" [look]="'flat'" [primary]="true">Editar Cuenta</button> -->
+                <!-- <button class="netsmonibotonmentop" kendoButton *ngIf="cargocuenta" (click)="openconsulta('llamabusqueda')" [icon]="'edit'" [look]="'flat'" [primary]="true">Editar Cuenta</button> -->
+
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
+            <strong>Monitor Cuenta {{regCuenta.nombre}}
+      </strong>
+            <!-- <form class="navbar-form navbar-right" role="search" method="POST" action="<%=llinkbot%>">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">Año</div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-default" id=submit1 name=BA>Consultar</button>
+            </form> -->
+        </div>
+    </div>
+    <div class="row">
+        <kendo-splitter-pane>
+            <kendo-tabstrip>
+                <kendo-tabstrip-tab [title]="'Información'" [selected]="true">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="layout">
+                                <div class="navigation-pane">
+                                    <div class="panelbar-wrapper">
+                                        <kendo-panelbar [items]="itemsinfo" (stateChange)="onPanelChange($event)">
+                                            <ng-template kendoPanelBarItemTemplate let-dataItem>
+                                            </ng-template>
+                                        </kendo-panelbar>
+                                    </div>
+                                </div>
+                                <div class="content-pane">
+                                    <div *ngIf="cargocuenta && cargocliente" class="row">
+                                        <div *ngIf="infopanelselec==='infcon'" class="col-md-12">
+                                            <app-listbasmodal ptablab="CONTACTOS" paplica="21" porden="2" pcampoxdefecto="id_cuenta" [pvalxdefecto]="regCuenta.id_cuentacrm" [filtro]="filtrocontacto" title="Contacto" objeto="CRMCLIENTECON01" rutamant="mantbasica/CRMCLIENTECON01/">
+                                            </app-listbasmodal>
+                                        </div>
+                                        <div *ngIf="infopanelselec==='infgen'" class="col-md-12">
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">Identificación:</legend>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Código'}}" valor="{{regCuenta.cod_tercer}}"></labelinfo>
+                                                    <i *ngIf="cargocuenta" (click)="openconsulta('cuenta')" class="fa fa-eye fa-lg manteconsulta" data-toggle="tooltip" title="Click para consultar cuenta."></i>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Nit'}}" valor="{{regTercero.nit}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Nombre o Razón social'}}" valor="{{regCuenta.nombre}}"></labelinfo>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">Ubicación:</legend>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'País'}}" valor="{{regCuenta.cod_pais}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Ciudad'}}" valor="{{regCuenta.cod_ciudad}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Dirección'}}" valor="{{regCuenta.direccion}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Teléfono'}}" valor="{{regCuenta.telefono}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Sitio Web'}}" valor="{{regCuenta.url_empre}}"></labelinfo>
+                                                </div>
+
+                                            </fieldset>
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">Creación:</legend>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Fecha:'}}" valor="{{regCuenta.fecha_crea}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Usuario'}}" valor="{{regCuenta.usuar_crea}}"></labelinfo>
+                                                </div>
+                                                <legend class="netsolinfs">Ultima actualización:</legend>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Fecha:'}}" valor="{{regCuenta.fecha_uacr}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Usuario'}}" valor="{{regCuenta.usuar_uact}}"></labelinfo>
+                                                </div>
+                                            </fieldset>
+
+                                        </div>
+                                        <div *ngIf="infopanelselec==='infmark'" class="col-md-12">
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">:</legend>
+                                                <div *ngIf="cargocliepoten" class="row">
+                                                    <labelinfo titulo="{{'Cliente potencial de origen'}}" valor="{{regCliepoten.nom_empre}}"></labelinfo>
+                                                    <i *ngIf="cargocliepoten" (click)="openconsulta('cliepoten')" class="fa fa-eye fa-lg manteconsulta" data-toggle="tooltip" title="Click para consultar cliente potencial."></i>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Ingresos anuales'}}" valor="{{regCuenta.ing_anual}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Número empleados'}}" valor="{{regCuenta.num_emple}}"></labelinfo>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">Clasificación:</legend>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Sector'}}" valor="{{regCuenta.id_sectore}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Propiedad'}}" valor="{{regCuenta.propiedad}}"></labelinfo>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div *ngIf="infopanelselec==='infclie'" class="col-md-12">
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">Info. para facturación y cartera:</legend>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Cupo de credito'}}" valor="{{regCuenta.cupo_credi}}"></labelinfo>
+                                                </div>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Forma de pago'}}" valor="{{regCuenta.cod_fpago}}"></labelinfo>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div *ngIf="infopanelselec==='infarch'" class="col-md-12">
+                                            <fieldset class="netsolinfs">
+                                                <legend class="netsolinfs">Archivos:</legend>
+                                                <app-listmantarchivosadj ptablab="ARCHIVOSADJ" paplica="21" porden="2" modulo_asoc="3" [id_modasoc]="regCuenta.id_cuentacrm" [filtro]="filtroarchivos" title="Archivos Cuenta" objeto="CRMARCHIVOSADJ" rutamant="archivosadj/CRMARCHIVOSADJ/" (pasarDatos)="refrescaArchivos($event)"
+                                                    cod_doca="" num_doca="" id_cliepote="0" [id_cuentacrm]="regCuenta.id_cuentacrm">
+                                                </app-listmantarchivosadj>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+                <kendo-tabstrip-tab [title]="'En proceso'">
+                    <ng-template kendoTabContent>
+                        <kendo-splitter-pane>
+                            <kendo-tabstrip #tabstripseg [ngStyle]="{'background-color':'#e2eef5'}">
+                                <kendo-tabstrip-tab [title]="'Cotizaciones'" [selected]="false">
+                                    <ng-template kendoTabContent>
+                                        <div [ngStyle]="{'background-color':'#e2eef5'}">
+                                            <h3 class="divprincipal alert-muted text-center ">
+                                                Cotizaciones
+                                            </h3>
+                                            <lista-busqueda ptablab="COTIZACRM_C" paplica="21" porden="2" [filtro]="filtrocotiza" lobjbusqueda="BUSMONICOTIZACRM" title="Cotizaciones" objeto="CRMCOTIZA" rutamant="cotizacion/VARPARCOTIZACRM_C/">
+                                            </lista-busqueda>
+
+                                        </div>
+                                    </ng-template>
+                                </kendo-tabstrip-tab>
+                                <kendo-tabstrip-tab [title]="'Actividades'" [selected]="true">
+                                    <ng-template kendoTabContent>
+                                        <div [ngStyle]="{'background-color':'#e2eef5'}">
+                                            <app-listmantactividad ptablab="ACTIVIDADES" paplica="21" porden="2" [modulo_asoc]="3" [id_modasoc]="regCuenta.id_cuentacrm" [filtro]="filtroactividades" title="Actividades Cuenta" objeto="CRMACTIVIDADES" rutamant="actividades/CRMACTIVIDADES/" [cod_doca]=""
+                                                [num_doca]="" [id_cliepote]="" [id_cuentacrm]="regCuenta.id_cuentacrm">
+                                            </app-listmantactividad>
+                                        </div>
+                                    </ng-template>
+                                </kendo-tabstrip-tab>
+                                <!-- <kendo-tabstrip-tab [title]="'Archivos'" [selected]="false">
+                                    <ng-template kendoTabContent>
+                                        <div [ngStyle]="{'background-color':'#e2eef5'}">
+                                            <h3 class="divprincipal alert-muted text-center ">
+                                                Archivos adjuntos de la cotización
+                                            </h3> -->
+                                <!-- <app-listmantarchivosadj ptablab="ARCHIVOSADJ" paplica="21" porden="2" [modulo_asoc]="4" [id_modasoc]="idccotiza" [filtro]="filtroactividades" title="Archivos Cotización" objeto="CRMARCHIVOSADJ" rutamant="archivosadj/CRMARCHIVOSADJ/" (pasarDatos)="refrescaArchivos($event)"
+                                                        [cod_doca]="cod_dcotiz" [num_doca]="num_dcotiz" [id_cliepote]="id_cliepoten" [id_cuentacrm]="id_cuentacrm">
+                                                    </app-listmantarchivosadj> -->
+                                <!-- </div>
+                                    </ng-template>
+                                </kendo-tabstrip-tab> -->
+                            </kendo-tabstrip>
+                        </kendo-splitter-pane>
+
+                    </ng-template>
+                </kendo-tabstrip-tab>
+                <kendo-tabstrip-tab [title]="'Ventas'">
+                    <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
+                                <div class="list-group">
+                                    <a [href]="cleanURL(linkmoniventas)" class="list-group-item active">
+                                        <h6 class="list-group-item-heading">Monitor cliente ERP</h6>
+                                        <p class="list-group-item-text">Ir al monitor del cliente completo de Netsolin</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONCRMVENCLIEXMES" minimizada="NO" titulo="Ventas x Mes" color="success" [paramobj]="paramtabgencuentacrm"></monitor-objtabla>
+                            </div>
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONCRMVENCLIESERV" minimizada="NO" titulo="Servicios" color="success" [paramobj]="paramtabgencuentacrm"></monitor-objtabla>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab>
+
+                <!-- <kendo-tabstrip-tab [title]="'Estadistica'">
+                    <ng-template kendoTabContent>
+                        <h3 class="divprincipal alert-muted text-center">
+                            Estadisticas de la cuenta. En desarrollo. Muy pronto
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <li>
+                                    <a href='javascript:show_dialogo_con("../EjeConsultaLis.wss?VRCod_obj=MONIBUSQUEDAS&VCAMPO=&VCONDI=Especial&VRPLINKXML=N&VTEXTO=","Busqueda","700px","100%",false)'>
+                                        <i class="fa fa-search text-red"></i>
+                                        <span>Monitor Busquedas</span></a>
+                                    <a href='javascript:show_dialogo_con("../EjeConsultaLis.wss?VRCod_obj=MONIBUSQUEDAS&VCAMPO=&VCONDI=Especial&VRPLINKXML=N&VTEXTO=","Busqueda","700px","100%",false)'>
+                                        <i class="fa fa-search text-red"></i>
+                                        <span>Monitor Busquedas</span></a>
+                                </li>
+                                <li class="footer">
+                                    <a [href]="cleanURL(linkcarteracuetna)">
+                                        <strong>Cartera cliente</strong></a>
+                                </li>
+
+                                <li class="footer">
+                                    <a [href]="cleanURL(linkaddarchivo)">
+                                        <strong>Adicionar Archivo</strong></a>
+                                </li>
+
+                                <div id="Nethtmlpanel">
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div id="panel_vcartxcue" class="box box-info box-solid collapsed-box">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Cartera X Cuenta</h3>
+                                        <div class="box-tools pull-right">
+                                            <button id="btn-div_vcartxcue" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" data-placement="top" title="Click en + para consultar en - para contraer"><i class="fa fa-plus"></i></button>
+                                            <button class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" data-placement="top" title="Click para esconder panel"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="box-body">
+                                        <div id="indtrabdiv_vcartxcue" class="overlay">
+                                            <i class="fa fa-refresh fa-spin"></i>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table no-margin">
+                                                <div id="div_vcartxcue">
+                                                </div>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="box-footer clearfix">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </kendo-tabstrip-tab> -->
+            </kendo-tabstrip>
+        </kendo-splitter-pane>
+    </div>
+</div>

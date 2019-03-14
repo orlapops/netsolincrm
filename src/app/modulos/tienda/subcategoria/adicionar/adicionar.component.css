@@ -1,0 +1,184 @@
+
+input.ng-invalid.ng-touched {
+    border-left: 5px solid #a94442;
+}
+
+input.ng-valid.ng-dirty {
+    border-left: 5px solid #42A948;
+}
+
+.select.ng-invalid.ng-touched {
+    border-left: 5px solid #a94442;
+}
+
+.select.ng-valid.ng-dirty {
+    border-left: 5px solid #42A948;
+}
+.solcombog.ng-invalid.ng-touched {
+    border-left: 5px solid #a94442;
+}
+
+.solcombog.ng-valid.ng-dirty {
+    border-left: 5px solid #42A948;
+}
+
+
+.check {
+    color: #42A948;
+}
+
+.icon_main {
+    color: rgb(81, 177, 237);
+}
+
+.uncheck {
+    color: #a94442;
+}
+.date {
+    width: 280px;
+}
+
+.divprincipal {
+    border-radius: 3px;
+    padding: 1 px; 
+    margin-bottom: 0px;
+    color: #DDD;
+    background-color: rgb(54, 102, 247);
+}
+.divsecundaria {
+    border-radius: 3px;
+    padding: 1px; 
+    margin-bottom: 0px;
+    background-color:rgb(54, 102, 247);
+    font-weight: normal;
+}
+
+.divterciaria {
+    border-radius: 3px;
+    padding: 0px; 
+    margin-bottom: 0px;
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(54, 102, 247);
+    font-weight: normal;
+   
+}
+
+.border {
+    border-style: groove;
+    border-color: rgb(228, 225, 225);
+}
+
+
+
+.title_par
+{
+    border-radius: 3px;
+    padding: 2.5px; 
+    margin-bottom: 0px;
+    color: rgb(0, 0, 0);
+    background-color: rgb(118, 155, 230);
+    font-weight: 900;
+    text-align: center;
+}
+   
+
+.title_expli
+{
+    font-size: 12px;
+    text-align: left;
+}
+
+
+
+.title_main
+{
+    font-size: 30px;
+    font-weight: bold !important;
+    font-family:"Trebuchet MS", Helvetica, sans-serif;
+    font-weight: 150;
+    text-align: left;
+}
+
+.title_check
+{
+    font-size: 15px;
+    font-weight: 100;
+    font-family: Tahoma, Geneva, sans-serif;
+    color:  #000000;
+}
+
+.title_sec
+{
+    font-size: 20px;
+    font-weight: bold !important;
+    font-family:"Lucida Console", Monaco, monospace;
+    font-weight: 450;
+    text-align: center;
+}
+
+.title_tir
+{
+    font-size: 10px;
+    font-weight: bold !important;
+    font-family:"Lucida Console", Monaco, monospace;
+    font-weight: 450;
+    text-align: center;
+}
+
+
+.image
+{
+display: block;
+margin-left: auto;
+margin-right: auto;
+width: 50%;
+border: 1px solid rgb(162, 160, 162);
+font-weight: 900;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    border: 1px solid rgb(165, 200, 242);
+    border-radius: 5px;
+    padding: 10px;
+    color: #DDD;
+    background-color: rgb(97, 154, 198);
+    cursor: pointer;
+    position: relative;
+    font-weight: lighter;
+    font-size: 15px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-weight: 450;
+    text-align: center; 
+}
+
+.rowimg {
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    -ms-flex-wrap: wrap; /* IE10 */
+    flex-wrap: wrap;
+    padding: 0 4px;
+}
+
+/* Create four equal columns that sits next to each other */
+.column {
+    -ms-flex: 25%; /* IE10 */
+    flex: 25%;
+    max-width: 25%;
+    padding: 0 4px;
+    /*vertical-align: middle;*/
+}
+
+.column_img {
+    margin-top: 8px;
+    vertical-align: middle;
+}
+.spacer5 {
+    height: 15px;
+  }
+
+  .spacer6 {
+    height: 60px;
+  }
+
+

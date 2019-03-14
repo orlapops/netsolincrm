@@ -1,0 +1,349 @@
+<!-- <div *ngIf="!vparcaptura">
+    <app-header [title]="title" [subtitle]="subtitle" [rutaListado]="retornaRuta()"> </app-header>
+</div> -->
+<div class="alert alert-danger" *ngIf="enlistaerror">
+    <ul>
+        <li *ngFor="let regerror of listaerrores">
+            {{regerror.menerror}}
+        </li>
+    </ul>
+</div>
+
+<div *ngIf="resultados" class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+        <form [formGroup]="tablaForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <kendo-splitter-pane min="50%">
+                    <kendo-tabstrip>
+                        <kendo-tabstrip-tab [title]="'Generales'" [selected]="true">
+                            <ng-template kendoTabContent>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label for="id_cliepote" data-toggle="tooltip" title="Seleccione el cliente potencial asociado a la cuenta.">Cliente potencial </label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('id_cliepote','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('id_cliepote','invalid',tablaForm)"></i>
+                                        <!-- <i (click)="openadicion('sectore')" class="fa fa-plus-square fa-lg mantenimiento" data-toggle="tooltip" title="Click para adicionar un nuevo sector económico."></i> -->
+                                        <netscombog (pasarDatos)="libmantab.verCombog($event,'id_cliepote','id_cliepote',tablaForm)" valini="{{libmantab.valoriniCombog('id_cliepote',tablaForm)}}" tablabase="CLIENPOTEN" orden="1" filtro="*" campollave="id_cliepote" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="cod_tercer" data-toggle="tooltip" title="Seleccione elo tercero asociado al cliente. Verifique con área contable.">Código Tercero </label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_tercer','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_tercer','invalid',tablaForm)"></i>
+                                        <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_tercer','cod_tercer',tablaForm)" valini="{{libmantab.valoriniCombog('cod_tercer',tablaForm)}}" tablabase="TERCEROS" orden="1" filtro="*" campollave="cod_tercer" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                    <div class="col-md-1">
+                                    </div>
+                                </div>
+                                <div *ngIf="cargotercero" class="row">
+                                    <div class="col-md-3">
+                                        <label class="labelrela">Documento Id.: {{regTercero.clase_iden}} </label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="labelrela">Nit: {{regTercero.nit}} </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="labelrela">Nombre: {{regTercero.nombre}} </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <h4 class="divsecundaria alert-muted text-center">
+                                        Empresa
+                                    </h4>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="nombre" data-toggle="tooltip" title="Nombre  o razón social.">Nombres </label>
+                                        <input type="text" class="form-control" formControlName="nombre" placeholder="Nombre o razón social." id="nombre">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="cod_pais" data-toggle="tooltip" title="Seleccione el pais. Para buscar escriba código o nombre seguido de *">País</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_pais','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_pais','invalid',tablaForm)"></i>
+                                        <netscombog #combociudad id="combociud" (pasarDatos)="verCombocod_pais($event,'cod_pais','cod_pais')" valini="{{libmantab.valoriniCombog('cod_pais',tablaForm)}}" tablabase="PAISES" orden="1" filtro="*" campollave="cod_pais" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cod_ciudad" data-toggle="tooltip" title="Seleccione la ciudad. Para buscar escriba código o nombre seguido de *">Ciudad</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_ciudad','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_ciudad','invalid',tablaForm)"></i>
+                                        <!-- <nets-dropdownlist  *ngIf="cargociudaes" (pasarDatos)="verCombocod_ciudad($event,'cod_ciudad','cod_ciudad')"
+                                [adata]="listaCiudades"  placeholder="Escriba y seleccione una ciudad"
+                                >
+                               </nets-dropdownlist> -->
+                                        <!-- <pru-categoria 
+                               (pasarDatos)="verCombocod_ciudad($event,'cod_ciudad','cod_ciudad')" valini="{{libmantab.valoriniCombog('cod_ciudad',tablaForm)}}"
+                               tablabase="CIUDADES" orden="1" filtro="*" campollave="cod_ciudad"                                      
+                               ></pru-categoria>
+                             El valor seleccionado es {{vvalocategoria | json}} -->
+
+                                        <netscombog (pasarDatos)="verCombocod_ciudad($event,'cod_ciudad','cod_ciudad')" valini="{{libmantab.valoriniCombog('cod_ciudad',tablaForm)}}" tablabase="CIUDADES" orden="1" filtro="*" campollave="cod_ciudad" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="direccion" data-toggle="tooltip" title="Escriba la Dirección principal completa">Dirección</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('direccion','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('direccion','invalid',tablaForm)"></i>
+                                        <input type="text" class="form-control" formControlName="direccion" placeholder="Escriba la Dirección principal completa" [UpperCase]="true" id="direccion">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="url_empre" data-toggle="tooltip" title="Escriba la dirección url asociada a la cuenta">Sitio Web </label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('url_empre','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('url_empre','invalid',tablaForm)"></i>
+                                        <input type="text" class="form-control" formControlName="url_empre" placeholder="Escriba la dirección url asociada a la cuenta" [UpperCase]="true" id="url_empre">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="codterprim" data-toggle="tooltip" title="Seleccione el tercero primario asociado al cliente. Usado par reportes primarios y secundarios.">Cuenta primaria </label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('codterprim','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('codterprim','invalid',tablaForm)"></i>
+                                        <netscombog (pasarDatos)="libmantab.verCombog($event,'codterprim','cod_tercer',tablaForm)" valini="{{libmantab.valoriniCombog('codterprim',tablaForm)}}" tablabase="TERCEROS" orden="1" filtro="*" campollave="cod_tercer" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="telefono" data-toggle="tooltip" title="Escriba el teléfono asociado a la cuenta">Teléfono </label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('telefono','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('telefono','invalid',tablaForm)"></i>
+                                        <input type="text" class="form-control" formControlName="telefono" placeholder="Escriba el teléfono asociado a la cuenta" [UpperCase]="true" id="telefono">
+                                    </div>
+                                    <div class="col-md-6">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <h4 class="divsecundaria alert-muted text-center">
+                                        Contacto Principal
+                                    </h4>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="id_contapri" data-toggle="tooltip" title="Seleccione el contacto principal asociado a la cuenta.">Contacto principal </label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('id_contapri','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('id_contapri','invalid',tablaForm)"></i>
+                                        <netscombog (pasarDatos)="libmantab.verCombog($event,'id_contapri','id_contacto',tablaForm)" valini="{{libmantab.valoriniCombog('id_contapri',tablaForm)}}" tablabase="CONTACTOS" orden="1" filtro="*" campollave="id_contacto" esdisabled="{{true}}">
+                                        </netscombog>
+                                        <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo('id_contapri','invalid',tablaForm) && 
+                                            libmantab.conpropvalCampo('id_contapri','touched',tablaForm)">
+                                            Debe seleccionar un contacto principal asociado a la cuenta.
+                                        </p>
+                                    </div>
+                                    <div *ngIf="cargocontacto" class="col-md-6">
+                                        <label class="labelrela">Cargo: {{regContacto.cargo}} </label>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="cargocontacto" class="row">
+                                    <div class="col-md-6">
+                                        <label class="labelrela">Nombres: {{regContacto.nombres}} </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="labelrela">Apellidos: {{regContacto.apellidos}} </label>
+                                    </div>
+                                </div>
+                                <div *ngIf="cargocontacto" class="row">
+                                    <div class="col-md-12">
+                                        <label class="labelrela">Telefonos: {{regContacto.tel_trabajo+' | '+regContacto.tel_movil}} </label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="nombre" data-toggle="tooltip" title="Nombre  o razón social.">Nombres </label>
+                                            <input type="text" class="form-control" formControlName="nombre" placeholder="Nombre o razón social." id="nombre">
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+                        <kendo-tabstrip-tab [title]="'Detalles'">
+                            <ng-template kendoTabContent>
+                                <h3 class="divprincipal alert-muted text-center">
+                                    Detalles de la cuenta
+                                </h3>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="descripcion" data-toggle="tooltip" title="Escriba información adicional para describir el cliente potencial">Descripción</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('descripcion','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('descripcion','invalid',tablaForm)"></i>
+                                        <textarea type="text" class="form-control" formControlName="descripcion" placeholder="Escriba información adicional para describir el cliente potencial" [UpperCase]="false" id="descripcion"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="ing_anual" data-toggle="tooltip" title="Escriba los ingresos anuales del cliente">Ingresos anuales:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('ing_anual','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('ing_anual','invalid',tablaForm)"></i>
+                                        <input type="number" class="form-control" formControlName="ing_anual" placeholder="Escriba los ingresos anuales del cliente" id="ing_anual">
+                                    </div>
+                                    <div class="col-md-2">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="num_emple" data-toggle="tooltip" title="Escriba el número de empleados del cliente">Número de empleados:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('num_emple','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('num_emple','invalid',tablaForm)"></i>
+                                        <input type="number" class="form-control" formControlName="num_emple" placeholder="Escriba el número de empleados del cliente" id="num_emple">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="id_sectore" data-toggle="tooltip" title="Seleccione el sector al que pertenece. Para buscar escriba código o nombre seguido de *">Sector:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('id_sectore','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('id_sectore','invalid',tablaForm)"></i>
+                                        <!-- <i (click)="openadicion('sectore')" class="fa fa-plus-square fa-lg mantenimiento" data-toggle="tooltip" title="Click para adicionar un nuevo sector económico."></i> -->
+                                        <netscombog (pasarDatos)="verCombosector($event,'id_sectore','id_sector')" valini="{{libmantab.valoriniCombog('id_sectore',tablaForm)}}" tablabase="SECTORCRM" orden="1" filtro="*" campollave="id_sector" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="propiedad" data-toggle="tooltip" title="Seleccione la estructura de propiedad de la cuenta (Publica,Privada,..)">Propiedad:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('propiedad','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('propiedad','invalid',tablaForm)"></i>
+                                        <netslistnum class="solcombog" (pasarDatos)="libmantab.verListnum($event,'propiedad','propiedad',tablaForm)" valini="{{libmantab.valoriniListnum('propiedad',tablaForm)}}" opciones="Pública,U,Privada,P,Subcidiaria,Otro,O" esdisabled="{{true}}">
+                                        </netslistnum>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="id_claxvolven" data-toggle="tooltip" title="Seleccione la clasificación asociada por volumen d eventas. Para buscar escriba código o nombre seguido de *">Clas.X Vol. Ventas:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('id_claxvolven','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('id_claxvolven','invalid',tablaForm)"></i>
+                                        <netscombog (pasarDatos)="libmantab.verCombog($event,'id_claxvolven','id_ventas',tablaForm)" valini="{{libmantab.valoriniCombog('id_claxvolven',tablaForm)}}" tablabase="CLA_XVOLVEN" orden="1" filtro="*" campollave="id_claxvolven" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <h4 class="divsecundaria alert-muted text-center">
+                                        Datos para facturación ERP
+                                    </h4>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="cod_acteic" data-toggle="tooltip" title="Seleccione la actividad económica a la que pertenece. Para buscar escriba código o nombre seguido de *">Actividad Económica</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_acteic','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_acteic','invalid',tablaForm)"></i>
+                                        <netscombog (pasarDatos)="verCombocod_acteic($event,'cod_acteic','cod_acteic')" valini="{{libmantab.valoriniCombog('cod_acteic',tablaForm)}}" tablabase="ACT_INDC" orden="1" filtro="*" campollave="cod_acteic" esdisabled="{{true}}" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cod_fpago" data-toggle="tooltip" title="Seleccione la  forma de pago asociada a la cuenta. Usado en facturación y cartera">Forma de pago</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_fpago','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_fpago','invalid',tablaForm)"></i>
+                                        <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_fpago','cod_fpago',tablaForm)" valini="{{libmantab.valoriniCombog('cod_fpago',tablaForm)}}" tablabase="FOR_PAGO" orden="1" filtro="*" campollave="cod_fpago" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="cod_vended" data-toggle="tooltip" title="Seleccione el vendedor asociado a la cuenta. Use * para busquedas">Vendedor:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_vended','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_vended','invalid',tablaForm)"></i>
+                                        <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_vended','cod_vended',tablaForm)" valini="{{libmantab.valoriniCombog('cod_vended',tablaForm)}}" tablabase="VENDEDORES" orden="1" filtro="*" campollave="cod_vended" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cod_zona" data-toggle="tooltip" title="Seleccione la zona asociada a la cuenta. Usado en facturación y estadisticas">Zona</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cod_zona','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cod_zona','invalid',tablaForm)"></i>
+                                        <netscombog (pasarDatos)="libmantab.verCombog($event,'cod_zona','cod_zona',tablaForm)" valini="{{libmantab.valoriniCombog('cod_zona',tablaForm)}}" tablabase="ZONAS" orden="1" filtro="*" campollave="cod_zona" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="lista_prec" data-toggle="tooltip" title="Seleccione la lista de precios asociada al cliente. Usado en facturación">Lista de precios</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('lista_prec','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('lista_prec','invalid',tablaForm)"></i>
+                                        <netscombog (pasarDatos)="libmantab.verCombog($event,'lista_prec','cod_lista',tablaForm)" valini="{{libmantab.valoriniCombog('lista_prec',tablaForm)}}" tablabase="C_LIS_PREC" orden="1" filtro="*" campollave="cod_lista" esdisabled="{{true}}">
+                                        </netscombog>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="descuento" data-toggle="tooltip" title="Escriba el porcentaje de descuento. Usado para facturar">Descuento:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('descuento','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('descuento','invalid',tablaForm)"></i>
+                                        <input type="number" class="form-control" formControlName="descuento" placeholder="Escriba el porcentaje de descuento." id="descuento">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="cupo_credi" data-toggle="tooltip" title="Escriba el cupo de credito asociado al cliente. Usado para pedidos y facturación">Cupo de Credito:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('cupo_credi','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('cupo_credi','invalid',tablaForm)"></i>
+                                        <input type="number" class="form-control" formControlName="cupo_credi" placeholder="Escriba el cupo de credito asociado al cliente." id="cupo_credi">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="ag_retened" class="form-check-label" data-toggle="tooltip" title="Marque si es un agente retenedor. Usado en facturación">Agente retenedor</label>
+                                        <input type="checkbox" class="form-check-input" formControlName="ag_retened" id="ag_retened" name="ag_retened" checked>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="estado" data-toggle="tooltip" title="Seleccione el estado de la cuenta (Activo,Inactivo).">Estado:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('estado','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('estado','invalid',tablaForm)"></i>
+                                        <netslistnum class="solcombog" (pasarDatos)="libmantab.verListnum($event,'estado','estado',tablaForm)" valini="{{libmantab.valoriniListnum('estado',tablaForm)}}" opciones="Activo,1,Inactivo,2" esdisabled="{{true}}">
+                                        </netslistnum>
+                                    </div>
+                                </div>
+
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+                        <kendo-tabstrip-tab [title]="'Contactos'">
+                            <ng-template kendoTabContent>
+                                <h3 class="divprincipal alert-muted text-center">
+                                    Contactos asociados a la cuenta
+                                </h3>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <app-listbasmodal ptablab="CONTACTOS" paplica="21" porden="2" [filtro]="filtrocontacto" title="Contacto" objeto="CRMCLIENTECON01" rutamant="mantbasica/CRMCLIENTECON01/">
+                                        </app-listbasmodal>
+
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+
+                        <kendo-tabstrip-tab [title]="'Usuario'">
+                            <ng-template kendoTabContent>
+                                <h3 class="divprincipal alert-muted text-center">
+                                    Campos de usuario del cliente potencial
+                                </h3>
+                                <div *ngFor="let field of camposform">
+                                    <div *ngIf="field.creado">
+                                        <label *ngIf="field.type != 'checkbox' && field.per_consultar" [for]="field.name" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                        <label *ngIf="field.type == 'checkbox' && field.per_consultar" [for]="field.name" class="form-check-label" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                        <i class="fa fa-check-circle check" *ngIf="field.type != 'checkbox' && field.per_consultar && libmantab.conpropvalCampo(field.name,'valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="field.type != 'checkbox' && field.per_consultar && libmantab.conpropvalCampo(field.name,'invalid',tablaForm)"></i>
+                                        <input *ngIf="field.type == 'text' && field.per_consultar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name">
+                                        <textarea *ngIf="field.type == 'textarea' && field.per_consultar" rows="5" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name"></textarea>
+                                        <input *ngIf="field.type == 'number' && field.per_consultar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [id]="field.name">
+                                        <input *ngIf="field.type == 'date' && field.per_consultar" [type]="field.type" class="form-control date" [formControlName]="field.name" [id]="field.name">
+                                        <input *ngIf="field.type == 'checkbox' && field.per_consultar" type="checkbox" class="form-check-input" [formControlName]="field.name" [id]="field.name" [name]="field.name" checked>
+                                        <netscombog *ngIf="field.type == 'solcombog' && field.per_consultar" class="solcombog" (pasarDatos)="libmantab.verCombog($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniCombog(field.name,tablaForm)}}" tablabase="{{field.combtabla}}"
+                                            orden="{{field.comborden}}" filtro="*" campollave="{{field.combcllave}}" esdisabled="true">
+                                        </netscombog>
+                                        <netslistnum *ngIf="field.type == 'netslistnum' && field.per_consultar" class="solcombog" (pasarDatos)="libmantab.verListnum($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniListnum(field.name,tablaForm)}}" opciones="{{field.options}}"
+                                            esdisabled="true">
+                                        </netslistnum>
+                                        <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo(field.name,'invalid',tablaForm) && 
+                                  libmantab.conpropvalCampo(field.name,'touched',tablaForm)">
+                                            {{field.mensaje_er}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+                    </kendo-tabstrip>
+                </kendo-splitter-pane>
+            </div>
+        </form>
+        <hr>
+    </div>
+</div>
+<!-- {{tablaForm.value | json}} -->

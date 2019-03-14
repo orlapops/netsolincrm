@@ -1,0 +1,108 @@
+<!-- <div *ngIf="!vparcaptura">
+    <app-header [title]="title" [subtitle]="subtitle" [rutaListado]="retornaRuta()"> </app-header>
+</div> -->
+<div class="alert alert-danger" *ngIf="enerror">
+    {{message}}
+</div>
+<div class="alert alert-danger" *ngIf="enlistaerror">
+    <ul>
+        <li *ngFor="let regerror of listaerrores">
+            {{regerror.menerror}}
+        </li>
+    </ul>
+</div>
+<div class="alert alert-success" *ngIf="!enerror && grabo">
+    {{message}}
+</div>
+<div>
+    <kendo-dialog title="Resultado." *ngIf="confmodifica" (close)="close()">
+        <h3 style="margin: 30px; text-align: center;">Se modifico el registro satisfactoriamente.</h3>
+
+        <kendo-dialog-actions>
+            <button kendoButton (click)="close()" [primary]="true">Cerrar.</button>
+        </kendo-dialog-actions>
+    </kendo-dialog>
+    <div *ngIf="resultados && grabando" class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+        <div class="alert alert-warning">
+            Grabando registro....
+            <img src="assets/spinner.gif">
+        </div>
+    </div>
+
+    <div *ngIf="resultados && !grabando" class="row">
+        <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+            <form [formGroup]="tablaForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <kendo-splitter-pane min="50%">
+                        <kendo-tabstrip>
+                            <kendo-tabstrip-tab [title]="'Generales'" [selected]="true">
+                                <ng-template kendoTabContent>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p> <span class="labelrela"> {{labelmodasoc}} </span></p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="id_tiparch" data-toggle="tooltip" title="Seleccione el tipo de archivo. Para buscar escriba código o nombre seguido de *">Tipo de archivo:</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('id_tiparch','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('id_tiparch','invalid',tablaForm)"></i>
+                                            <i (click)="openadicion('tipoarch')" class="fa fa-plus-square fa-lg mantenimiento" data-toggle="tooltip" title="Click para adicionar un nuevo tipo de archivo."></i>
+                                            <netscombog (pasarDatos)="verComboTipoarch($event,'id_tiparch','id_tiparch')" valini="{{libmantab.valoriniCombog('id_tiparch',tablaForm)}}" tablabase="TIPOSARCHADJ" orden="1" filtro="*" campollave="id_tiparch">
+                                            </netscombog>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <label for="descripcion" data-toggle="tooltip" title="Escriba información adicional para describir la archivosadj.">Descripción</label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('descripcion','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('descripcion','invalid',tablaForm)"></i>
+                                            <textarea type="text" class="form-control" formControlName="descripcion" placeholder="Escriba información adicional para describir la archivosadj" [UpperCase]="false" id="descripcion"></textarea>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+                            <kendo-tabstrip-tab [title]="'Usuario'">
+                                <ng-template kendoTabContent>
+                                    <h3 class="divprincipal alert-muted text-center">
+                                        Campos de usuario del cliente potencial
+                                    </h3>
+                                    <div *ngFor="let field of camposform">
+                                        <div *ngIf="field.creado">
+                                            <label *ngIf="field.type != 'checkbox' && field.per_modificar" [for]="field.name" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                            <label *ngIf="field.type == 'checkbox' && field.per_modificar" [for]="field.name" class="form-check-label" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                            <i class="fa fa-check-circle check" *ngIf="field.type != 'checkbox'  && field.per_modificar && libmantab.conpropvalCampo(field.name,'valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="field.type != 'checkbox' && field.per_modificar && libmantab.conpropvalCampo(field.name,'invalid',tablaForm)"></i>
+                                            <input *ngIf="field.type == 'text' && field.per_modificar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name">
+                                            <textarea *ngIf="field.type == 'textarea' && field.per_modificar" rows="5" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name"></textarea>
+                                            <input *ngIf="field.type == 'number' && field.per_modificar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [id]="field.name">
+                                            <input *ngIf="field.type == 'date' && field.per_modificar" [type]="field.type" class="form-control date" [formControlName]="field.name" [id]="field.name">
+                                            <input *ngIf="field.type == 'checkbox' && field.per_modificar" type="checkbox" class="form-check-input" [formControlName]="field.name" [id]="field.name" [name]="field.name" checked>
+                                            <netscombog *ngIf="field.type == 'solcombog' && field.per_modificar" class="solcombog" (pasarDatos)="libmantab.verCombog($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniCombog(field.name,tablaForm)}}" tablabase="{{field.combtabla}}"
+                                                orden="{{field.comborden}}" filtro="*" campollave="{{field.combcllave}}">
+                                            </netscombog>
+                                            <netslistnum *ngIf="field.type == 'netslistnum' && field.per_modificar" class="solcombog" (pasarDatos)="libmantab.verListnum($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniListnum(field.name,tablaForm)}}" opciones="{{field.options}}">
+                                            </netslistnum>
+                                            <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo(field.name,'invalid',tablaForm) && field.per_modificar && 
+                            libmantab.conpropvalCampo(field.name,'touched',tablaForm)">
+                                                {{field.mensaje_er}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </kendo-tabstrip-tab>
+                        </kendo-tabstrip>
+                    </kendo-splitter-pane>
+
+                </div>
+                <button type="submit" class="btn btn-primary" [disabled]="!tablaForm.valid">Guardar Cambios</button>
+                <div *ngIf="!vparcaptura">
+                    <a class="btn btn-danger" [routerLink]="[retornaRuta()]">Cancelar</a>
+                </div>
+                <p class="alert alert-warning" *ngIf="!tablaForm.valid">
+                    Por favor complete todos los campos con valores validos
+                </p>
+            </form>
+            <!-- <p>Form value: {{tablaForm.value | json}}</p> -->
+            <hr>
+        </div>
+    </div>
+</div>

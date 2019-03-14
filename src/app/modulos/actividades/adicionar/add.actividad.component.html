@@ -1,0 +1,140 @@
+<div class="row">
+    <div class="alert alert-danger" *ngIf="enerror">
+        {{message}}
+    </div>
+    <div class="alert alert-danger" *ngIf="enlistaerror">
+        <ul>
+            <li *ngFor="let regerror of listaerrores">
+                {{regerror.menerror}}
+            </li>
+        </ul>
+    </div>
+    <div class="alert alert-success" *ngIf="!enerror && grabo">
+        {{message}}
+    </div>
+
+    <!-- aqui ventanas modal para la adicion de otras tablas desde este modulo -->
+
+
+    <!-- <h2>version angular {{verangular}}</h2> -->
+    <!-- Solo si esta inicializado y esta grabando mostrar sppiner -->
+    <div *ngIf="inicializado && grabando" class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+        <div class="alert alert-warning">
+            Grabando registro....
+            <img src="assets/spinner.gif">
+        </div>
+    </div>
+    <!-- Solo si esta inicializado y no esta grabando-->
+    <div *ngIf="inicializado && cargomodasoc && !grabando" class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
+        <form [formGroup]="tablaForm" (ngSubmit)="onSubmit()">
+            <!-- camposform:{{camposform[0] | json}} -->
+            <div class="form-group">
+                <kendo-splitter-pane min="50%">
+                    <kendo-tabstrip #tabstrip>
+                        <kendo-tabstrip-tab [title]="'Generales'" [selected]="true">
+                            <ng-template kendoTabContent>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="labelrela"> {{labelmodasoc}} </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="tipo_act" data-toggle="tooltip" title="Seleccione el tipo de actividad a adicionar.">Tipo Actividad:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('tipo_act','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('tipo_act','invalid',tablaForm)"></i>
+                                        <netslistnum class="solcombog" (pasarDatos)="verListtipo_act($event,'tipo_act','tipo_act')" valini="{{libmantab.valoriniListnum('tipo_act',tablaForm)}}" opciones="Tarea,T,Llamada,L,Email,E,Cita,C,Servicio,S,Reg. Seguimiento,R">
+                                        </netslistnum>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label for="asunto" data-toggle="tooltip" title="Escriba el asunto o resumen que le ayude a identificar la actividad">Asunto</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('asunto','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('asunto','invalid',tablaForm)"></i>
+                                        <textarea type="text" class="form-control" formControlName="asunto" placeholder="Escriba el asunto o resumen que le ayude a identificar la actividad" [UpperCase]="true" id="asunto"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="descripcion" data-toggle="tooltip" title="Escriba información adicional para describir la actividad.">Descripción</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('descripcion','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('descripcion','invalid',tablaForm)"></i>
+                                        <textarea type="text" class="form-control" formControlName="descripcion" placeholder="Escriba información adicional para describir la actividad" [UpperCase]="false" id="descripcion"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="prioridad" data-toggle="tooltip" title="Seleccione la prioridad.">Prioridad:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('prioridad','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('prioridad','invalid',tablaForm)"></i>
+                                        <netslistnum class="solcombog" (pasarDatos)="verListprioridad($event,'prioridad','prioridad')" valini="{{libmantab.valoriniListnum('prioridad',tablaForm)}}" opciones="Alta,A,Media,M,Baja,B">
+                                        </netslistnum>
+                                    </div>
+                                    <div class="col-md-2">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="fecha_ven" data-toggle="tooltip" title="Seleccione la fecha_ven.">fecha_ven:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('fecha_ven','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('fecha_ven','invalid',tablaForm)"></i>
+                                        <input type="date" class="form-control date" formControlName="fecha_ven" id="fecha_ven">
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="estado" data-toggle="tooltip" title="Seleccione la estado.">Estado:</label>
+                                        <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('estado','valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('estado','invalid',tablaForm)"></i>
+                                        <netslistnum class="solcombog" (pasarDatos)="verListestado($event,'estado','estado')" valini="{{libmantab.valoriniListnum('estado',tablaForm)}}" opciones="Abierta,A,En proceso,P,Ejecutada,E,Cerrada,C">
+                                        </netslistnum>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+                        <kendo-tabstrip-tab [title]="'Usuario'">
+                            <ng-template kendoTabContent>
+                                <h3 class="divprincipal alert-muted text-center">
+                                    Campos de usuario de la cuenta (cliente)
+                                </h3>
+                                <div *ngFor="let field of camposform">
+                                    <div *ngIf="field.creado">
+                                        <label *ngIf="field.type != 'checkbox' && field.per_adicionar" [for]="field.name" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                        <label *ngIf="field.type == 'checkbox' && field.per_adicionar" [for]="field.name" class="form-check-label" data-toggle="tooltip" [title]="field.placeholder">{{field.label}} </label>
+                                        <i class="fa fa-check-circle check" *ngIf="field.type != 'checkbox'  && field.per_adicionar && libmantab.conpropvalCampo(field.name,'valid',tablaForm)"></i>
+                                        <i class="fa fa-exclamation-circle uncheck" *ngIf="field.type != 'checkbox'  && field.per_adicionar && libmantab.conpropvalCampo(field.name,'invalid',tablaForm)"></i>
+                                        <input *ngIf="field.type == 'text' && field.per_adicionar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name">
+                                        <textarea *ngIf="field.type == 'textarea' && field.per_adicionar" rows="5" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [UpperCase]="true" [id]="field.name"></textarea>
+                                        <input *ngIf="field.type == 'number' && field.per_adicionar" [type]="field.type" class="form-control" [formControlName]="field.name" placeholder="{{field.placeholder}}" [id]="field.name">
+                                        <input *ngIf="field.type == 'date' && field.per_adicionar" [type]="field.type" class="form-control date" [formControlName]="field.name" [id]="field.name">
+                                        <input *ngIf="field.type == 'checkbox' && field.per_adicionar" type="checkbox" class="form-check-input" [formControlName]="field.name" [id]="field.name" [name]="field.name" checked>
+                                        <netscombog *ngIf="field.type == 'solcombog' && field.per_adicionar" class="solcombog" (pasarDatos)="libmantab.verCombog($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniCombog(field.name,tablaForm)}}" tablabase="{{field.combtabla}}"
+                                            orden="{{field.comborden}}" filtro="*" campollave="{{field.combcllave}}">
+                                        </netscombog>
+                                        <netslistnum *ngIf="field.type == 'netslistnum' && field.per_adicionar" class="solcombog" (pasarDatos)="libmantab.verListnum($event,field.name,field.combcllave,tablaForm)" valini="{{libmantab.valoriniListnum(field.name,tablaForm)}}" opciones="{{field.options}}">
+                                        </netslistnum>
+                                        <p class="alert alert-danger" *ngIf="libmantab.conpropvalCampo(field.name,'invalid',tablaForm)  && field.per_adicionar && 
+                          libmantab.conpropvalCampo(field.name,'touched',tablaForm)">
+                                            {{field.mensaje_er}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </kendo-tabstrip-tab>
+                    </kendo-tabstrip>
+                </kendo-splitter-pane>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="!tablaForm.valid">Adicionar Registro</button>
+            <div *ngIf="!vparcaptura">
+                <a class="btn btn-danger" [routerLink]="[retornaRuta()]">Cancelar</a>
+            </div>
+            <p class="alert alert-warning" *ngIf="!tablaForm.valid">
+                Por favor complete todos los campos
+            </p>
+        </form>
+        <hr>
+    </div>
+</div>
+<!-- <p>Form value: {{tablaForm.value | json}}</p> -->
+
+<!-- {{tablaForm | json}} -->
