@@ -35,6 +35,7 @@ export class GraficoComponent implements OnInit {
   @Input() oparamgrafico: any;
   //Para comunicar grafica
   @Input() clasegrafico:string='mes';
+  @Input() filtrarano: boolean= false;
 
   inicializado=false;
   cambiomes=false;
@@ -57,13 +58,32 @@ export class GraficoComponent implements OnInit {
   
   public showTransitions: boolean = true;
   public resultados:boolean = true;
+  public listanos: Array<number> = [];
+  fechahoy = new Date();
+  ano = this.fechahoy.getFullYear();
+
   constructor(
     private service: NetsolinService,
     public libmantab: MantablasLibreria,
     private activatedRouter: ActivatedRoute,
     public vglobal: varGlobales,
     ) 
-    { }
+    { 
+          //llenar array ultimos 5 años
+    this.listanos.push(this.ano);
+    this.listanos.push(this.ano-1);
+    this.listanos.push(this.ano-2);
+    this.listanos.push(this.ano-3);
+    this.listanos.push(this.ano-4);
+    console.log(this.listanos);
+    console.log(this.listaopciones);
+    console.log(this.listaopciones2);
+    this.selectedopcion = this.listaopciones[0];
+    this.selectedopcion2 = this.listaopciones2[0];
+    console.log(this.selectedopcion);
+    console.log(this.selectedopcion2);
+    }
+
   ngOnChanges(changes: SimpleChanges): void {
       //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
       //Add '${implements OnChanges}' to the class.
@@ -107,6 +127,7 @@ export class GraficoComponent implements OnInit {
         }
       );
           
+    
     }
     
   ngOnInit() {
@@ -182,6 +203,50 @@ export class GraficoComponent implements OnInit {
   public labelContent(e: any): string {
     return `${ e.category }: \n ${e.value}`;
 }
+public valueChangeano(value: any): void {    
+  console.log('valueChange', value);
+  this.oparamgrafico.ano = value;
+  this.inicializado = false;
+  NetsolinApp.objenvrest.tiporet = 'OBJ'
+
+  this.service.getNetsolinObjconParametros(this.oparamgrafico.objeto,this.oparamgrafico)
+  .subscribe(result => {
+      //viene registro con datos de la grafica
+      this.inicializado = true;
+      console.log("valueChangeano eje getNetsolinObjconParametros retorna result");
+      console.log(result);
+      this.listaopciones=result.opciones.opciones;
+      
+      this.modelgrafserie1=result.serie1.data;
+      this.modelgrafserie2=result.serie2.data;
+      this.modeldatos=result.curdatos;
+      this.linkexcel=result.opciones.linkexcel;
+      console.log('link excel:'+this.linkexcel);
+      if (result.opciones.titulo != ''){
+        this.titulo = result.opciones.titulo;
+      }
+    this.objretornado=result;
+      var result0 = result[0];
+      this.inicializado=true;
+      // console.log(result0);
+      if (typeof result.isCallbackError === "undefined") {       
+        //viene el registro con datos para el grafico
+        console.log("valueChangeano eje getNetsolinObjconParametros retorna con datos grafico result");
+        console.log(result);  
+      } else {
+        //viene el registro con el error
+        console.log("Error en getNetsolinObjconParametros result");
+        console.log(result);
+      }
+    },
+    error => {
+      console.log("Error en getNetsolinObjconParametros error otro tipo");
+      console.log(error);
+    }
+  );
+
+}
+
 handleOpcionChange(value) {
   this.inicializado = false;
   console.log('handleOpcionChange 1');

@@ -7,6 +7,19 @@
 
 
 <div class="row" *ngIf="inicializado">
+    <div class="col-sm-3" *ngIf="filtrarano">
+        <label>
+            Año
+            <kendo-dropdownlist
+                isRequired="true"
+                [data]="listanos"
+                [value]="oparamgrafico.ano"
+                (valueChange)="valueChangeano($event)"
+                required
+            >
+            </kendo-dropdownlist>
+        </label>
+    </div>
     <div class="col-sm-2">
         <div class="example-config">
             <label for="btipograf">Tipo Grafico</label>

@@ -27,6 +27,9 @@ export class MonitorObjetotablaComponent implements OnInit {
   @Input() titulo: string;
   @Input() minimizada: string;
   @Input() paramobj: any;
+  @Input() filtrarano: boolean= false;
+  @Input() ano: number;
+  @Input() mes: number;
 
   title: string;
   subtitle = '(Monitor)';
@@ -46,7 +49,9 @@ export class MonitorObjetotablaComponent implements OnInit {
   collapse=false;
   esconder=false;
   ejecutoObjeto = false;
-
+  public listanos: Array<number> = [];
+  fechahoy = new Date();
+  
   constructor(private mantbasicaService: MantbasicaService,
     public vglobal: varGlobales,
     private service: NetsolinService,
@@ -57,11 +62,19 @@ export class MonitorObjetotablaComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private httpc: HttpClient
   ) {
+    console.log('constructor objtabla');
     this.vglobal.mostrarbreadcrumbs = false;
-
+          //llenar array ultimos 5 años
+          this.listanos.push(this.ano);
+          this.listanos.push(this.ano-1);
+          this.listanos.push(this.ano-2);
+          this.listanos.push(this.ano-3);
+          this.listanos.push(this.ano-4);
+      
   }
 
   ngOnInit() {
+    console.log('ngoninit objtabla',this.ano);
     // console.log('ngoninit esconder');
     // console.log(this.esconder);
     // console.log('ngoninit collapse');
@@ -90,7 +103,14 @@ export class MonitorObjetotablaComponent implements OnInit {
       }
     );
   }
+  public valueChangeano(value: any): void {    
+    console.log('valueChange', value);
+    this.paramobj.ano = value;
+    this.ano  = value;
+      this.ejecutaObjeto();
 
+  }
+  
   ejecutaObjeto(){
     this.ejecutoObjeto=true;
     this.enlistaerror=false;
@@ -99,7 +119,7 @@ export class MonitorObjetotablaComponent implements OnInit {
     .subscribe(result => {
         //viene registro con el precio o error
         // console.log("eje getNetsolinObjconParametros retorna result");
-        // console.log(result);
+        console.log(result);
         var result0 = result[0];
         // console.log(result0);
         if (typeof result.isCallbackError === "undefined") {       
@@ -151,8 +171,12 @@ export class MonitorObjetotablaComponent implements OnInit {
   }
   //Si cambia el codigo del tercero llenar el nit con el mismo si este esta vacio
   onChanges(): void {
+    console.log('onchange objtabla');
   }
-
+  ngOnChanges(): void {
+    console.log('ngOnChanges objtabla',this.ano,this.paramobj);
+    this.ejecutaObjeto();
+  }
   retornaRuta() {
     // console.log(this.rutamant);
     // return '/' + this.rutamant;

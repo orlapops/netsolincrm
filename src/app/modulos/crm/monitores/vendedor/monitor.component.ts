@@ -101,13 +101,28 @@ export class MonitorVendedorComponent implements OnInit {
   pruebavininumbuscombog:string = "";
   llamabusqueda = false;
   pruellegallabusque:string="";
-  public paramocotizaganadas: any = {titulo: "Ganadas",cod_vended :"",tipo:"G", numreg:20}
-  public paramocotizacanceladas: any = {titulo: "Canceladas",cod_vended :"",tipo:"C", numreg:10}
-  public paramocotizaperdidas: any = {titulo: "Perdidas",cod_vended :"",tipo:"P", numreg:20}
-  public paramocotizaborrador: any = {titulo: "Borrador",cod_vended :"",tipo:"B", numreg:20}
-  public paramocotizaenproceso: any = {titulo: "En proceso",cod_vended :"",tipo:"O", numreg:20}
-
-  public paramtabvendcrm: any = {titulo: "Monitor  Vendedor ",cod_usuar :"",cod_vended:"", ano:this.ano}
+  public paramocotizaganadas: any = {titulo: "Ganadas",cod_vended :"",tipo:"G", numreg:20, ano:this.ano, mes: this.mes}
+  public paramocotizacanceladas: any = {titulo: "Canceladas",cod_vended :"",tipo:"C", numreg:10, ano:this.ano, mes: this.mes}
+  public paramocotizaperdidas: any = {titulo: "Perdidas",cod_vended :"",tipo:"P", numreg:20, ano:this.ano, mes: this.mes}
+  public paramocotizaborrador: any = {titulo: "Borrador",cod_vended :"",tipo:"B", numreg:20, ano:this.ano, mes: this.mes}
+  public paramocotizaenproceso: any = {titulo: "En proceso",cod_vended :"",tipo:"O", numreg:20, ano:this.ano, mes: this.mes}
+  public listanos: Array<number> = [];
+  public listameses: any = [
+       {mes: 1,nommes :"Enero"},
+       {mes: 2,nommes :"Febrero"},
+       {mes: 3,nommes :"Marzo"},
+       {mes: 4,nommes :"Abril"},
+       {mes: 5,nommes :"Mayo"},
+       {mes: 6,nommes :"Junio"},
+       {mes: 7,nommes :"Julio"},
+       {mes: 8,nommes :"Agosto"},
+       {mes: 9,nommes :"Septiembre"},
+       {mes: 10,nommes :"Octubre"},
+       {mes: 11,nommes :"Noviembre"},
+       {mes: 12,nommes :"Diciembre"}
+  ]
+  Itemmes: {mes: 1,nommes :"Enero"};
+  public paramtabvendcrm: any = {titulo: "Monitor  Vendedor ",cod_usuar :"",cod_vended:"", ano:this.ano, mes: this.mes}
   
 //configuracion menu panelinfo
 public itemsinfo: Array<PanelBarItemModel> = [
@@ -138,6 +153,12 @@ private selectedId: string = "";
 
   ) {
     this.vglobal.mostrarbreadcrumbs = false;
+    //llenar array ultimos 5 años
+    this.listanos.push(this.ano);
+    this.listanos.push(this.ano-1);
+    this.listanos.push(this.ano-2);
+    this.listanos.push(this.ano-3);
+    this.listanos.push(this.ano-4);
 
   }
 
@@ -248,6 +269,19 @@ private selectedId: string = "";
               this.paramocotizacanceladas.cod_vended = regTabla.cod_vended;
               this.paramocotizaperdidas.cod_vended = regTabla.cod_vended;
 
+              this.paramocotizaborrador.ano = ano;
+              this.paramocotizaenproceso.ano = ano;
+              this.paramocotizaganadas.ano = ano;
+              this.paramocotizacanceladas.ano = ano;
+              this.paramocotizaperdidas.ano = ano;
+
+              this.paramocotizaborrador.mes = mes;
+              this.paramocotizaenproceso.mes = mes;
+              this.paramocotizaganadas.mes = mes;
+              this.paramocotizacanceladas.mes = mes;
+              this.paramocotizaperdidas.mes = mes;
+
+
               this.cargovendedor = true;
               this.inicializaMonitor(regTabla);
             }
@@ -278,6 +312,31 @@ private selectedId: string = "";
   //Si cambia el codigo del tercero llenar el nit con el mismo si este esta vacio
   onChanges(): void {
   }
+  public valueChange(value: any): void {    
+    console.log('valueChange', value);
+    this.ano = value;
+    this.paramtabvendcrm.ano = value;
+    this.oparamgraficollamadasdia.ano = value;
+    this.oparamgraficocotizadia.ano = value;
+    this.paramocotizaborrador.ano = value;
+    this.paramocotizaenproceso.ano = value;
+    this.paramocotizaganadas.ano = value;
+    this.paramocotizacanceladas.ano = value;
+    this.paramocotizaperdidas.ano = value;
+}
+public valueChangemes(value: any): void {    
+  console.log('valueChangemes', value);
+  this.mes = value.mes;
+  this.paramtabvendcrm.mes = value.mes;
+  this.oparamgraficollamadasdia.mes = value.mes;
+  this.oparamgraficocotizadia.mes = value.mes;
+  this.paramocotizaborrador.mes = value.mes;
+  this.paramocotizaenproceso.mes = value.mes;
+  this.paramocotizaganadas.mes = value.mes;
+  this.paramocotizacanceladas.mes = value.mes;
+  this.paramocotizaperdidas.mes = value.mes;
+
+}
 
   retornaRuta() {
     // console.log(this.rutamant);

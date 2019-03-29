@@ -228,6 +228,26 @@
                     <ng-template kendoTabContent>
                         <div class="row">
                             <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
+                                <div class="form-group">
+                                    <label>
+                                    Año
+                                    <kendo-dropdownlist
+                                        isRequired="true"
+                                        [data]="listanos"
+                                        [value]=ano
+                                        (valueChange)="valueChange($event)"
+                                        required
+                                    >
+                                    </kendo-dropdownlist>
+                                </label>
+                                </div>
+                    
+                    
+                                <!-- <nets-filtroanomes (pasarAno)="filtroAno($event)" (pasarMes)="filtroMes($event)" tipo="AM" titulofiltro="Filtrar: " anoini="{{anofiltro}}" mesini="{{mesfiltro}}"></nets-filtroanomes> -->
+                            </div>
+                        </div>
+                    <div class="row">
+                            <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
                                 <div class="list-group">
                                     <a [href]="cleanURL(linkmoniventas)" class="list-group-item active">
                                         <h6 class="list-group-item-heading">Monitor cliente ERP</h6>
@@ -238,10 +258,10 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMVENCLIEXMES" minimizada="NO" titulo="Ventas x Mes" color="success" [paramobj]="paramtabgencuentacrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMVENCLIEXMES" minimizada="NO" titulo="Ventas x Mes" color="success" [paramobj]="paramtabgencuentacrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMVENCLIESERV" minimizada="NO" titulo="Servicios" color="success" [paramobj]="paramtabgencuentacrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMVENCLIESERV" minimizada="NO" titulo="Servicios" color="success" [paramobj]="paramtabgencuentacrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
                     </ng-template>

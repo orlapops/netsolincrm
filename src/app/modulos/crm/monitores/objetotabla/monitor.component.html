@@ -20,6 +20,20 @@
         <div *ngIf="!esconder" class="box box-{{color}}">
             <div class="box-header with-border">
                 <h3 class="box-title">{{titulo}}</h3>
+                <div class="col-sm-3" *ngIf="filtrarano">
+                    <label>
+                        Año
+                        <kendo-dropdownlist
+                            isRequired="true"
+                            [data]="listanos"
+                            [value]="paramobj.ano"
+                            (valueChange)="valueChangeano($event)"
+                            required
+                        >
+                        </kendo-dropdownlist>
+                    </label>
+                </div>
+            
                 <div class="box-tools pull-right">
                     <button *ngIf="collapse" class="btn btn-box-tool" data-widget="collapse" (click)="conmutacollapse()"><i class="fa fa-plus"></i></button>
                     <button *ngIf="!collapse" class="btn btn-box-tool" data-widget="collapse" (click)="conmutacollapse()"><i class="fa fa-minus"></i></button>

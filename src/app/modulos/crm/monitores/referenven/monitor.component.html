@@ -97,7 +97,7 @@
                                         </kendo-tabstrip-tab> -->
                     <!-- <kendo-tabstrip-tab [title]="'Ventas Anuales'" [selected]="true">
                                 <ng-template kendoTabContent> -->
-                    <nets-grafico titulo="Ventas en el año" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="line" formatoserie="M" formatoxy="c0" [oparamgrafico]="oparamgrafico"></nets-grafico>
+                    <nets-grafico titulo="Ventas en el año" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="line" formatoserie="M" formatoxy="c0" [oparamgrafico]="oparamgrafico" filtrarano="true"></nets-grafico>
                     <!-- </ng-template>
                             </kendo-tabstrip-tab>
 
@@ -115,7 +115,7 @@
                     <ng-template kendoTabContent>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABREFVXMES" minimizada="NO" titulo="Ventas x Mes" color="success" [paramobj]="paramtabvenxmes"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABREFVXMES" minimizada="NO" titulo="Ventas x Mes" color="success" [paramobj]="paramtabvenxmes" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                             <div class="col-md-6">
                                 <!-- <div class="row">
@@ -124,15 +124,15 @@
                                     </div>
                                 </div>
                                 <br> -->
-                                <monitor-objtabla objeto="MONTABREFEARCHIVO" minimizada="SI" titulo="Archivos" color="danger" [paramobj]="paramtabarchivos"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABREFEARCHIVO" minimizada="SI" titulo="Archivos" color="danger" [paramobj]="paramtabarchivos" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABREFETOPCLIE" minimizada="SI" titulo="Top 10 Vtas x Cliente del Año" color="warning" [paramobj]="paramtabvenxmes"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABREFETOPCLIE" minimizada="SI" titulo="Top 10 Vtas x Cliente del Año" color="warning" [paramobj]="paramtabvenxmes" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABREFEXIXBOD" minimizada="SI" titulo="Existencias x Bodega" color="info" [paramobj]="paramtabexixbod"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABREFEXIXBOD" minimizada="SI" titulo="Existencias x Bodega" color="info" [paramobj]="paramtabexixbod" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
 

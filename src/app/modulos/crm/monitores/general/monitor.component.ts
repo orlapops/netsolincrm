@@ -142,8 +142,23 @@ public itemsinfo: Array<PanelBarItemModel> = [
     <PanelBarItemModel> {title: "Contacto Inicial", id:'infcontac' },
     <PanelBarItemModel> {title: "Contactos", id:'infcon' }
 ];
-
-public paramtabgencrm: any = {titulo: "Monitor  Generarl Crm",cod_usuar :"", ano:this.ano}
+public listanos: Array<number> = [];
+public listameses: any = [
+     {mes: 1,nommes :"Enero"},
+     {mes: 2,nommes :"Febrero"},
+     {mes: 3,nommes :"Marzo"},
+     {mes: 4,nommes :"Abril"},
+     {mes: 5,nommes :"Mayo"},
+     {mes: 6,nommes :"Junio"},
+     {mes: 7,nommes :"Julio"},
+     {mes: 8,nommes :"Agosto"},
+     {mes: 9,nommes :"Septiembre"},
+     {mes: 10,nommes :"Octubre"},
+     {mes: 11,nommes :"Noviembre"},
+     {mes: 12,nommes :"Diciembre"}
+]
+Itemmes: {mes: 1,nommes :"Enero"};
+public paramtabgencrm: any = {titulo: "Monitor  Generarl Crm",cod_usuar :"", ano:this.ano, mes: this.mes}
   
 private selectedId: string = "";
 
@@ -165,7 +180,13 @@ private selectedId: string = "";
     private sanitizer: DomSanitizer
   ) {
     this.vglobal.mostrarbreadcrumbs = false;
-
+    //llenar array ultimos 5 años
+    this.listanos.push(this.ano);
+    this.listanos.push(this.ano-1);
+    this.listanos.push(this.ano-2);
+    this.listanos.push(this.ano-3);
+    this.listanos.push(this.ano-4);
+    console.log(this.listanos);
   }
 
   public onPanelChange(data: Array<PanelBarItemModel>): boolean {
@@ -218,6 +239,27 @@ private selectedId: string = "";
   //Si cambia el codigo del tercero llenar el nit con el mismo si este esta vacio
   onChanges(): void {
   }
+  public valueChange(value: any): void {    
+    console.log('valueChange', value);
+    this.ano = value;
+    this.paramtabgencrm.ano = value;
+    this.oparamgraficollamadasven.ano = value;
+    this.oparamgraficovenxvende.ano = value;
+    this.oparamgraficovenganxvende.ano = value;
+    this.oparamgraficovenperxvende.ano = value;
+    this.oparamgraficocotizaven.ano = value;  
+}
+public valueChangemes(value: any): void {    
+  console.log('valueChangemes', value);
+  this.mes = value.mes;
+  this.paramtabgencrm.mes = value.mes;
+  this.oparamgraficollamadasven.mes = value.mes;
+  this.oparamgraficovenxvende.mes = value.mes;
+  this.oparamgraficovenganxvende.mes = value.mes;
+  this.oparamgraficovenperxvende.mes = value.mes;
+  this.oparamgraficocotizaven.mes = value.mes;
+  
+}
 
   retornaRuta() {
     // console.log(this.rutamant);

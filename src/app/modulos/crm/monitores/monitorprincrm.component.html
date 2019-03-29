@@ -48,28 +48,48 @@
             <kendo-tabstrip>
                 <kendo-tabstrip-tab [title]="'Cotizaciones'" [selected]="false">
                     <ng-template kendoTabContent>
-                        <h4 class="divprincipal alert-muted text-center">
+                        <!-- <h4 class="divprincipal alert-muted text-center">
                             Top Cotizaciones
-                        </h4>
+                        </h4> -->
                         <div class="row">
-                            <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABCOTIZUSUAR" minimizada="SI" titulo="En borrador" color="warning" [paramobj]="paramocotizaborrador"></monitor-objtabla>
-                            </div>
-                            <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABCOTIZUSUAR" minimizada="NO" titulo="En proceso" color="info" [paramobj]="paramocotizaenproceso"></monitor-objtabla>
+                            <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
+                                <div class="form-group">
+                                    <label>
+                                    Año
+                                    <kendo-dropdownlist
+                                        isRequired="true"
+                                        [data]="listanos"
+                                        [value]=ano
+                                        (valueChange)="valueChange($event)"
+                                        required
+                                    >
+                                    </kendo-dropdownlist>
+                                </label>
+                                </div>
+                    
+                    
+                                <!-- <nets-filtroanomes (pasarAno)="filtroAno($event)" (pasarMes)="filtroMes($event)" tipo="AM" titulofiltro="Filtrar: " anoini="{{anofiltro}}" mesini="{{mesfiltro}}"></nets-filtroanomes> -->
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABCOTIZUSUAR" minimizada="SI" titulo="Ganadas" color="success" [paramobj]="paramocotizaganadas"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABCOTIZUSUAR" minimizada="SI" titulo="En borrador" color="warning" [paramobj]="paramocotizaborrador" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABCOTIZUSUAR" minimizada="SI" titulo="Perdidas" color="danger" [paramobj]="paramocotizaperdidas"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABCOTIZUSUAR" minimizada="NO" titulo="En proceso" color="info" [paramobj]="paramocotizaenproceso" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABCOTIZUSUAR" minimizada="SI" titulo="Canceladas" color="warning" [paramobj]="paramocotizacanceladas"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABCOTIZUSUAR" minimizada="SI" titulo="Ganadas" color="success" [paramobj]="paramocotizaganadas" [ano]="ano" [mes]="mes"></monitor-objtabla>
+                            </div>
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONTABCOTIZUSUAR" minimizada="SI" titulo="Perdidas" color="danger" [paramobj]="paramocotizaperdidas" [ano]="ano" [mes]="mes"></monitor-objtabla>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONTABCOTIZUSUAR" minimizada="SI" titulo="Canceladas" color="warning" [paramobj]="paramocotizacanceladas" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
                     </ng-template>
@@ -82,34 +102,34 @@
                         </h4>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="NO" titulo="Pendientes Vencidas" color="danger" [paramobj]="paramactividadpenvenc"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="NO" titulo="Pendientes Vencidas" color="danger" [paramobj]="paramactividadpenvenc" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Proximas a Vencer" color="warning" [paramobj]="paramactividadpenxvenc"></monitor-objtabla>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Tareas" color="info" [paramobj]="paramactividadtareas"></monitor-objtabla>
-                            </div>
-                            <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Llamadas" color="info" [paramobj]="paramactividadllamadas"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Proximas a Vencer" color="warning" [paramobj]="paramactividadpenxvenc" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Seguimientos" color="warning" [paramobj]="paramactividadsegui"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Tareas" color="info" [paramobj]="paramactividadtareas" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Emails" color="warning" [paramobj]="paramactividademail"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Llamadas" color="info" [paramobj]="paramactividadllamadas" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Citas" color="success" [paramobj]="paramactividadcitas"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Seguimientos" color="warning" [paramobj]="paramactividadsegui" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Servicios" color="success" [paramobj]="paramactividadservi"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Emails" color="warning" [paramobj]="paramactividademail" [ano]="ano" [mes]="mes"></monitor-objtabla>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Citas" color="success" [paramobj]="paramactividadcitas" [ano]="ano" [mes]="mes"></monitor-objtabla>
+                            </div>
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONTABACTIVIDUSUAR" minimizada="SI" titulo="Servicios" color="success" [paramobj]="paramactividadservi" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
 

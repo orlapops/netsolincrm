@@ -89,7 +89,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="!collapse" class="box-body">
-                                        <nets-grafico titulo="Actividades" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="line" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficollamadasdia"></nets-grafico>
+                                        <nets-grafico titulo="Actividades" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="line" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficollamadasdia" filtrarano="true"></nets-grafico>
                                     </div>
                                 </div>
 
@@ -156,7 +156,7 @@
                                                         </div>
                                                     </div>
                                                     <div *ngIf="!collapse" class="box-body">
-                                                        <nets-grafico titulo="Estados de las Cotizaciones" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="line" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficocotizadia"></nets-grafico>
+                                                        <nets-grafico titulo="Estados de las Cotizaciones" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="line" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficocotizadia" filtrarano="true"></nets-grafico>
                                                     </div>
                                                 </div>
 
@@ -166,28 +166,48 @@
                                 </kendo-tabstrip-tab>
                                 <kendo-tabstrip-tab [title]="'Consultas'" [selected]="false">
                                     <ng-template kendoTabContent>
-                                        <h4 class="divprincipal alert-muted text-center">
+                                        <!-- <h4 class="divprincipal alert-muted text-center">
                                             Top Cotizaciones
-                                        </h4>
+                                        </h4> -->
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <monitor-objtabla objeto="MONTABCOTIZVEND" minimizada="SI" titulo="En borrador" color="warning" [paramobj]="paramocotizaborrador"></monitor-objtabla>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <monitor-objtabla objeto="MONTABCOTIZVEND" minimizada="NO" titulo="En proceso" color="info" [paramobj]="paramocotizaenproceso"></monitor-objtabla>
+                                            <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
+                                                <div class="form-group">
+                                                    <label>
+                                                    Año
+                                                    <kendo-dropdownlist
+                                                        isRequired="true"
+                                                        [data]="listanos"
+                                                        [value]=ano
+                                                        (valueChange)="valueChange($event)"
+                                                        required
+                                                    >
+                                                    </kendo-dropdownlist>
+                                                </label>
+                                                </div>
+                                    
+                                    
+                                                <!-- <nets-filtroanomes (pasarAno)="filtroAno($event)" (pasarMes)="filtroMes($event)" tipo="AM" titulofiltro="Filtrar: " anoini="{{anofiltro}}" mesini="{{mesfiltro}}"></nets-filtroanomes> -->
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <monitor-objtabla objeto="MONTABCOTIZVEND" minimizada="SI" titulo="Ganadas" color="success" [paramobj]="paramocotizaganadas"></monitor-objtabla>
+                                                <monitor-objtabla objeto="MONTABCOTIZVEND" minimizada="SI" titulo="En borrador" color="warning" [paramobj]="paramocotizaborrador" [ano]="ano" [mes]="mes"></monitor-objtabla>
                                             </div>
                                             <div class="col-md-6">
-                                                <monitor-objtabla objeto="MONTABCOTIZVEND" minimizada="SI" titulo="Perdidas" color="danger" [paramobj]="paramocotizaperdidas"></monitor-objtabla>
+                                                <monitor-objtabla objeto="MONTABCOTIZVEND" minimizada="NO" titulo="En proceso" color="info" [paramobj]="paramocotizaenproceso" [ano]="ano" [mes]="mes"></monitor-objtabla>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <monitor-objtabla objeto="MONTABCOTIZVEND" minimizada="SI" titulo="Canceladas" color="warning" [paramobj]="paramocotizacanceladas"></monitor-objtabla>
+                                                <monitor-objtabla objeto="MONTABCOTIZVEND" minimizada="SI" titulo="Ganadas" color="success" [paramobj]="paramocotizaganadas" [ano]="ano" [mes]="mes"></monitor-objtabla>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <monitor-objtabla objeto="MONTABCOTIZVEND" minimizada="SI" titulo="Perdidas" color="danger" [paramobj]="paramocotizaperdidas" [ano]="ano" [mes]="mes"></monitor-objtabla>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <monitor-objtabla objeto="MONTABCOTIZVEND" minimizada="SI" titulo="Canceladas" color="warning" [paramobj]="paramocotizacanceladas" [ano]="ano" [mes]="mes"></monitor-objtabla>
                                             </div>
                                         </div>
 
@@ -202,6 +222,26 @@
                     <ng-template kendoTabContent>
                         <div class="row">
                             <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
+                                <div class="form-group">
+                                    <label>
+                                    Año
+                                    <kendo-dropdownlist
+                                        isRequired="true"
+                                        [data]="listanos"
+                                        [value]=ano
+                                        (valueChange)="valueChange($event)"
+                                        required
+                                    >
+                                    </kendo-dropdownlist>
+                                </label>
+                                </div>
+                    
+                    
+                                <!-- <nets-filtroanomes (pasarAno)="filtroAno($event)" (pasarMes)="filtroMes($event)" tipo="AM" titulofiltro="Filtrar: " anoini="{{anofiltro}}" mesini="{{mesfiltro}}"></nets-filtroanomes> -->
+                            </div>
+                        </div>
+                    <div class="row">
+                            <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
                                 <div class="list-group">
                                     <a [href]="cleanURL(linkmonivended)" class="list-group-item active">
                                         <h6 class="list-group-item-heading">Monitor Vendedor ERP</h6>
@@ -212,7 +252,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMVENVENDXMES" minimizada="NO" titulo="Ventas x Mes" color="success" [paramobj]="paramtabvendcrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMVENVENDXMES" minimizada="NO" titulo="Ventas x Mes" color="success" [paramobj]="paramtabvendcrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                             <!-- <div class="col-md-6">
                                 <monitor-objtabla objeto="MONCRMVENCLIESERV" minimizada="NO" titulo="Servicios" color="success" [paramobj]="paramtabgencuentacrm"></monitor-objtabla>

@@ -21,6 +21,26 @@
         <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
             <strong>Monitor General 
       </strong>
+            <div class="form-group">
+                <label>
+                Año
+                <kendo-dropdownlist
+                    isRequired="true"
+                    [data]="listanos"
+                    [value]=ano
+                    (valueChange)="valueChange($event)"
+                    required
+                >
+                </kendo-dropdownlist>
+            </label>
+                <label>
+                Mes
+                <kendo-dropdownlist [defaultItem]="Itemmes" [data]="listameses" textField="nommes" valueField="mes"  (valueChange)="valueChangemes($event)" isRequired="true">
+                </kendo-dropdownlist>        
+            </label>
+            </div>
+
+
             <!-- <nets-filtroanomes (pasarAno)="filtroAno($event)" (pasarMes)="filtroMes($event)" tipo="AM" titulofiltro="Filtrar: " anoini="{{anofiltro}}" mesini="{{mesfiltro}}"></nets-filtroanomes> -->
         </div>
     </div>
@@ -42,7 +62,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="!collapse" class="box-body">
-                                        <nets-grafico titulo="Estados de las Cotizaciones" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="line" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficocotizaven"></nets-grafico>
+                                        <nets-grafico titulo="Estados de las Cotizaciones" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="line" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficocotizaven" filtrarano="true"></nets-grafico>
                                     </div>
                                 </div>
 
@@ -60,7 +80,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="!collapse1" class="box-body">
-                                        <nets-grafico titulo="Cotizaciones por Vendedor" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="pie" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficovenxvende"></nets-grafico>
+                                        <nets-grafico titulo="Cotizaciones por Vendedor" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="pie" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficovenxvende"  filtrarano="true"></nets-grafico>
                                     </div>
                                 </div>
                             </div>
@@ -77,7 +97,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="!collapse2" class="box-body">
-                                        <nets-grafico titulo="Cotizaciones ganadas por Vendedor" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="pie" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficovenganxvende"></nets-grafico>
+                                        <nets-grafico titulo="Cotizaciones ganadas por Vendedor" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="pie" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficovenganxvende" filtrarano="true"></nets-grafico>
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +114,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="!collapse3" class="box-body">
-                                        <nets-grafico [titulo]="ltitulocotixvend" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="pie" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficovenperxvende"></nets-grafico>
+                                        <nets-grafico [titulo]="ltitulocotixvend" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="pie" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficovenperxvende" filtrarano="true"></nets-grafico>
                                     </div>
                                 </div>
                             </div>
@@ -106,26 +126,26 @@
                     <ng-template kendoTabContent>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMMETMES01" minimizada="NO" titulo="# Cotizaciones por Estado" color="success" [paramobj]="paramtabgencrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMMETMES01" minimizada="NO" titulo="# Cotizaciones por Estado" color="success" [paramobj]="paramtabgencrm"  [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMMETMES02" minimizada="NO" titulo="# Cotizaciones por Asesor" color="success" [paramobj]="paramtabgencrm"></monitor-objtabla>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMMETMES03" minimizada="NO" titulo="Aprobadas Top Productos" color="warning" [paramobj]="paramtabgencrm"></monitor-objtabla>
-                            </div>
-                            <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMMETMES04" minimizada="NO" titulo="Aprobadas Top Clientes" color="warning" [paramobj]="paramtabgencrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMMETMES02" minimizada="NO" titulo="# Cotizaciones por Asesor" color="success" [paramobj]="paramtabgencrm"  [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMMETMES05" minimizada="NO" titulo="Cliente Cotizado-Facturado" color="info" [paramobj]="paramtabgencrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMMETMES03" minimizada="NO" titulo="Aprobadas Top Productos" color="warning" [paramobj]="paramtabgencrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMMETMES06" minimizada="NO" titulo="Negadas por Cliente" color="info" [paramobj]="paramtabgencrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMMETMES04" minimizada="NO" titulo="Aprobadas Top Clientes" color="warning" [paramobj]="paramtabgencrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONCRMMETMES05" minimizada="NO" titulo="Cliente Cotizado-Facturado" color="info" [paramobj]="paramtabgencrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
+                            </div>
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONCRMMETMES06" minimizada="NO" titulo="Negadas por Cliente" color="info" [paramobj]="paramtabgencrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
                     </ng-template>
@@ -134,26 +154,26 @@
                     <ng-template kendoTabContent>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMMETANO01" minimizada="NO" titulo="# Cotizaciones por Estado" color="success" [paramobj]="paramtabgencrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMMETANO01" minimizada="NO" titulo="# Cotizaciones por Estado" color="success" [paramobj]="paramtabgencrm" [ano]="ano" [mes]="mes" ></monitor-objtabla>
                             </div>
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMMETANO02" minimizada="NO" titulo="# Cotizaciones por Asesor" color="success" [paramobj]="paramtabgencrm"></monitor-objtabla>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMMETANO03" minimizada="NO" titulo="Aprobadas Top Productos" color="warning" [paramobj]="paramtabgencrm"></monitor-objtabla>
-                            </div>
-                            <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMMETANO04" minimizada="NO" titulo="Aprobadas Top Clientes" color="warning" [paramobj]="paramtabgencrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMMETANO02" minimizada="NO" titulo="# Cotizaciones por Asesor" color="success" [paramobj]="paramtabgencrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMMETANO05" minimizada="NO" titulo="Cliente Cotizado-Facturado" color="info" [paramobj]="paramtabgencrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMMETANO03" minimizada="NO" titulo="Aprobadas Top Productos" color="warning" [paramobj]="paramtabgencrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMMETANO06" minimizada="NO" titulo="Negadas por Cliente" color="info" [paramobj]="paramtabgencrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMMETANO04" minimizada="NO" titulo="Aprobadas Top Clientes" color="warning" [paramobj]="paramtabgencrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONCRMMETANO05" minimizada="NO" titulo="Cliente Cotizado-Facturado" color="info" [paramobj]="paramtabgencrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
+                            </div>
+                            <div class="col-md-6">
+                                <monitor-objtabla objeto="MONCRMMETANO06" minimizada="NO" titulo="Negadas por Cliente" color="info" [paramobj]="paramtabgencrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
                     </ng-template>
@@ -173,7 +193,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="!collapse" class="box-body">
-                                        <nets-grafico titulo="Actividades" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="line" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficollamadasven"></nets-grafico>
+                                        <nets-grafico titulo="Actividades" [leyendavisible]="true" style="width: 300px; height: 200px;" backgroundcolor="white" tipografico="line" formatoserie="M" formatoxy="0" [oparamgrafico]="oparamgraficollamadasven" filtrarano="true"></nets-grafico>
                                     </div>
                                 </div>
 
@@ -183,6 +203,26 @@
                 </kendo-tabstrip-tab>
                 <kendo-tabstrip-tab [title]="'Ventas'">
                     <ng-template kendoTabContent>
+                        <div class="row">
+                            <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
+                                <div class="form-group">
+                                    <label>
+                                    Año
+                                    <kendo-dropdownlist
+                                        isRequired="true"
+                                        [data]="listanos"
+                                        [value]=ano
+                                        (valueChange)="valueChange($event)"
+                                        required
+                                    >
+                                    </kendo-dropdownlist>
+                                </label>
+                                </div>
+                    
+                    
+                                <!-- <nets-filtroanomes (pasarAno)="filtroAno($event)" (pasarMes)="filtroMes($event)" tipo="AM" titulofiltro="Filtrar: " anoini="{{anofiltro}}" mesini="{{mesfiltro}}"></nets-filtroanomes> -->
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
                                 <div class="list-group">
@@ -202,10 +242,10 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMVENXMES" minimizada="NO" titulo="Ventas x Mes" color="success" [paramobj]="paramtabgencrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMVENXMES" minimizada="NO" titulo="Ventas x Mes" color="success" [paramobj]="paramtabgencrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                             <div class="col-md-6">
-                                <monitor-objtabla objeto="MONCRMVENXVEND" minimizada="NO" titulo="Ventas x Vendedor" color="success" [paramobj]="paramtabgencrm"></monitor-objtabla>
+                                <monitor-objtabla objeto="MONCRMVENXVEND" minimizada="NO" titulo="Ventas x Vendedor" color="success" [paramobj]="paramtabgencrm" [ano]="ano" [mes]="mes"></monitor-objtabla>
                             </div>
                         </div>
                     </ng-template>

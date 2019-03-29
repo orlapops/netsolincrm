@@ -83,7 +83,8 @@ export class MonitorcuentaComponent implements OnInit {
   ano = this.fechahoy.getFullYear();
   mes = this.fechahoy.getMonth() + 1;
 
-  public paramtabgencuentacrm: any = {titulo: "Monitor  Cuenta Crm",cod_usuar :"",cod_tercer:"", ano:this.ano}
+  public paramtabgencuentacrm: any = {titulo: "Monitor  Cuenta Crm",cod_usuar :"",cod_tercer:"", ano:this.ano, mes: this.mes}
+  public listanos: Array<number> = [];
 
 
 //configuracion menu panelinfo
@@ -120,6 +121,12 @@ private selectedId: string = "";
     this.vglobal.mostrarbreadcrumbs = false;
     this.infopanelselec='infgen';
     this.linkcarteracuetna+=',PVXICOD_TERCER='+"'830099553',PVXICOD_ZONA='',PVXICOD_VENDED='',PVXIMONEDA='',PVXICENTRO='',PVXISUBCENTRO='',PVXICOD_CUENTA='',PVXIANO="+this.ano.toString() +'","Home","700px","100%",true)';
+    //llenar array ultimos 5 años
+    this.listanos.push(this.ano);
+    this.listanos.push(this.ano-1);
+    this.listanos.push(this.ano-2);
+    this.listanos.push(this.ano-3);
+    this.listanos.push(this.ano-4);
   }
 
   //solo para prueba buscombog
@@ -271,7 +278,11 @@ private selectedId: string = "";
   //Si cambia el codigo del tercero llenar el nit con el mismo si este esta vacio
   onChanges(): void {
   }
-
+  public valueChange(value: any): void {    
+    console.log('valueChange', value);
+    this.ano = value;
+    this.paramtabgencuentacrm.ano = value;
+}
   retornaRuta() {
     // console.log(this.rutamant);
     return '/' + this.rutamant;

@@ -58,25 +58,46 @@ export class MonitorPrinCrmComponent implements OnInit {
   infopanelselec: string;
   mostrarmensaje=false;
   puedecrearcotizacion= false;
+  fechahoy = new Date();
+  ano = this.fechahoy.getFullYear();
+  mes = this.fechahoy.getMonth() + 1;
+  anofiltro = this.ano.toString().trim();
+  mesfiltro = this.mes.toString().trim();
 
   pruebavininumbuscombog:string = "";
   llamabusqueda = false;
   pruellegallabusque:string="";
   public paramusuar: any = {titulo: "Usuario",cod_usuar :"",tipo:"T"}
-  public paramocotizaganadas: any = {titulo: "Ganadas",cod_usuar :"",tipo:"G", numreg:20}
-  public paramocotizacanceladas: any = {titulo: "Canceladas",cod_usuar :"",tipo:"C", numreg:10}
-  public paramocotizaperdidas: any = {titulo: "Perdidas",cod_usuar :"",tipo:"P", numreg:20}
-  public paramocotizaborrador: any = {titulo: "Borrador",cod_usuar :"",tipo:"B", numreg:20}
-  public paramocotizaenproceso: any = {titulo: "En proceso",cod_usuar :"",tipo:"O", numreg:20}
-  public paramactividadpenvenc: any = {titulo: "Pendientes vencidas",cod_usuar :"",tipo:"PV", numreg:30}
-  public paramactividadpenxvenc: any = {titulo: "Pendientes x Vencer",cod_usuar :"",tipo:"PXV", numreg:20}
-  public paramactividadtareas: any = {titulo: "Tareas",cod_usuar :"",tipo:"TAR", numreg:20}
-  public paramactividadllamadas: any = {titulo: "Llamadas",cod_usuar :"",tipo:"LLA", numreg:20}
-  public paramactividadsegui: any = {titulo: "Seguimientos",cod_usuar :"",tipo:"SEG", numreg:20}
-  public paramactividademail: any = {titulo: "Llamadas",cod_usuar :"",tipo:"EMAIL", numreg:20}
-  public paramactividadcitas: any = {titulo: "Citas",cod_usuar :"",tipo:"CITA", numreg:20}
-  public paramactividadservi: any = {titulo: "Servicios",cod_usuar :"",tipo:"SERV", numreg:20}
+  public paramocotizaganadas: any = {titulo: "Ganadas",cod_usuar :"",tipo:"G", numreg:20, ano:this.ano, mes: this.mes}
+  public paramocotizacanceladas: any = {titulo: "Canceladas",cod_usuar :"",tipo:"C", numreg:10, ano:this.ano, mes: this.mes}
+  public paramocotizaperdidas: any = {titulo: "Perdidas",cod_usuar :"",tipo:"P", numreg:20, ano:this.ano, mes: this.mes}
+  public paramocotizaborrador: any = {titulo: "Borrador",cod_usuar :"",tipo:"B", numreg:20, ano:this.ano, mes: this.mes}
+  public paramocotizaenproceso: any = {titulo: "En proceso",cod_usuar :"",tipo:"O", numreg:20, ano:this.ano, mes: this.mes}
+  public paramactividadpenvenc: any = {titulo: "Pendientes vencidas",cod_usuar :"",tipo:"PV", numreg:30, ano:this.ano, mes: this.mes}
+  public paramactividadpenxvenc: any = {titulo: "Pendientes x Vencer",cod_usuar :"",tipo:"PXV", numreg:20, ano:this.ano, mes: this.mes}
+  public paramactividadtareas: any = {titulo: "Tareas",cod_usuar :"",tipo:"TAR", numreg:20, ano:this.ano, mes: this.mes}
+  public paramactividadllamadas: any = {titulo: "Llamadas",cod_usuar :"",tipo:"LLA", numreg:20, ano:this.ano, mes: this.mes}
+  public paramactividadsegui: any = {titulo: "Seguimientos",cod_usuar :"",tipo:"SEG", numreg:20, ano:this.ano, mes: this.mes}
+  public paramactividademail: any = {titulo: "Llamadas",cod_usuar :"",tipo:"EMAIL", numreg:20, ano:this.ano, mes: this.mes}
+  public paramactividadcitas: any = {titulo: "Citas",cod_usuar :"",tipo:"CITA", numreg:20, ano:this.ano, mes: this.mes}
+  public paramactividadservi: any = {titulo: "Servicios",cod_usuar :"",tipo:"SERV", numreg:20, ano:this.ano, mes: this.mes}
   items: Observable<any[]>;
+  public listanos: Array<number> = [];
+  public listameses: any = [
+       {mes: 1,nommes :"Enero"},
+       {mes: 2,nommes :"Febrero"},
+       {mes: 3,nommes :"Marzo"},
+       {mes: 4,nommes :"Abril"},
+       {mes: 5,nommes :"Mayo"},
+       {mes: 6,nommes :"Junio"},
+       {mes: 7,nommes :"Julio"},
+       {mes: 8,nommes :"Agosto"},
+       {mes: 9,nommes :"Septiembre"},
+       {mes: 10,nommes :"Octubre"},
+       {mes: 11,nommes :"Noviembre"},
+       {mes: 12,nommes :"Diciembre"}
+  ]
+  Itemmes: {mes: 1,nommes :"Enero"};
 
 //configuracion menu panelinfo
 public itemsinfo: Array<PanelBarItemModel> = [
@@ -106,6 +127,12 @@ private selectedId: string = "";
 
   ) {
     this.vglobal.mostrarbreadcrumbs = false;
+    //llenar array ultimos 5 años
+    this.listanos.push(this.ano);
+    this.listanos.push(this.ano-1);
+    this.listanos.push(this.ano-2);
+    this.listanos.push(this.ano-3);
+    this.listanos.push(this.ano-4);
     // this.items = db.collection('categorias').valueChanges();
   }
 
@@ -185,6 +212,34 @@ private selectedId: string = "";
               this.paramactividadsegui.cod_usuar = NetsolinApp.oapp.cuserid;
               this.paramactividadservi.cod_usuar = NetsolinApp.oapp.cuserid;
               this.paramactividadtareas.cod_usuar = NetsolinApp.oapp.cuserid;
+
+              this.paramocotizaborrador.ano = this.ano;
+              this.paramocotizaenproceso.ano = this.ano;
+              this.paramocotizaganadas.ano = this.ano;
+              this.paramocotizacanceladas.ano = this.ano;
+              this.paramocotizaperdidas.ano = this.ano;
+              this.paramactividadcitas.ano = this.ano;
+              this.paramactividademail.ano = this.ano;
+              this.paramactividadllamadas.ano = this.ano;
+              this.paramactividadpenvenc.ano = this.ano;
+              this.paramactividadpenxvenc.ano = this.ano;
+              this.paramactividadsegui.ano = this.ano;
+              this.paramactividadservi.ano = this.ano;
+              this.paramactividadtareas.ano = this.ano;
+
+              this.paramocotizaborrador.mes = this.mes;
+              this.paramocotizaenproceso.mes = this.mes;
+              this.paramocotizaganadas.mes = this.mes;
+              this.paramocotizacanceladas.mes = this.mes;
+              this.paramocotizaperdidas.mes = this.mes;
+              this.paramactividadcitas.mes = this.mes;
+              this.paramactividademail.mes = this.mes;
+              this.paramactividadllamadas.mes = this.mes;
+              this.paramactividadpenvenc.mes = this.mes;
+              this.paramactividadpenxvenc.mes = this.mes;
+              this.paramactividadsegui.mes = this.mes;
+              this.paramactividadservi.mes = this.mes;
+              this.paramactividadtareas.mes = this.mes;
               this.cargousuario = true;
               this.inicializaMonitor(regTabla);
             }
@@ -217,6 +272,40 @@ private selectedId: string = "";
   //Si cambia el codigo del tercero llenar el nit con el mismo si este esta vacio
   onChanges(): void {
   }
+  public valueChange(value: any): void {    
+    console.log('valueChange', value);
+    this.ano = value;
+    this.paramocotizaborrador.ano = value;
+    this.paramocotizaenproceso.ano = value;
+    this.paramocotizaganadas.ano = value;
+    this.paramocotizacanceladas.ano = value;
+    this.paramocotizaperdidas.ano = value;
+    this.paramactividadcitas.ano = value;
+    this.paramactividademail.ano = value;
+    this.paramactividadllamadas.ano = value;
+    this.paramactividadpenvenc.ano = value;
+    this.paramactividadpenxvenc.ano = value;
+    this.paramactividadsegui.ano = value;
+    this.paramactividadservi.ano = value;
+    this.paramactividadtareas.ano = value;
+}
+public valueChangemes(value: any): void {    
+  console.log('valueChangemes', value);
+  this.mes = value.mes;
+  this.paramocotizaborrador.mes = value.mes;
+  this.paramocotizaenproceso.mes = value.mes;
+  this.paramocotizaganadas.mes = value.mes;
+  this.paramocotizacanceladas.mes = value.mes;
+  this.paramocotizaperdidas.mes = value.mes;
+  this.paramactividadcitas.mes = value.mes;
+  this.paramactividademail.mes = value.mes;
+  this.paramactividadllamadas.mes = value.mes;
+  this.paramactividadpenvenc.mes = value.mes;
+  this.paramactividadpenxvenc.mes = value.mes;
+  this.paramactividadsegui.mes = value.mes;
+  this.paramactividadservi.mes = value.mes;
+  this.paramactividadtareas.mes = value.mes;
+}
 
   retornaRuta() {
     // console.log(this.rutamant);
