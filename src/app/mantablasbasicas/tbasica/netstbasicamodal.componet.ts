@@ -103,6 +103,7 @@ export class Netsadmintablabasicamodal implements OnInit {
                     this.cargando = false;
                     return;
                 }
+                NetsolinApp.objpartablabas.campos_lista = [];
                 NetsolinApp.objpartablabas.aplica = parseInt(result0.aplica);
                 NetsolinApp.objpartablabas.tabla = result0.tabla;
                 NetsolinApp.objpartablabas.campollave = result0.campollave;

@@ -252,7 +252,9 @@ export class ListbasicaComponent implements OnInit {
     this.confirmado = null;
     this.cargando = true;
     this.enlistaerror = false;
-    this.mantbasicaService.gettablaSearch(this.busqueda, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre, this.porden, this.objeto, "")
+    console.log('NetsolinApp.objpartablabas.campos_lista',NetsolinApp.objpartablabas.campos_lista);
+    console.log('ejeBusqueda',this.busqueda, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre, this.porden, this.objeto, "");
+    this.mantbasicaService.gettablaSearch(this.busqueda, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre, this.porden, this.objeto, "",NetsolinApp.objpartablabas.campos_lista)
       .subscribe(result => {
         // console.log("eje busqueda");
         // console.log(result);
@@ -290,7 +292,7 @@ export class ListbasicaComponent implements OnInit {
   }
 
   exportaArchivo(ptipo: string) {
-    this.mantbasicaService.gettablaSearch(this.busqueda, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre, this.porden, this.objeto, ptipo)
+    this.mantbasicaService.gettablaSearch(this.busqueda, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre, this.porden, this.objeto, ptipo,NetsolinApp.objpartablabas.campos_lista)
       .subscribe(result => {
         this.message = "Archivo " + ptipo + ":" + result.link;
         //  console.log('exporta a '+ptipo);
@@ -486,6 +488,7 @@ export class ListbasicaComponent implements OnInit {
             this.camposv = var3;
             this.mlista_campo = true;
           } else {
+            NetsolinApp.objpartablabas.campos_lista = [];
             this.mlista_campo = false;
           }
         } else{

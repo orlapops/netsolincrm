@@ -281,6 +281,7 @@ export class ListbusquedacomboglComponent implements OnInit {
             NetsolinApp.objpartablabas.campos_lista = var3;
             this.camposv = var3;
           } else {
+            NetsolinApp.objpartablabas.campos_lista = [];
             this.enerror = true;
             this.message =
               "Error. Debe definir en el objeto los campos a visualizar.";

@@ -242,7 +242,7 @@ export class ListmantdcotizamodalComponent implements OnInit {
         this.confirmado = null;
         this.cargando = true;
         this.enlistaerror = false;
-        this.mantbasicaService.gettablaSearch(this.busqueda, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre, this.porden, this.objeto, "")
+        this.mantbasicaService.gettablaSearch(this.busqueda, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre, this.porden, this.objeto, "",NetsolinApp.objpartablabas.campos_lista)
             .subscribe(result => {
                 // console.log("eje busqueda result");
                 // console.log(result);
@@ -460,6 +460,7 @@ export class ListmantdcotizamodalComponent implements OnInit {
                         NetsolinApp.objpartablabas.campos_lista = var3;
                         this.camposv = var3;
                     } else {
+                        NetsolinApp.objpartablabas.campos_lista = [];
                         this.enerror = true;
                         this.message = "Error. Debe definir en el objeto los campos a visualizar."
                 // console.log("getNetsolinObjmantbasica luego de cargar objeto 3 ojo no tiene campos a mostrar");

@@ -70,7 +70,8 @@ export class MantbasicaService {
     pcamponombre: string,
     porden: string,
     pobjeto: string,
-    pexporta: string
+    pexporta: string,
+    pcamposlista: any
   ): Observable<any> {
     NetsolinApp.urlNetsolin = localStorage.getItem("urlNetsolin");
     NetsolinApp.objenvrestcrud.usuario = NetsolinApp.oapp.cuserid;
@@ -87,11 +88,12 @@ export class MantbasicaService {
     NetsolinApp.objenvrestcrud.objeto = pobjeto;
     NetsolinApp.objenvrestcrud.exporta = pexporta;
     NetsolinApp.objenvrestcrud.cursor = "Tcursorx";
+    console.log("filtro para buscar busqueda:",busqueda);
     if (busqueda == "*") {
       //   console.log("filtro para buscar 1 VA *");
       NetsolinApp.objenvrestcrud.filtro = "*";
     } else {
-      // console.log("filtro para buscar 2");
+      console.log("filtro para buscar 2");
       //si viene un igual o > o < es porque ya viene filtro armado y no lo arma
       if (
         busqueda.indexOf("=") > 0 ||
@@ -100,11 +102,11 @@ export class MantbasicaService {
         busqueda.indexOf("like") > 0 ||
         busqueda.indexOf("LIKE") > 0
       ) {
-        // console.log("filtro para buscar 3 va por que encontro =");
+        console.log("filtro para buscar 3 va por que encontro =");
         NetsolinApp.objenvrestcrud.filtro = busqueda;
       } else {
-        //   console.log("filtro para buscar 2");
-        //   console.log(pcampollave);
+          console.log("filtro para buscar 2");
+          console.log(pcampollave);
         var acllave = pcampollave.split(",");
         //   console.log(acllave);
         //solo tener encuenta 2 para armar condicion
@@ -125,20 +127,37 @@ export class MantbasicaService {
             busqueda +
             "%'";
         } else {
-          NetsolinApp.objenvrestcrud.filtro =
-            pcampollave +
-            " like '%" +
-            busqueda +
-            "%' or " +
-            pcamponombre +
-            " like '%" +
-            busqueda +
-            "%'";
+          //op abrl 6 2019 si campo llave inicia por id_ es numerico en netsolin y no se busca estos son autonumericos
+          //buscar con campos lista los que va amostrar
+          console.log('pcamposlista',pcamposlista);
+          if (pcamposlista.length>0) {
+            let lii = 0;
+            NetsolinApp.objenvrestcrud.filtro ="";
+            pcamposlista.forEach(element => {
+              lii +=1;
+              if (element.campo.slice(0,3)==='id_') {            
+                //saltar no busca por id
+                } else {
+                  if ( lii > 1) {
+                    NetsolinApp.objenvrestcrud.filtro +=" or ";
+                  }
+                   NetsolinApp.objenvrestcrud.filtro += element.campo +" like '%" +busqueda +"%'";
+                }                
+            });
+          } else {
+            //como antes
+            console.log('filtro busqueda: ',NetsolinApp.objenvrestcrud.filtro);
+            if (pcampollave.slice(0,3)==='id_') {            
+            NetsolinApp.objenvrestcrud.filtro = pcamponombre +" like '%" +busqueda +"%'";
+            } else {
+              NetsolinApp.objenvrestcrud.filtro =pcampollave +" like '%" +busqueda +"%' or " +pcamponombre +" like '%" +busqueda +"%'";
+            }
+          }
         }
       }
     }
-    // console.log("filtro para buscar");
-    // console.log(NetsolinApp.objenvrestcrud.filtro);
+    console.log("filtro para buscar");
+    console.log(NetsolinApp.objenvrestcrud.filtro);
     return this.http
       .post(
         NetsolinApp.urlNetsolin + "nets_v_exi_ref.csvc",

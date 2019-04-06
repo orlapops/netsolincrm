@@ -75,6 +75,7 @@ export class EditregFichatecComponent implements OnInit {
   linkcreaimagen="";
   id_fichatec: any;
   filtrofichaarch="";
+  usacampomarca = false;
   fechahoy = new Date();
   ano = this.fechahoy.getFullYear();
   mes = this.fechahoy.getMonth() + 1;
@@ -89,6 +90,7 @@ export class EditregFichatecComponent implements OnInit {
   //campos a visualizar de contactos
   public liscampvconta = [
     { titulo: 'Nombre', campo: 'nombre'},
+    { titulo: 'Marca', campo: 'marca' },
     { titulo: 'Catalogo', campo: 'esde_catalogo' },
     { titulo: 'Cod_Venta', campo: 'cod_refven' },
     { titulo: 'Cod_Producto', campo: 'cod_prod' },
@@ -112,7 +114,7 @@ export class EditregFichatecComponent implements OnInit {
     { titulo: 'Margen', campo: 'marg_erro' },
     { titulo: 'Division', campo: 'div_escal' },
     { titulo: 'Indicador', campo: 'indicador' },
-    { titulo: 'Diam_tube', campo: 'diám_tube' },
+    { titulo: 'Diam_tube', campo: 'diam_tube' },
     { titulo: 'Potencia_ter', campo: 'poten_ter' },
     { titulo: 'Presion_GN', campo: 'presi_gn' },
     { titulo: 'Presion_GLP', campo: 'presi_glp' },
@@ -174,6 +176,10 @@ export class EditregFichatecComponent implements OnInit {
         lvar = localStorage.getItem("DDT" + this.ptablab);
         this.camposform = JSON.parse(lvar);
         for (var litemobj of this.camposform) {
+          // console.log("litemobj",litemobj);
+          if (litemobj.name === 'marca'){
+            this.usacampomarca = true;
+        } 
           //Crear campo formulario con valor por default
           let lcampformctrl = new FormControl('');
           //adicionar validacion si es obligatorio
@@ -184,12 +190,16 @@ export class EditregFichatecComponent implements OnInit {
         };
         this.tablaForm = this.tablaFormOrig;
         //buscar con cod_refven
+        console.log('a buscar con referencia:',this.id, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre);
         this.mantbasicaService.getregTabla(this.id, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre)
-          .subscribe(regTabla => {
+          .subscribe(regTabla => {            
+            console.log('de bus refe',regTabla);
             if (typeof (regTabla.isCallbackError) != "undefined") {
                //buscar con cod_prod
-              this.mantbasicaService.getregTabla(this.id, this.ptablab, this.paplica, 'cod_prod', this.pclase_nbs, this.pclase_val, this.pcamponombre)
+               console.log('a buscar con producto:',this.id, this.ptablab, this.paplica, 'cod_prod', this.pclase_nbs, this.pclase_val, this.pcamponombre);
+               this.mantbasicaService.getregTabla(this.id, this.ptablab, this.paplica, 'cod_prod', this.pclase_nbs, this.pclase_val, this.pcamponombre)
                 .subscribe(regTabla => {
+                  console.log('de bus prod',regTabla);
                   if (typeof (regTabla.isCallbackError) != "undefined") {
                    
                     this.enlistaerror = true;
@@ -238,6 +248,7 @@ export class EditregFichatecComponent implements OnInit {
             } else {
               this.cargorefere=true;
               this.regProdref = regTabla;
+              console.log('cargo ref regTabla',regTabla);
               this.prod_catalogo = regTabla.esde_catalogo;
               var fecha = new Date();
               var ano = fecha.getFullYear();
@@ -304,8 +315,9 @@ export class EditregFichatecComponent implements OnInit {
     avalida.push(Validators.required);
     this.labelprodref="";
     //por defecto al inicializar el producto es de catalogo obligatorio referencia y no la del cod_prod
-    this.prod_catalogo = true;
-    this.libmantab.asignaValorcampoform(this.tablaForm, "esde_catalogo", true);
+
+    // this.prod_catalogo = true;
+    // this.libmantab.asignaValorcampoform(this.tablaForm, "esde_catalogo", true);
     this.libmantab.defineValidaCampo(this.tablaForm, "esde_catalogo", avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "descrip", avalida);
     this.inicializado = true;
@@ -345,7 +357,7 @@ export class EditregFichatecComponent implements OnInit {
     this.grabo = false;
     this.grabando = true;
     this.regTabla = this.saveregTabla();
-    console.log(this.regTabla);
+    console.log('a grabar:',this.regTabla);
     if (this.regTabla.cod_prod=="" && this.regTabla.cod_refven==""){
       this.showError("Debe ingresar un código de producto o una referencia");
       this.grabando = false;

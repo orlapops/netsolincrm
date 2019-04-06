@@ -59,6 +59,14 @@
                                         </div>
                                     </div>
 
+                                    <div class="row" *ngIf="usacampomarca">
+                                        <div class="col-md-6">
+                                            <label for="marca" data-toggle="tooltip" title="marca">Marca </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('marca','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('marca','invalid',tablaForm)"></i>
+                                            <input type="text" class="form-control" formControlName="marca" placeholder="Marca" [UpperCase]="true" id="marca">
+                                        </div>
+                                    </div>
                                     <div class="row">
 
                                         <div class="col-md-12">
@@ -449,7 +457,7 @@
                                                     <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
                                                     <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
                                                                                                     <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
-                                                    <input type="text" class="form-control" formControlName="diám_tube" placeholder="Escriba el diámetro de la tubería" [UpperCase]="true" id="diám_tube">
+                                                    <input type="text" class="form-control" formControlName="diam_tube" placeholder="Escriba el diámetro de la tubería" [UpperCase]="true" id="diam_tube">
                                                 </div>
                                             </div>
 

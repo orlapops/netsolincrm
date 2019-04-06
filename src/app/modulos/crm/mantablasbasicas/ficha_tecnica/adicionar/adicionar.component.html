@@ -15,7 +15,7 @@
     <div class="alert alert-success" *ngIf="!enerror && grabo">
         {{message}}
     </div>
-    
+
 
     <!-- Solo si esta inicializado -->
     <div *ngIf="inicializado && grabando" class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset 2">
@@ -42,7 +42,7 @@
                                 <h4 class="divterciaria">
 
                                     <div class="row ">
-                                           
+
                                         <div class="col-sm-3">
                                             <label for="esde_catalogo" class="form-check-label" data-toggle="tooltip" title="Marque si es un producto de catalogo. Si no es de catalogo tomara de productos solo CRM">Producto de catalogo</label>
                                             <kendo-switch formControlName="esde_catalogo" [onLabel]="'Si'" [offLabel]="'No'" id="esde_catalogo" name="esde_catalogo"></kendo-switch>
@@ -66,12 +66,20 @@
                                             </netscombog>
                                         </div>
                                         <div class="col-sm-4">
-                                                <label for="nombre" data-toggle="tooltip" title="nombre">Nombre </label>
-                                                <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('nombre','valid',tablaForm)"></i>
-                                                <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('nombre','invalid',tablaForm)"></i>
-                                                <input type="text" class="form-control" formControlName="nombre" placeholder="Nombre" [UpperCase]="true" id="nombre">
+                                            <label for="nombre" data-toggle="tooltip" title="nombre">Nombre </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('nombre','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('nombre','invalid',tablaForm)"></i>
+                                            <input type="text" class="form-control" formControlName="nombre" placeholder="Nombre" [UpperCase]="true" id="nombre">
                                         </div>
-                                      </div>
+                                    </div>
+                                    <div class="row" *ngIf="usacampomarca">
+                                        <div class="col-md-6">
+                                            <label for="marca" data-toggle="tooltip" title="marca">Marca </label>
+                                            <i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('marca','valid',tablaForm)"></i>
+                                            <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('marca','invalid',tablaForm)"></i>
+                                            <input type="text" class="form-control" formControlName="marca" placeholder="Marca" [UpperCase]="true" id="marca">
+                                        </div>
+                                    </div>
 
                                     <div class="row">
 
@@ -456,7 +464,7 @@
                                                     <!--<label for="dime_frente" data-toggle="tooltip" title="FRENTE">Frente </label>-->
                                                     <!--<i class="fa fa-check-circle check" *ngIf="libmantab.conpropvalCampo('dime_frente','valid',tablaForm)"></i>
                                                                             <i class="fa fa-exclamation-circle uncheck" *ngIf="libmantab.conpropvalCampo('dime_frente','invalid',tablaForm)"></i>-->
-                                                    <input type="text" class="form-control" formControlName="diám_tube" placeholder="Escriba el diámetro de la tubería" [UpperCase]="true" id="diám_tube">
+                                                    <input type="text" class="form-control" formControlName="diam_tube" placeholder="Escriba el diámetro de la tubería" [UpperCase]="true" id="diam_tube">
                                                 </div>
                                             </div>
 
@@ -641,7 +649,7 @@
 
                             </ng-template>
                         </kendo-tabstrip-tab>
-                        
+
                         <kendo-tabstrip-tab [title]="'Usuario'">
                             <ng-template kendoTabContent>
                                 <h3 class="divprincipal alert-muted text-center">
@@ -676,9 +684,9 @@
                 </kendo-splitter-pane>
             </div>
             <div class="row">
-                    <div class="alert alert-danger" *ngIf="enerror">
-                        {{message}}
-                    </div>
+                <div class="alert alert-danger" *ngIf="enerror">
+                    {{message}}
+                </div>
             </div>
             <button type="submit" class="btn btn-primary" [disabled]="!tablaForm.valid">Adicionar Registro</button>
             <div *ngIf="!vparcaptura">

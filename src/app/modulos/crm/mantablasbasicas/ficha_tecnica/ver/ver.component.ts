@@ -64,6 +64,7 @@ export class VerregFichatecComponent implements OnInit {
   id_fichatec: any;
   crearimagen=false;
   linkcreaimagen="";
+  usacampomarca = false;
   fechahoy = new Date();
   ano = this.fechahoy.getFullYear();
   mes = this.fechahoy.getMonth() + 1;
@@ -71,12 +72,13 @@ export class VerregFichatecComponent implements OnInit {
   public paramtabarchivosprod: any = {titulo: "Archivos",cod_usuar :"",cod_prod:"", ano:this.ano}
   public paramtabarchivos: any = {titulo: "Archivos",cod_usuar :"",cod_refven:"", ano:this.ano}
 
-  //campos a visualizar de contactos
+  //campos a visualizar de ficha tec
   public liscampvconta = [
     { titulo: 'Catalogo', campo: 'esde_catalogo' },
     { titulo: 'Cod_Venta', campo: 'cod_refven' },
     { titulo: 'Cod_Producto', campo: 'cod_prod' },
     { titulo: 'Nombre', campo: 'nombre' },
+    { titulo: 'Marca', campo: 'marca' },
     { titulo: 'Frente', campo: 'dime_frente' },
     { titulo: 'Num_Bandejas', campo: 'num_bande' },
     { titulo: 'Capacidad', campo: 'capacidad' },
@@ -97,7 +99,7 @@ export class VerregFichatecComponent implements OnInit {
     { titulo: 'Margen', campo: 'marg_erro' },
     { titulo: 'Division', campo: 'div_escal' },
     { titulo: 'Indicador', campo: 'indicador' },
-    { titulo: 'Diam_tube', campo: 'diám_tube' },
+    { titulo: 'Diam_tube', campo: 'diam_tube' },
     { titulo: 'Potencia_ter', campo: 'poten_ter' },
     { titulo: 'Presion_GN', campo: 'presi_gn' },
     { titulo: 'Presion_GLP', campo: 'presi_glp' },
@@ -180,20 +182,22 @@ export class VerregFichatecComponent implements OnInit {
             this.pcampollave = 'cod_refven';
         } 
         console.log('this.pcampollave');
-        console.log(this.pcampollave);
+        console.log(this.id, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre);
         this.mantbasicaService.getregTabla(this.id, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre)
           .subscribe(regTabla => {
+            console.log('regTabla',regTabla);
             if (typeof (regTabla.isCallbackError) != "undefined") {
                //buscar con cod_prod
               this.mantbasicaService.getregTabla(this.id, this.ptablab, this.paplica, 'cod_prod', this.pclase_nbs, this.pclase_val, this.pcamponombre)
                 .subscribe(regTabla => {
+                  console.log('regTabla',regTabla);
                   if (typeof (regTabla.isCallbackError) != "undefined") {
                     this.consulto = false;
                     this.enlistaerror = true;
                     this.listaerrores = regTabla.messages;
                   } else {
                     this.cargorefere=true;
-                    this.regProdref = regTabla;
+                    this.regProdref = regTabla;                    
                     this.prod_catalogo = regTabla.esde_catalogo;
                     var fecha = new Date();
                     var ano = fecha.getFullYear();
@@ -235,6 +239,12 @@ export class VerregFichatecComponent implements OnInit {
             } else {
               this.cargorefere=true;
               this.regProdref = regTabla;
+              if (typeof regTabla.marca  === "undefined"){
+                this.usacampomarca = false;                
+              } else {
+                this.usacampomarca = true;                                
+              }
+
               this.prod_catalogo = regTabla.esde_catalogo;
               var fecha = new Date();
               var ano = fecha.getFullYear();

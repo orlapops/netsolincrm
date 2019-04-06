@@ -74,9 +74,10 @@ export class VerregactividadComponent implements OnInit {
           this.id = parametros['id'];
         }
         let lvart: any;
-        // console.log(this.varParam);
+        console.log(this.varParam);
         lvart = localStorage.getItem(this.varParam);
         let lobjpar = JSON.parse(lvart);
+        console.log(lobjpar);
         this.title = lobjpar.titulo;
         this.rutamant = lobjpar.rutamant;
         this.paplica = lobjpar.aplica;
@@ -99,14 +100,17 @@ export class VerregactividadComponent implements OnInit {
           this.tablaFormOrig.addControl(litemobj.name, lcampformctrl);
         };
         this.tablaForm = this.tablaFormOrig;
+        console.log(this.id, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre);
         this.mantbasicaService.getregTabla(this.id, this.ptablab, this.paplica, this.pcampollave, this.pclase_nbs, this.pclase_val, this.pcamponombre)
           .subscribe(regTabla => {
             if (typeof (regTabla.isCallbackError) != "undefined") {
+              console.error(regTabla.messages);
               this.consulto = false;
               this.enlistaerror = true;
               this.listaerrores = regTabla.messages;
             } else {
               this.consulto = true;
+              console.log('reg: ',regTabla);
               this.asignaValores(regTabla);
             }
           })
@@ -135,10 +139,28 @@ export class VerregactividadComponent implements OnInit {
       } 
       case "2": { 
         // this.carga_cliepoten()
+        this.mantbasicaService.getregTabla(this.id_modasoc,"CLIENPOTEN","21","id_cliepote","","","nom_empre")
+        .subscribe(regTabla => {
+          if (typeof regTabla != "undefined") {
+            this.regModasoc = regTabla;
+            this.labelmodasoc = 'Consultando actividad para clie poten: '+regTabla.cod_cliepote+'/'+regTabla.nom_empre;
+            this.cargomodasoc = true;            
+            this.resultados = true;
+          }
+        });
          break; 
       } 
       case "3": { 
         // this.carga_cuenta()
+        this.mantbasicaService.getregTabla(this.id_modasoc,"CUENTACRM","21","id_cuentacrm","","","nombre")
+        .subscribe(regTabla => {
+          if (typeof regTabla != "undefined") {
+            this.regModasoc = regTabla;
+            this.labelmodasoc = 'Consultando actividad para cuenta: '+regTabla.cod_tercer+'/'+regTabla.nombre;
+            this.cargomodasoc = true;            
+            this.resultados = true;
+          }
+        });
          break; 
       } 
       case "4": { 

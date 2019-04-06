@@ -28,21 +28,21 @@ export class MantablasLibreria {
   //se utiliza al inicializar el formulario en metodo:inicializaForm() para definir validaciones especificas
   defineValidaCampo(pform: FormGroup, pcampo: string, avalidators: any[]) {
     var lcontrol: any;
-    console.log('defineValidaCampo pcampo:'+pcampo);
-    console.log(avalidators);
+    // console.log('defineValidaCampo pcampo:'+pcampo);
+    // console.log(avalidators);
     lcontrol = pform.get(pcampo);
     if (avalidators.length > 0) {
-      console.log('defineValidaCampo pcampo 1 limpia :'+pcampo);
+      // console.log('defineValidaCampo pcampo 1 limpia :'+pcampo);
       lcontrol.clearValidators();
-      console.log(lcontrol);
-      console.log('defineValidaCampo pcampo 2 asigna :'+pcampo);
+      // console.log(lcontrol);
+      // console.log('defineValidaCampo pcampo 2 asigna :'+pcampo);
       lcontrol.setValidators(avalidators);
     } else {
-      console.log('defineValidaCampo pcampo 3 solo limpia :'+pcampo);
+      // console.log('defineValidaCampo pcampo 3 solo limpia :'+pcampo);
       lcontrol.clearValidators();  
     }
-    console.log(lcontrol);
-    console.log(pform);    
+    // console.log(lcontrol);
+    // console.log(pform);    
 }
 
   //Consulta propiedad validacion campo formulario

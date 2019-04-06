@@ -191,10 +191,32 @@ export class EditregactividadComponent implements OnInit {
       } 
       case "2": { 
         // this.carga_cliepoten()
+        this.mantbasicaService.getregTabla(this.id_modasoc,"CLIENPOTEN","21","id_cliepote","","","nom_empre")
+        .subscribe(regTabla => {
+          // console.log("ngoninit cuentas 1.3 inicializaform 31");
+          if (typeof regTabla != "undefined") {
+            // console.log("ngoninit cuentas 1.3 inicializaform 31 1");
+            this.labelmodasoc = 'Consultando actividad para cliente potencial: '+regTabla.cod_cliepote+'/'+regTabla.nom_empre;
+            this.regModasoc = regTabla;
+            this.cargomodasoc = true;            
+            this.resultados = true;
+          }
+        });
          break; 
       } 
       case "3": { 
         // this.carga_cuenta()
+        this.mantbasicaService.getregTabla(this.id_modasoc,"CUENTACRM","21","id_cuentacrm","","","nombre")
+        .subscribe(regTabla => {
+          // console.log("ngoninit cuentas 1.3 inicializaform 31");
+          if (typeof regTabla != "undefined") {
+            // console.log("ngoninit cuentas 1.3 inicializaform 31 1");
+            this.labelmodasoc = 'Consultando actividad para cuenta: '+regTabla.cod_tercer+'/'+regTabla.nombre;
+            this.regModasoc = regTabla;
+            this.cargomodasoc = true;            
+            this.resultados = true;
+          }
+        });
          break; 
       } 
       case "4": { 

@@ -247,7 +247,9 @@ export class NetsolinService {
 				  let var3 = JSON.parse(result0.campos_lista);
 				  if (typeof(var3)=='object'){
 					NetsolinApp.objpartablabas.campos_lista = var3;
-				  }
+				  } else {
+						NetsolinApp.objpartablabas.campos_lista = [];
+					}
 				} 
 				let var1 = JSON.stringify(NetsolinApp.objpartablabas);
 				localStorage.setItem("VPAR" + result0.tabla, var1);		
@@ -296,7 +298,9 @@ export class NetsolinService {
 				  let var3 = JSON.parse(result0.campos_lista);
 				  if (typeof(var3)=='object'){
 					NetsolinApp.objpartablabas.campos_lista = var3;
-				  }
+				  } else {
+						NetsolinApp.objpartablabas.campos_lista = [];
+					}
 				} 
 				let var1 = JSON.stringify(NetsolinApp.objpartablabas);
 				localStorage.setItem("VPAR" + result0.tabla, var1);		

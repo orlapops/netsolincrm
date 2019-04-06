@@ -47,6 +47,7 @@ export class AddregFichatecComponent implements OnInit {
   cargorefere= false;
   labelprodref="";
   llinkimagen="";
+  usacampomarca = false;
   fechahoy = new Date();
   ano = this.fechahoy.getFullYear();
   mes = this.fechahoy.getMonth() + 1;
@@ -97,7 +98,7 @@ export class AddregFichatecComponent implements OnInit {
         // console.log("ngoninit contactos 1.2");
         this.camposform = JSON.parse(lvar);
         for (var litemobj of this.camposform) {
-          // console.log("ngoninit contactos 1.2.1");
+          //  console.log("litemobj",litemobj);
           //Crear campo formulario con valor por default
           let vardefa: any;
           if (litemobj.type == 'text' && litemobj.val_defaul.length != 0) {
@@ -110,6 +111,9 @@ export class AddregFichatecComponent implements OnInit {
           } else if (litemobj.type == 'checkbox' && litemobj.val_defaul.length != 0) {
             vardefa = litemobj.val_defaul == 'true', true, false;
           }
+          if (litemobj.name === 'marca'){
+              this.usacampomarca = true;
+          } 
           let lcampformctrl = new FormControl(vardefa);
           //adicionar validacion si es obligatorio
           var avalida = [];
@@ -203,37 +207,44 @@ export class AddregFichatecComponent implements OnInit {
       this.grabo = false;
     return 
     }
-
+    console.log('a adicionar',this.regTabla, this.ptablab, this.paplica, 'cod_refven', this.pclase_nbs, this.pclase_val, this.pcamponombre);
     this.mantbasicaService.postregTabla(this.regTabla, this.ptablab, this.paplica, 'cod_refven', this.pclase_nbs, this.pclase_val, this.pcamponombre)
       .subscribe(newpro => {
         this.grabando = false;
         var result0 = newpro[0];
-      
-    
+        if (typeof (newpro.isCallbackError) != "undefined") {
+          this.grabo = false;
+          console.error(newpro.messages);
+          this.showError(newpro.messages[0].menerror);  
+        } else {
+          console.log('resul graba reg',result0,newpro);    
           this.grabo = true;
           this.tablaForm.reset();
           this.showMensaje('Se adiciono producto.');
-        
+        }
       }, error => {
         this.grabando = false;
         this.grabo = false;
+        console.error(error);
         this.showError(error);
       })
-
-      this.mantbasicaService.postregTabla(this.regTabla, this.ptablab, this.paplica, 'cod_prod', this.pclase_nbs, this.pclase_val, this.pcamponombre)
-      .subscribe(newpro => {
-        this.grabando = false;
-        var result0 = newpro[0];
+      // console.log('a adicionar',this.regTabla, this.ptablab, this.paplica, 'cod_refven', this.pclase_nbs, this.pclase_val, this.pcamponombre);
+      // this.mantbasicaService.postregTabla(this.regTabla, this.ptablab, this.paplica, 'cod_prod', this.pclase_nbs, this.pclase_val, this.pcamponombre)
+      // .subscribe(newpro => {
+      //   console.log('resul graba reg',result0,newpro);    
+      //   this.grabando = false;
+      //   var result0 = newpro[0];
         
-          this.grabo = true;
-          this.tablaForm.reset();
-          this.showMensaje('Se adiciono producto.');
+      //     this.grabo = true;
+      //     this.tablaForm.reset();
+      //     this.showMensaje('Se adiciono producto.');
         
-      }, error => {
-        this.grabando = false;
-        this.grabo = false;
-        this.showError(error);
-      })
+      // }, error => {
+      //   this.grabando = false;
+      //   this.grabo = false;
+      //   console.error(error);
+      //   this.showError(error);
+      // })
   }
 
   saveregTabla() {
