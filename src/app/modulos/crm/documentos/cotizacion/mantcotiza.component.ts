@@ -190,7 +190,7 @@ export class MantcotizacionComponent implements OnInit {
     private pf: FormBuilder
   ) {}
   ngOnInit() {
-    // console.log("ngoninit mant cotiza 1");
+    console.log("ngoninit mant cotiza 1");
     this.activatedRouter.params.subscribe(parametros => {
       // console.log("ngoninit cotiza 1.1");
       // this.varParam = parametros['varParam'];
@@ -201,7 +201,7 @@ export class MantcotizacionComponent implements OnInit {
         // this.pidcliepote=0;
         // this.pidcuentacrm=0;
       } else {
-        // console.log("ngoninit cotiza 1.3");
+        console.log("ngoninit cotiza 1.3");
         this.varParam = parametros["varParam"];
         // console.log("ngoninit cotiza 1.3 " + this.varParam);
         this.pid = parametros["pid"];
@@ -2386,4 +2386,43 @@ export class MantcotizacionComponent implements OnInit {
       this.ngcierrexperdida = false;
     }
   }  
+  verComboid_contacto(event, pcamporecibe, pcamporetorna) {
+    // console.log('verComboid_contacto',pcamporecibe,pcamporetorna,event);
+    var lcontrolcampo: any;
+    var lvalor: any;
+    var lncampo: string;
+    lcontrolcampo = this.tablaForm.controls[pcamporecibe];
+    //si es indefinido dejar vacio
+    if (typeof event == "undefined") {
+      // console.log('verComboid_contacto 2',pcamporecibe,pcamporetorna);
+      lcontrolcampo.setValue("");
+      lvalor = "";
+      return;
+    }
+    //si es por combog que retorna el valor o es por el que retorna objeto
+    if (typeof event != "object") {
+      // console.log('verComboid_contacto 3',pcamporecibe,pcamporetorna);
+      if (event) {
+        // console.log("valor que llega ciudades 2 asigna event");
+        // lcontrolcampo.setValue(event);
+        lvalor = event;
+        // console.log("valor que llega ciudades 2 asigna event 2");
+        // return
+      }
+    } else if (event.length > 0) {
+      // console.log('verComboid_contacto 4',pcamporecibe,pcamporetorna);
+      var result0 = event[0];
+      lncampo = "result0." + pcamporetorna;
+      lvalor = eval(lncampo);
+      if (lvalor) {
+      } else {
+        lncampo = "result0.id";
+        lvalor = eval(lncampo);
+      }
+    } else {
+      lvalor = "";
+    }
+    // console.log('verComboid_contacto 5',lvalor);
+    lcontrolcampo.setValue(lvalor);
+  }
 }

@@ -590,6 +590,12 @@ export class AddregdprodcotizaComponent implements OnInit {
                       var lprecio = this.libmantab.valCampoform(this.tablaForm,"valor_list");
                       this.libmantab.asignaValorcampoform(this.tablaForm,"valor_list",result0.valor);
                       this.libmantab.asignaValorcampoform(this.tablaForm,"por_desc",result0.descuento);
+                      console.log('descuento cambiar validator ', result0);
+                      //op Abril 22 2019 cambio validator a descuento maximo si existe campo definido des_max en lista de precios y es verdadero
+                      if (typeof result0.des_max != "undefined" && result0.des_max) {
+                        console.log('Se asigna como descuento maximo',result0);
+                        this.tablaForm.controls['por_desc'].setValidators([Validators.min(0), Validators.max(result0.descuento)]);  
+                      }
                       if (result0.valor > 0) {
                         if (result0.fijo)
                             this.libmantab.disableCampoform(this.tablaForm,"valor_list");                       
@@ -603,6 +609,7 @@ export class AddregdprodcotizaComponent implements OnInit {
                       } else {
                         this.libmantab.enableCampoform(this.tablaForm,"por_desc");                                               
                       }
+                  
                       if (this.regCotizac.inc_iva)
                         this.por_iva = result0.por_iva;
                       else 

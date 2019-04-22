@@ -83,7 +83,7 @@
                                             </app-listbasmodal>
                                         </div>
                                         <div *ngIf="infopanelselec==='infgen'" class="col-md-12">
-                                            <fieldset class="netsolinfs">
+                                            <fieldset *ngIf="cargocuenta" class="netsolinfs">
                                                 <legend class="netsolinfs">Identificación:</legend>
                                                 <div class="row">
                                                     <labelinfo titulo="{{'Código'}}" valor="{{regCuenta.cod_tercer}}"></labelinfo>
@@ -94,6 +94,12 @@
                                                 </div>
                                                 <div class="row">
                                                     <labelinfo titulo="{{'Nombre o Razón social'}}" valor="{{regCuenta.nombre}}"></labelinfo>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset *ngIf="cargovended" class="netsolinfs">
+                                                <legend class="netsolinfs">Vendedor Asignado:</legend>
+                                                <div class="row">
+                                                    <labelinfo titulo="{{'Vendedor'}}" valor="{{regCuenta.cod_vended + ' '+ regVended.nombre}}"></labelinfo>
                                                 </div>
                                             </fieldset>
                                             <fieldset class="netsolinfs">
@@ -241,12 +247,12 @@
                                     </kendo-dropdownlist>
                                 </label>
                                 </div>
-                    
-                    
+
+
                                 <!-- <nets-filtroanomes (pasarAno)="filtroAno($event)" (pasarMes)="filtroMes($event)" tipo="AM" titulofiltro="Filtrar: " anoini="{{anofiltro}}" mesini="{{mesfiltro}}"></nets-filtroanomes> -->
                             </div>
                         </div>
-                    <div class="row">
+                        <div class="row">
                             <div class="col-md-12 col-xs-12 col-sm-6 col-lg-6 netsmonibotonmentop">
                                 <div class="list-group">
                                     <a [href]="cleanURL(linkmoniventas)" class="list-group-item active">

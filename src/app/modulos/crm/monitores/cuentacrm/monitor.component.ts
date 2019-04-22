@@ -55,6 +55,8 @@ export class MonitorcuentaComponent implements OnInit {
   cargocuenta = false;
   regCuenta: any;
   cargotercero = false;
+  regVended: any;
+  cargovended = false;
   regTercero: any;
   cargocliente = false;
   regCliente: any;
@@ -255,6 +257,7 @@ private selectedId: string = "";
       this.mantbasicaService.getregTabla(preg.cod_tercer, "TERCEROS", "21", "cod_tercer", "", "", "nombre")
         .subscribe(regTabla => {
           if (typeof (regTabla) != "undefined") {
+            console.log('cargo tercero', regTabla);
             this.regTercero = regTabla;
             this.id_terconsulta = regTabla.cod_tercer;
             //cargar cliente
@@ -264,6 +267,18 @@ private selectedId: string = "";
                 if (typeof (regTabla) != "undefined") {
                   this.regCliente = regTabla;
                   this.cargocliente = true;
+                  //cargar vendedor
+                  this.cargovended = false;
+                  this.mantbasicaService.getregTabla(this.regCuenta.cod_vended, "TERCEROS", "0", "cod_tercer", "", "", "nombre")
+                    .subscribe(regTabla => {
+                      if (typeof (regTabla) != "undefined") {
+                        console.log('cargo vendedor', regTabla);
+                        this.regVended = regTabla;
+                        this.cargovended = true;
+                        // this.tabstrip.selectTab(0);
+                      }
+                    });
+
                   // this.tabstrip.selectTab(0);
                 }
               });

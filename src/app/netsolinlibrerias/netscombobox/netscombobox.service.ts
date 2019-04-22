@@ -37,7 +37,7 @@ export class NetscomboboxService extends BehaviorSubject<any> {
         objrest.filtro = filtro;
         // NetsolinApp.objenvrestsolcomobog.cursor = "Tcursorx";
         // console.log('getch prueba combog objrest filtro');
-        // console.log(filtro);
+        console.log(NetsolinApp.urlNetsolin,objrest,filtro,NetsolinApp.objenvrestsolcomobog);
         // console.log('getch prueba combog objrest:');
         // console.log(objrest);
 

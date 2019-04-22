@@ -144,7 +144,8 @@
                                                         Total Item:
                                                     </td>
                                                     <td align="rigth" class="netscoltotvalor">
-                                                        {{valor_bruto |currency: 'COP':'symbol' | Moneda: '$':20}}
+                                                        <!-- {{valor_bruto |currency: 'COP':'symbol' | Moneda: '$':20}} -->
+                                                        {{valor_bruto |currency}}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -152,7 +153,8 @@
                                                         Descuento:
                                                     </td>
                                                     <td align="rigth" class="netscoltotvalor">
-                                                        {{valor_descuento |currency: 'COP':'symbol' | Moneda: '$':20}}
+                                                        <!-- {{valor_descuento |currency: 'COP':'symbol' | Moneda: '$':20}} -->
+                                                        {{valor_descuento |currency}}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -160,7 +162,8 @@
                                                         Neto:
                                                     </td>
                                                     <td align="rigth" class="netscoltotvalor">
-                                                        {{valor_neto |currency: 'COP':'symbol' | Moneda: '$':20}}
+                                                        <!-- {{valor_neto |currency: 'COP':'symbol' | Moneda: '$':20}} -->
+                                                        {{valor_neto |currency}}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -168,7 +171,8 @@
                                                         Iva {{por_iva}}%:
                                                     </td>
                                                     <td align="rigth" class="netscoltotvalor">
-                                                        {{valor_iva |currency: 'COP':'symbol' | Moneda: '$':20}}
+                                                        <!-- {{valor_iva |currency: 'COP':'symbol' | Moneda: '$':20}} -->
+                                                        {{valor_iva |currency}}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -176,7 +180,8 @@
                                                         Total:
                                                     </td>
                                                     <td align="rigth" class="netscoltotvalor">
-                                                        {{valor_total |currency: 'COP':'symbol' | Moneda: '$':20}}
+                                                        <!-- {{valor_total |currency: 'COP':'symbol' | Moneda: '$':20}} -->
+                                                        {{valor_total |currency}}
                                                     </td>
                                                 </tr>
 

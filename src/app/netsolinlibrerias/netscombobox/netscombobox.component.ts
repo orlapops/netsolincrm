@@ -73,13 +73,13 @@ export class NetscomboboxComponent  implements OnInit,OnChanges{
 
      ngOnInit() {
         this.inicializado = true;
-        // console.log("ngoninit comobobox");
-        // console.log("valor ini");
-        // console.log(this.tablabase);
-        // console.log(this.campollave);
-        // console.log(this.valini);
-        // console.log("valor filtro");
-        // console.log(this.filtro);
+        console.log("ngoninit comobobox");
+        console.log("valor ini");
+        console.log(this.tablabase);
+        console.log(this.campollave);
+        console.log(this.valini);
+        console.log("valor filtro");
+        console.log(this.filtro);
         this.campvalor = this.valini;
         // console.log(this.esdisabled);
         NetsolinApp.objenvrestsolcomobog.usuario = NetsolinApp.oapp.cuserid;

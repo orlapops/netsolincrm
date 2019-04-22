@@ -46,6 +46,7 @@ export class EditregdprodcotizaComponent implements OnInit {
   listaerrores: any[] = [];
   grabo = false;
   message = "";
+  menalerta = '';
   crearrefere = false;
   crearprodfc = false;
   consultarefere = false;
@@ -201,39 +202,6 @@ export class EditregdprodcotizaComponent implements OnInit {
     avalida.push(Validators.required);
     this.prod_catalogo = preg.prod_catal;
     this.por_iva = preg.por_iva;
-    if (preg.prod_catal){      
-      this.libmantab.defineValidaCampo(this.tablaForm, "cod_refven", avalida);
-      this.libmantab.defineValidaCampo(this.tablaForm, "cod_prod", []);
-      this.cargorefere = false;
-      this.cargoprod = false;
-      this.mantbasicaService.getregTabla(preg.cod_refven, "REFERE_V", "10", "cod_refven", "", "", "nombre")
-        .subscribe(regTabla => {
-          if (typeof (regTabla) != "undefined") {
-            this.regReferen = regTabla;
-            //disable se vuelve a evaluar al modificar referencia
-            this.libmantab.disableCampoform(this.tablaForm, "valor_list");
-            this.id_refconsulta = regTabla.cod_refven;
-            this.cargorefere = true;
-          }
-        })
-    } else {
-      this.libmantab.defineValidaCampo(this.tablaForm, "cod_refven", []);
-      this.libmantab.defineValidaCampo(this.tablaForm, "cod_prod", avalida);
-      avalidanumero.push(Validators.min(0));
-      avalidanumero.push(Validators.max(360));
-      this.libmantab.defineValidaCampo(this.tablaForm, "tmp_entreg", avalidanumero);        
-      this.cargorefere = false;
-      this.cargoprod = false;
-      this.mantbasicaService.getregTabla(preg.cod_prod,"PRODUCTOS","21","cod_prod", "", "", "nombre")
-        .subscribe(regTabla => {
-          if (typeof (regTabla) != "undefined") {
-            this.regProdfc = regTabla;
-            //disable se vuelve a evaluar al modificar referencia
-            this.libmantab.disableCampoform(this.tablaForm, "valor_list");           
-            this.cargoprod = true;
-          }
-        })
-    }
     this.message = "";
     this.enerror = false;
     this.cargocotizac = false;
@@ -260,12 +228,112 @@ export class EditregdprodcotizaComponent implements OnInit {
                 this.onChanges();
               }
             });
+            if (preg.prod_catal){      
+              this.libmantab.defineValidaCampo(this.tablaForm, "cod_refven", avalida);
+              this.libmantab.defineValidaCampo(this.tablaForm, "cod_prod", []);
+              this.cargorefere = false;
+              this.cargoprod = false;
+              this.mantbasicaService.getregTabla(preg.cod_refven, "REFERE_V", "10", "cod_refven", "", "", "nombre")
+                .subscribe(regTabla => {
+                  if (typeof (regTabla) != "undefined") {
+                    this.regReferen = regTabla;
+                    //Actualizar precio si es el caso
+                    this.actualizar_precioalinicia();
+                    //disable se vuelve a evaluar al modificar referencia
+                    this.libmantab.disableCampoform(this.tablaForm, "valor_list");
+                    this.id_refconsulta = regTabla.cod_refven;
+                    this.cargorefere = true;
+                  }
+                })
+            } else {
+              this.libmantab.defineValidaCampo(this.tablaForm, "cod_refven", []);
+              this.libmantab.defineValidaCampo(this.tablaForm, "cod_prod", avalida);
+              avalidanumero.push(Validators.min(0));
+              avalidanumero.push(Validators.max(360));
+              this.libmantab.defineValidaCampo(this.tablaForm, "tmp_entreg", avalidanumero);        
+              this.cargorefere = false;
+              this.cargoprod = false;
+              this.mantbasicaService.getregTabla(preg.cod_prod,"PRODUCTOS","21","cod_prod", "", "", "nombre")
+                .subscribe(regTabla => {
+                  if (typeof (regTabla) != "undefined") {
+                    this.regProdfc = regTabla;
+                    //disable se vuelve a evaluar al modificar referencia
+                    this.libmantab.disableCampoform(this.tablaForm, "valor_list");           
+                    this.cargoprod = true;
+                  }
+                })
+            }
           // this.tabstrip.selectTab(0);
         }
       });
-    
+        
+
+
     this.cargando = false;
     this.resultados = true;
+  }
+  actualizar_precioalinicia(){
+            //op abril 22 2019 verificar precio
+            NetsolinApp.param_precioven.cod_tercer = this.regCotizac.cod_tercer;
+            NetsolinApp.param_precioven.proc_ven = this.regCotizac.cod_procve;
+            NetsolinApp.param_precioven.lista = this.regCotizac.cod_lista;
+            NetsolinApp.param_precioven.cod_refven = this.regReferen.cod_refven;
+            this.service.getNetsolinObjconParametros(this.vglobal.obj_precio,NetsolinApp.param_precioven)
+              .subscribe(result => {
+                  //viene registro con el precio o error
+                  console.log("eje getNetsolinObjconParametros retorna result");
+                  console.log(result);
+                  var result0 = result[0];
+                  // console.log(result0);
+                  if (typeof result.isCallbackError === "undefined") {       
+                    //viene el registro con el precio en result0
+                    var lprecio = this.libmantab.valCampoform(this.tablaForm,"valor_list");
+                    //Op Abril 22 19 no debe cambiar estos datos sin avisar
+                    console.log('Actualizando precio lprecio,result0.valor',lprecio,result0.valor);
+                    if (lprecio != result0.valor){
+                      this.libmantab.asignaValorcampoform(this.tablaForm,"valor_list",result0.valor);
+                      this.menalerta = 'El precio cambio. Se actualiza el precio. Verifique'
+                      // this.libmantab.asignaValorcampoform(this.tablaForm,"por_desc",result0.descuento);
+                    }
+                    //op Abril 22 2019 cambio validator a descuento maximo si existe campo definido des_max en lista de precios y es verdadero
+                    if (typeof result0.des_max != "undefined" && result0.des_max) {
+                        console.log('Se asigna como descuento maximo',result0);
+                        this.tablaForm.controls['por_desc'].setValidators([Validators.min(0), Validators.max(result0.descuento)]);  
+                    }                      
+                    if (result0.valor > 0) {
+                      if (result0.fijo)
+                          this.libmantab.disableCampoform(this.tablaForm,"valor_list");                       
+                      else 
+                        this.libmantab.enableCampoform(this.tablaForm,"valor_list");                       
+                    } else
+                      this.libmantab.enableCampoform(this.tablaForm,"valor_list");                       
+                    
+                    if (result0.des_fijo) {
+                      this.libmantab.disableCampoform(this.tablaForm,"por_desc");                       
+                    } else {
+                      this.libmantab.enableCampoform(this.tablaForm,"por_desc");                                               
+                    }
+                    if (this.regCotizac.inc_iva)
+                      this.por_iva = result0.por_iva;
+                    else 
+                      this.por_iva = 0;
+                    
+
+                  } else {
+                    //viene el registro con el error
+                    this.libmantab.asignaValorcampoform(this.tablaForm,"valor_list",0);
+                    var regerror = result.messages[0];
+                    this.message = regerror.menerror;
+                    this.showError(regerror.menerror);
+                  }
+                },
+                error => {
+                  this.libmantab.asignaValorcampoform(this.tablaForm,"valor_list",0);
+                  console.log("Error en getNetsolinObjconParametros");
+                  console.log(error);
+                  this.showError(error);
+                }
+              );            
   }
   //Si cambia el codigo del tercero llenar el nit con el mismo si este esta vacio
   onChanges(): void {
@@ -621,8 +689,18 @@ export class EditregdprodcotizaComponent implements OnInit {
                     if (typeof result.isCallbackError === "undefined") {       
                       //viene el registro con el precio en result0
                       var lprecio = this.libmantab.valCampoform(this.tablaForm,"valor_list");
-                      this.libmantab.asignaValorcampoform(this.tablaForm,"valor_list",result0.valor);
-                      this.libmantab.asignaValorcampoform(this.tablaForm,"por_desc",result0.descuento);
+                      //Op Abril 22 19 no debe cambiar estos datos sin avisar
+                      console.log('Actualizando precio lprecio,result0.valor',lprecio,result0.valor);
+                      if (lprecio != result0.valor){
+                        this.libmantab.asignaValorcampoform(this.tablaForm,"valor_list",result0.valor);
+                        this.menalerta = 'El precio cambio. Se actualiza el precio. Verifique'
+                        // this.libmantab.asignaValorcampoform(this.tablaForm,"por_desc",result0.descuento);
+                      }
+                      //op Abril 22 2019 cambio validator a descuento maximo si existe campo definido des_max en lista de precios y es verdadero
+                      if (typeof result0.des_max != "undefined" && result0.des_max) {
+                          console.log('Se asigna como descuento maximo',result0);
+                          this.tablaForm.controls['por_desc'].setValidators([Validators.min(0), Validators.max(result0.descuento)]);  
+                      }                      
                       if (result0.valor > 0) {
                         if (result0.fijo)
                             this.libmantab.disableCampoform(this.tablaForm,"valor_list");                       
@@ -659,7 +737,7 @@ export class EditregdprodcotizaComponent implements OnInit {
                 );
 
               // this.inicializado = true;
-              this.tabstrip.selectTab(0);
+              // this.tabstrip.selectTab(0);
               this.cargorefere = true;
             // }
           } else {
