@@ -117,12 +117,14 @@ export class MantcotizacionComponent implements OnInit {
   disablecod_zona = false;
   disablecod_vended = false;
   disablecod_lista = false;
+  disableid_oser = false;
   disablecod_procve = false;
   disableid_cuentacrm = false;
   disableid_cliepote = false;
   filtrocontacto: string = "";
   filtrocotizad: string;
   filtroactividades:string="";
+  filtroos: string ="";
   labelcuenta: string = "";
   labelcliepote: string = "";
   //totales
@@ -418,6 +420,7 @@ export class MantcotizacionComponent implements OnInit {
     // this.resultados = false;
     this.idccotiza = preg.id_cotiza;
     this.filtrocotizad = "id_cotiza=" + preg.id_cotiza;
+    this.filtroos = "cod_tercer='" + this.pidcuentacrm+"'";
     this.filtroactividades = "cod_doca='"+preg.cod_dcotiz+"' and num_doca='"+preg.num_dcotiz+"'";
     // console.log('cambio filtrocotizad en asignavalores:'+this.filtrocotizad);
     this.libmantab.asignaValoresform(preg,this.tablaForm,this.camposform,false);
@@ -478,6 +481,7 @@ export class MantcotizacionComponent implements OnInit {
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_ciudad", avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_zona", avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_vended", avalida);
+    this.libmantab.defineValidaCampo(this.tablaForm, "id_oser", avalida);
     // this.libmantab.defineValidaCampo(this.tablaForm, 'lista_prec', avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_fpago", avalida);
     if (preg.id_cuentacrm>0){
@@ -602,6 +606,7 @@ export class MantcotizacionComponent implements OnInit {
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_ciudad", avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_zona", avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_vended", avalida);
+    this.libmantab.defineValidaCampo(this.tablaForm, "id_oser", avalida);
     // this.libmantab.defineValidaCampo(this.tablaForm, 'lista_prec', avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_fpago", avalida);
 //definir validaciones campos númericos
@@ -654,6 +659,7 @@ export class MantcotizacionComponent implements OnInit {
       // console.log(this.num_dcotiz);
       // console.log(this.tablaForm);
       this.libmantab.asignaValorcampoform(this.tablaForm, "cod_procve", "");
+      this.libmantab.asignaValorcampoform(this.tablaForm, "id_oser", "");
       this.libmantab.asignaValorcampoform(this.tablaForm, "cod_lista", "");
       this.libmantab.asignaValorcampoform(this.tablaForm, "cod_mone", "");
       this.libmantab.asignaValorcampoform(this.tablaForm, "id_version", "1");
@@ -679,6 +685,7 @@ export class MantcotizacionComponent implements OnInit {
       this.cargoprocven = false;
       this.grabo = false;
       this.message = "";
+      this.filtroos = "cod_tercer='" + this.pidcuentacrm+"'";
       // console.log('ini adi 10 this.captura_xcuenta:'+this.captura_xcuenta);
       if (this.captura_xcuenta) {
         // console.log('ini adi 11 a valida cuednta');
@@ -1050,7 +1057,10 @@ export class MantcotizacionComponent implements OnInit {
     this.regTabla.ctrl_apli = 'P';
     // console.log('revisar');
     this.regTabla.descri_cierre=this.ngmdescri_cierre;
-    this.regTabla.id_dir=this.selecteddirdespa.id;
+    console.log(this.selecteddirdespa);
+    if(typeof this.selecteddirdespa != 'undefined'){
+      this.regTabla.id_dir=this.selecteddirdespa.id;
+    }
     // console.log('Registro a grbar:');
     // console.log(this.regTabla);
     this.dialogoconvsolped=false;
@@ -1326,6 +1336,7 @@ export class MantcotizacionComponent implements OnInit {
             this.id_cliepoten = this.regCliepoten.id_cliepote;
             // console.log("validacliepote a2");
             this.filtrocontacto = "id_cliepote=" + this.id_cliepoten;
+            this.filtroos = "";
             if (typeof(this.txtcod_cliepote) !='undefined'){
               // this.txtcod_cliepote.inputbus.nativeElement.value = this.regCliepoten.cod_cliepote;
               this.renderer.setValue(this.txtcod_cliepote,this.regCliepoten.cod_cliepote); 
@@ -1462,6 +1473,7 @@ export class MantcotizacionComponent implements OnInit {
             // console.log(this.id_cuentacrm);
             console.log("validacuenta a2");
             this.filtrocontacto = "id_cuenta=" + this.id_cuentacrm;
+            this.filtroos = "cod_tercer='" + this.regCuenta.cod_tercer+"'";
             console.log("valida cuenta this.filtrocontacto:" + this.filtrocontacto);
             this.labelcuenta = this.regCuenta.nombre;
             // this.labelcliepote = "";
@@ -1672,6 +1684,7 @@ export class MantcotizacionComponent implements OnInit {
           if (typeof regTabla != "undefined") {
             // console.log("verprocven 2");
             this.regProcven = regTabla;
+            console.log('this.regProcven', this.regProcven);
             this.cargoprocven = true;
             // this.id_contacto = regTabla.id_contacto;
             if (lcambiadatosval) {
@@ -1722,9 +1735,9 @@ export class MantcotizacionComponent implements OnInit {
                   // this.libmantab.asignaValorcampoformsindato(this.tablaForm,"cod_vended",NetsolinApp.oapp.cuserid);
                   this.disablecod_vended = (this.regProcven.per_cvende || this.regCliente.cod_vended != NetsolinApp.oapp.cuserid) ? false : true;
                   this.libmantab.asignaValorcampoformsindato(this.tablaForm,"cod_lista",this.regCliente.lista_prec);
-                  this.disablecod_lista = this.regProcven.per_clista
-                    ? false
-                    : true;
+                  this.disablecod_lista = this.regProcven.per_clista ? false : true;
+                  this.disableid_oser = this.regProcven.afec_mservi ? false : true;
+                  console.log('this.disableid_oser',this.regProcven.afec_mservi,this.disableid_oser);
                   this.libmantab.asignaValorcampoformsindato(this.tablaForm,"cod_fpago",this.regCliente.cod_fpago);
                   // console.log("verprocven 8");
                   this.disablecod_fpago = this.regProcven.per_cfpago

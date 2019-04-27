@@ -416,6 +416,12 @@
                                                 <label class="labelrela ">{{regContacto.nombres+' '+regContacto.apellidos}} <br>{{regContacto.cargo+' '+regContacto.tel_trabajo+' | '+regContacto.tel_movil}} </label>
                                             </p>
                                         </div>
+                                        <div *ngIf="cargoprocven" class="col-md-4">
+                                            <label for="id_oser" data-toggle="tooltip" title="Seleccione orden servicio asociado a la cotización. ">Orden de Servicio</label>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'id_oser','id_oser',tablaForm)" valini="{{libmantab.valoriniCombog('id_oser',tablaForm)}}" tablabase="HSERVIC" orden="1" filtro="{{filtroos}}" campollave="id_oser" [esdisabled]="disableid_oser">
+                                            </netscombog>
+                                        </div>
+
                                         <div class="col-md-4">
                                             <label for="inc_iva" class="form-check-label" data-toggle="tooltip" title="Marque si se calcula el iva.">Incluir Iva</label>
                                             <!-- <kendo-switch [(ngModel)]="incluir_iva"></kendo-switch> -->
@@ -513,11 +519,17 @@
                                         </div>
                                     </div>
                                     <div class="row ">
-                                        <div class="col-md-6 ">
+                                        <div class="col-md-4">
                                             <label for="id_contacto" data-toggle="tooltip" title="Seleccione el contacto asociado a la cotización. ">Contacto</label>
                                             <netscombog (pasarDatos)="libmantab.verCombog($event,'id_contacto','id_contacto',tablaForm)" valini="{{libmantab.valoriniCombog('id_contacto',tablaForm)}}" tablabase="CONTACTOS" orden="1" filtro="{{filtrocontacto}}" campollave="id_contacto" esdisabled="{{true}}">
                                             </netscombog>
                                         </div>
+                                        <div *ngIf="cargoprocven" class="col-md-4">
+                                            <label for="id_oser" data-toggle="tooltip" title="Seleccione orden servicio asociado a la cotización. ">Orden de Servicio</label>
+                                            <netscombog (pasarDatos)="libmantab.verCombog($event,'id_oser','id_oser',tablaForm)" valini="{{libmantab.valoriniCombog('id_oser',tablaForm)}}" tablabase="HSERVIC" orden="1" filtro="{{filtroos}}" campollave="id_oser" [esdisabled]="disableid_oser">
+                                            </netscombog>
+                                        </div>
+
                                         <div class="col-md-4">
                                             <label for="inc_iva" class="form-check-label" data-toggle="tooltip" title="Marque si se calcula el iva.">Incluir Iva</label>
                                             <kendo-switch formControlName="inc_iva" [onLabel]="'Si'" [offLabel]="'No'" id="inc_iva" name="inc_iva"></kendo-switch>
