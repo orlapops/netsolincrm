@@ -481,7 +481,7 @@ export class MantcotizacionComponent implements OnInit {
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_ciudad", avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_zona", avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_vended", avalida);
-    this.libmantab.defineValidaCampo(this.tablaForm, "id_oser", avalida);
+    this.libmantab.defineValidaCampo(this.tablaForm, "id_oser", []);
     // this.libmantab.defineValidaCampo(this.tablaForm, 'lista_prec', avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_fpago", avalida);
     if (preg.id_cuentacrm>0){
@@ -606,7 +606,7 @@ export class MantcotizacionComponent implements OnInit {
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_ciudad", avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_zona", avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_vended", avalida);
-    this.libmantab.defineValidaCampo(this.tablaForm, "id_oser", avalida);
+    this.libmantab.defineValidaCampo(this.tablaForm, "id_oser", []);
     // this.libmantab.defineValidaCampo(this.tablaForm, 'lista_prec', avalida);
     this.libmantab.defineValidaCampo(this.tablaForm, "cod_fpago", avalida);
 //definir validaciones campos númericos
@@ -1738,6 +1738,15 @@ export class MantcotizacionComponent implements OnInit {
                   this.disablecod_lista = this.regProcven.per_clista ? false : true;
                   this.disableid_oser = this.regProcven.afec_mservi ? false : true;
                   console.log('this.disableid_oser',this.regProcven.afec_mservi,this.disableid_oser);
+                  //Cambiar validacion op mayo 7 2019
+                  if (this.disableid_oser){
+                    var avalida = [];
+                    this.libmantab.defineValidaCampo(this.tablaForm,"id_oser",[]);
+                  } else {
+                    var avalida = [];
+                    avalida.push(Validators.required);
+                    this.libmantab.defineValidaCampo(this.tablaForm,"id_oser",avalida);
+                  }
                   this.libmantab.asignaValorcampoformsindato(this.tablaForm,"cod_fpago",this.regCliente.cod_fpago);
                   // console.log("verprocven 8");
                   this.disablecod_fpago = this.regProcven.per_cfpago

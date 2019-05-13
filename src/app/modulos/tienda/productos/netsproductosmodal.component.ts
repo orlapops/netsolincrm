@@ -11,7 +11,7 @@ import { NetsolinService } from '../../../services/netsolin.service';
     template: `
     <kendo-dialog title="{{ptitulo}}" 
     (close)="close()"
-    [minWidth]="350" [width]="650">
+    [minWidth]="350" [width]="650" [height]="600">
     <div class="alert alert-danger" *ngIf="enerror">
     {{message}}
   </div>

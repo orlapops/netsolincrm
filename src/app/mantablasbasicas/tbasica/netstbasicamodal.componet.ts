@@ -12,7 +12,7 @@ import { NetsolinApp } from '../../shared/global';
     template: `
         <kendo-dialog title="{{ptitulo}}" 
             (close)="close()"
-            [minWidth]="350" [width]="650">
+            [minWidth]="350" [width]="650"  [height]="600">
         <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="alert alert-danger" *ngIf="enerror">

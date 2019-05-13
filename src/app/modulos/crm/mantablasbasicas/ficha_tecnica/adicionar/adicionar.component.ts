@@ -207,6 +207,7 @@ export class AddregFichatecComponent implements OnInit {
       this.grabo = false;
     return 
     }
+    if (this.regTabla.esde_catalogo){
     console.log('a adicionar',this.regTabla, this.ptablab, this.paplica, 'cod_refven', this.pclase_nbs, this.pclase_val, this.pcamponombre);
     this.mantbasicaService.postregTabla(this.regTabla, this.ptablab, this.paplica, 'cod_refven', this.pclase_nbs, this.pclase_val, this.pcamponombre)
       .subscribe(newpro => {
@@ -228,9 +229,29 @@ export class AddregFichatecComponent implements OnInit {
         console.error(error);
         this.showError(error);
       })
-      // console.log('a adicionar',this.regTabla, this.ptablab, this.paplica, 'cod_refven', this.pclase_nbs, this.pclase_val, this.pcamponombre);
-      // this.mantbasicaService.postregTabla(this.regTabla, this.ptablab, this.paplica, 'cod_prod', this.pclase_nbs, this.pclase_val, this.pcamponombre)
-      // .subscribe(newpro => {
+    } else {
+      console.log('a adicionar',this.regTabla, this.ptablab, this.paplica, 'cod_prod', this.pclase_nbs, this.pclase_val, this.pcamponombre);
+      this.mantbasicaService.postregTabla(this.regTabla, this.ptablab, this.paplica, 'cod_prod', this.pclase_nbs, this.pclase_val, this.pcamponombre)
+      .subscribe(newpro => {
+        this.grabando = false;
+        var result0 = newpro[0];
+        if (typeof (newpro.isCallbackError) != "undefined") {
+          this.grabo = false;
+          console.error(newpro.messages);
+          this.showError(newpro.messages[0].menerror);  
+        } else {
+          console.log('resul graba reg',result0,newpro);    
+          this.grabo = true;
+          this.tablaForm.reset();
+          this.showMensaje('Se adiciono producto.');
+        }
+      }, error => {
+        this.grabando = false;
+        this.grabo = false;
+        console.error(error);
+        this.showError(error);
+      });
+       // .subscribe(newpro => {
       //   console.log('resul graba reg',result0,newpro);    
       //   this.grabando = false;
       //   var result0 = newpro[0];
@@ -245,6 +266,7 @@ export class AddregFichatecComponent implements OnInit {
       //   console.error(error);
       //   this.showError(error);
       // })
+    }
   }
 
   saveregTabla() {
